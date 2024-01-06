@@ -1,13 +1,19 @@
+
 package kik.framework.vortex;
+
+import kik.framework.vortex.annotations.Controller;
+import kik.framework.vortex.manager.AnnotationManager;
 
 /**
  * Hello world!
  *
  */
-public class App 
-{
-    public static void main( String[] args )
-    {
-        System.out.println( "Hello World!" );
-    }
+@Controller
+public class App {
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		AnnotationManager.getInstance();
+	}
 }

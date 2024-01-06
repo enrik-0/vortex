@@ -2,6 +2,9 @@ package kik.framework.vortex;
 
 import static org.junit.Assert.assertEquals;
 import org.junit.jupiter.api.BeforeAll;
+
+import kik.framework.vortex.manager.AnnotationManager;
+
 import org.junit.Test;
 
 public class AnnotationTest {
@@ -10,7 +13,7 @@ public class AnnotationTest {
 
 	@BeforeAll
 	void obtenerToken() throws Exception {
-		manager = AnnotationManager.getManager();
+		manager = AnnotationManager.getInstance();
 	}
 
 	@Test

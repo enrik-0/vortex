@@ -12,15 +12,15 @@ import kik.framework.vortex.annotations.PutMapping;
 import kik.framework.vortex.annotations.RequestBody;
 import kik.framework.vortex.annotations.RequestMapping;
 import kik.framework.vortex.annotations.RequestParam;
-import kik.framework.vortex.assets.service.UserService;
+import kik.framework.vortex.assets.service.DevUserService;
 
 @Controller
 @RequestMapping("/users")
 @CrossOrigin
-public class UserController {
+public class DevUserController {
 	
 	@Autowired
-	public UserService userService;
+	public DevUserService userService;
 	
 	
 	@PutMapping("/register")
