@@ -1,13 +1,9 @@
-
 package kik.framework.vortex.manager;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
-
-import java.util.Map;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,16 +15,17 @@ import kik.framework.vortex.annotations.Service;
 /**
  * @Author: Enrique Javier Villar Cea
  * @Date: 04/01/2024
- * @Purpose: Brief description of the purpose of this class
+ * @Purpose: handle the annotations
  */
 public final class AnnotationManager {
 
-	private final Logger logger = LoggerFactory.getLogger(AnnotationManager.class);
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(AnnotationManager.class);
 	private static AnnotationManager manager;
-	private HashMap<String, String> urls = new HashMap<>();
-	private HashMap<String, ArrayList<Class<?>>> classes = new HashMap<>();
+	private Storage data = new Storage();
 
 	private AnnotationManager() {
+
 		initialize();
 
 	}
@@ -47,27 +44,48 @@ public final class AnnotationManager {
 
 	private void initialize() {
 		seekClasses();
-		ArrayList<Class<?>>  annotatedClasses = classes.get(Controller.class.getName());
+		ArrayList<Class<?>> annotatedClasses = data
+				.getComponent(Controller.class.getName());
 		for (Class<?> annotatedClass : annotatedClasses) {
-			Method[] w = annotatedClass.getDeclaredMethods(); 
-			for(Method method : annotatedClass.getDeclaredMethods()) {
-				Annotation[] e = method.getAnnotations();
-				for ( Annotation a : method.getAnnotations()) {
-
-					logger.error(a.getClass().toString());
+			for (Method method : annotatedClass.getDeclaredMethods()) {
+				Annotation[][] w = method.getParameterAnnotations();
+				for (Annotation annotation : method.getAnnotations()) {
+					filter(annotation, method);
 				}
 
-				
 			}
 		}
 	}
 
+	private void filter(Annotation annotation, Method method) {
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("uri", annotation.toString().split("\"")[1].replace("\\", ""));
+		map.put("call", method);
+		switch (annotation.annotationType().getSimpleName()) {
+			case "GetMapping" :
+				data.addUrl("GET", map);
+				break;
+			case "PutMapping" :
+				data.addUrl("PUT", map);
+				break;
+
+			case "DeleteMapping" :
+				data.addUrl("DELETE", map);
+				break;
+			case "PostMapping" :
+				data.addUrl("POST", map);
+				break;
+			default :
+		}
+	}
+
 	private void setClasses(Class<? extends Annotation> annotation) {
-		classes.put(annotation.getName(), new ArrayList<Class<?>>());
+		data.addAnnotationType(annotation.getName());
 		Reflections reflections = new Reflections("");
-		Set<Class<?>> annotatedClasses = reflections.getTypesAnnotatedWith(annotation);
+		Set<Class<?>> annotatedClasses = reflections
+				.getTypesAnnotatedWith(annotation);
 		for (Class<?> annotatedClass : annotatedClasses) {
-			classes.get(annotation.getName()).add(annotatedClass);
+			data.addClass(annotation.getName(), annotatedClass);
 		}
 
 	}
@@ -76,10 +94,6 @@ public final class AnnotationManager {
 		setClasses(Controller.class);
 		setClasses(Service.class);
 		setClasses(Entity.class);
-		classes.forEach((key, value) -> {
-			logger.debug("type " + key);
-			value.stream().forEach(c -> logger.debug("class " + c.getName()));
-		});
 	}
 
 }

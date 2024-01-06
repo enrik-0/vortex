@@ -30,7 +30,7 @@ public class DevTestController {
 		// execute
 	}
 
-	@PostMapping("/analyze")
+	@PostMapping("/analyze\"")
 	public void analyzeTestResults(@RequestBody Map<String, Object> testData) {
 		// analyze
 	}

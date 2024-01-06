@@ -39,9 +39,9 @@
 		<appender-ref ref="RollingFile" />
 		<appender-ref ref="Console" />
 	</root>
-	<logger level="trace">
-		<appender-ref ref="RollingFile" />
+	<root level="trace">
 		<appender-ref ref="Console" />
-	</logger>
+		<appender-ref ref="RollingFile" />
+	</root>
 
 </configuration>

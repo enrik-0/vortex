@@ -5,7 +5,7 @@ import org.junit.jupiter.api.BeforeAll;
 
 import kik.framework.vortex.manager.AnnotationManager;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class AnnotationTest {
 
@@ -17,34 +17,36 @@ public class AnnotationTest {
 	}
 
 	@Test
-	public void GetTest() {
+	void testGet() {
 		String method = manager.checkType("/logged");
-		assertEquals(method, "GET");
+		assertEquals("GET", method);
 		method = manager.checkType("/status");
-		assertEquals(method, "GET");
+		assertEquals("GET", method);
 	}
 
 	@Test
-	public void PostTest() {
+	void testPost() {
 		String method = manager.checkType("/analyze");
-		assertEquals(method, "POST");
+		assertEquals("POST", method);
 		method = manager.checkType("/login");
-		assertEquals(method, "POST");
+		assertEquals("POST", method);
 	}
 
 	@Test
-	public void PutTest() {
+	void testPut() {
 		String method = manager.checkType("/execute");
-		assertEquals(method, "PUT");
+
+		assertEquals("PUT", method);
 		method = manager.checkType("/register");
-		assertEquals(method, "PUT");
+
+		assertEquals("PUT", method);
 	}
 
 	@Test
-	public void DeleteTest() {
+	void testDelete() {
 		String method = manager.checkType("/cleanup");
-		assertEquals(method, "DELETE");
+		assertEquals("DELETE", method);
 		method = manager.checkType("/erease");
-		assertEquals(method, "DELETE");
+		assertEquals("DELETE", method);
 	}
 }
