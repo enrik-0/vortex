@@ -22,7 +22,7 @@ public final class AnnotationManager {
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(AnnotationManager.class);
 	private static AnnotationManager manager;
-	private Storage data = new Storage();
+	private Storage data = Storage.getInstance();
 
 	private AnnotationManager() {
 
@@ -44,17 +44,16 @@ public final class AnnotationManager {
 
 	private void initialize() {
 		seekClasses();
-		ArrayList<Class<?>> annotatedClasses = data
+		ArrayList<Class<?>> annotatedClasses = (ArrayList<Class<?>>) data
 				.getComponent(Controller.class.getName());
 		for (Class<?> annotatedClass : annotatedClasses) {
 			for (Method method : annotatedClass.getDeclaredMethods()) {
-				Annotation[][] w = method.getParameterAnnotations();
 				for (Annotation annotation : method.getAnnotations()) {
 					filter(annotation, method);
 				}
-
 			}
 		}
+		data.checkType("/status");
 	}
 
 	private void filter(Annotation annotation, Method method) {

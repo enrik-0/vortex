@@ -9,7 +9,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * @Author: Enrique Javier Villar Cea
+ * @author Enrique Javier Villar Cea
+ * @Purpose dependency injection
  */
 @Target(FIELD)
 @Retention(RUNTIME)
