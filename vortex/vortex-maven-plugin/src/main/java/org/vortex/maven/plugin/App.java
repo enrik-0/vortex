@@ -1,5 +1,4 @@
-
-package kik.framework.vortex;
+package org.vortex.maven.plugin;
 
 import vortex.annotate.annotations.Launcher;
 import vortex.annotate.annotations.VortexApplication;
@@ -9,12 +8,11 @@ import vortex.annotate.annotations.VortexApplication;
  *
  */
 @VortexApplication
-public class App {
-	/**
-	 * @param args
-	 */
+public class App 
+{
 	@Launcher
-	public static void main(String[] args) {
-		System.out.println("funca");
-	}
+    public static void main( String[] args )
+    {
+        System.out.println( "Hello World!" );
+    }
 }
