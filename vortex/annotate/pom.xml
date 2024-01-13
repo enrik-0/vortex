@@ -4,10 +4,10 @@
 	xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
-	
+
 	<groupId>kik.framework.vortex</groupId>
 	<artifactId>annotate</artifactId>
-	<version>0.2.0</version>
+	<version>0.3.1</version>
 	<name>annotate</name>
 	<url>http://maven.apache.org</url>
 	<properties>
@@ -61,4 +61,9 @@
 			<version>1.2.6</version>
 		</dependency>
 	</dependencies>
+	<build>
+		<plugins>
+	
+		</plugins>
+	</build>
 </project>

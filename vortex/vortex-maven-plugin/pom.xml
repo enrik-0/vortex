@@ -2,11 +2,7 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>kik.framework</groupId>
-    <artifactId>vortex</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
-  </parent>
+  <groupId>kik.framework.vortex</groupId>
   <artifactId>vortex-maven-plugin</artifactId>
   <version>0.2.0</version>
   <name>vortex-maven-plugin</name>
@@ -31,31 +27,16 @@
       <version>${maven-plugin-tools.version}</version>
       <scope>provided</scope>
     </dependency>
-
     <dependency>
     	<groupId>kik.framework.vortex</groupId>
     	<artifactId>annotate</artifactId>
-    	<version>0.2.0</version>
+    	<version>0.2.1</version>
     </dependency>
   </dependencies>
  
   <build>
     <pluginManagement>
       <plugins>
-		  <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-plugin-plugin</artifactId>
-        <version>${maven-plugin-tools.version}</version>
-        <executions>
-          <execution>
-            <id>help-mojo</id>
-            <goals>
-              <!-- good practice is to generate help mojo for plugin -->
-              <goal>helpmojo</goal>
-            </goals>
-          </execution>
-        </executions>
-		  </plugin>
       </plugins>
     </pluginManagement>
   </build>

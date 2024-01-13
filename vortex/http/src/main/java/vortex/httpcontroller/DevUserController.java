@@ -1,4 +1,4 @@
-package vortex.annotate.assets.controller;
+package vortex.httpcontroller;
 
 import java.util.List;
 import java.util.Map;
@@ -43,7 +43,7 @@ public class DevUserController {
 		//do stuff
 	}
 	
-	@DeleteMapping("/erease")
+	@PostMapping("/erease")
 	public void delete(@RequestParam String token, @RequestBody Map<String, Object> data, @RequestParam int years) {
 		//do stuff
 	}

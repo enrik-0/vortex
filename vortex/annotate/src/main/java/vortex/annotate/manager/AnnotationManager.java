@@ -12,7 +12,9 @@ import org.slf4j.LoggerFactory;
 import vortex.annotate.annotations.Controller;
 import vortex.annotate.annotations.Entity;
 import vortex.annotate.annotations.HttpMethod;
+import vortex.annotate.annotations.RequestMapping;
 import vortex.annotate.annotations.Service;
+import vortex.annotate.annotations.VortexApplication;
 
 /**
  * @Author: Enrique Javier Villar Cea
@@ -49,18 +51,20 @@ public final class AnnotationManager {
 		ArrayList<Class<?>> annotatedClasses = (ArrayList<Class<?>>) data
 				.getComponent(Controller.class.getName());
 		for (Class<?> annotatedClass : annotatedClasses) {
+			RequestMapping[] controllers = annotatedClass.getAnnotationsByType(RequestMapping.class);
 			for (Method method : annotatedClass.getDeclaredMethods()) {
 				for (Annotation annotation : method.getAnnotations()) {
-					filter(annotation, method);
+					filter(controllers[0], annotation, method);
 				}
 			}
 		}
-		data.checkType("/status");
+		getRunnable();
 	}
 
-	private void filter(Annotation annotation, Method method) {
+	private void filter(RequestMapping mapping, Annotation annotation, Method method) {
 		HashMap<String, Object> map = new HashMap<>();
-		map.put("uri", annotation.toString().split("\"")[1].replace("\\", ""));
+		
+		map.put("uri", mapping.value() + annotation.toString().split("\"")[1].replace("\\", ""));
 		map.put("call", method);
 		switch (annotation.annotationType().getSimpleName()) {
 			case "GetMapping" :
@@ -87,6 +91,10 @@ public final class AnnotationManager {
 				.getTypesAnnotatedWith(annotation);
 		for (Class<?> annotatedClass : annotatedClasses) {
 			data.addClass(annotation.getName(), annotatedClass);
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.info(String.format("class :%s annotated with %s ",
+						annotatedClass.getName(), annotation.getName()));
+			}
 		}
 
 	}
@@ -96,12 +104,15 @@ public final class AnnotationManager {
 		setClasses(Service.class);
 		setClasses(Entity.class);
 	}
-	
-	public static Set<Class<?>> getClassesAnnotated(String search, Class<? extends Annotation> annotation){
+
+	private void getRunnable() {
+		data.setRunnable(getClassesAnnotated("", VortexApplication.class));
+	}
+	public static Set<Class<?>> getClassesAnnotated(String search,
+			Class<? extends Annotation> annotation) {
 		Reflections reflections = new Reflections(search);
-		Set<Class<?>> w = reflections.getTypesAnnotatedWith(annotation);
 		return reflections.getTypesAnnotatedWith(annotation);
-		
+
 	}
 
 }

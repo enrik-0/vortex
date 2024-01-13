@@ -29,48 +29,48 @@ class AnnotationTest {
 
 	@Test
 	void testGet() {
-		HttpMethod[] method = storage.checkType("/logged");
+		HttpMethod[] method = storage.checkType("/users/logged");
 		assertEquals(GET, method[0]);
-		method = storage.checkType("/status");
+		method = storage.checkType("/tests/status");
 		assertEquals(GET, method[0]);
 	}
 
 	@Test
 	void testPost() {
-		HttpMethod[] method = storage.checkType("/analyze");
+		HttpMethod[] method = storage.checkType("/tests/analyze");
 		assertEquals(POST,method[0]);
-		method = storage.checkType("/login");
+		method = storage.checkType("/users/login");
 		assertEquals(POST,  method[0]);
 	}
 
 	@Test
 	void testPut() {
-		HttpMethod[] method = storage.checkType("/execute");
+		HttpMethod[] method = storage.checkType("/tests/execute");
 
 		assertEquals(PUT, method[0]);
-		method = storage.checkType("/register");
+		method = storage.checkType("/users/register");
 
 		assertEquals(PUT, method[0]);
 	}
 
 	@Test
 	void testDelete() {
-		HttpMethod method[] = storage.checkType("/cleanup");
+		HttpMethod method[] = storage.checkType("/tests/cleanup");
 		assertEquals(DELETE, method[0]);
-		method = storage.checkType("/erease");
+		method = storage.checkType("/users/erease");
 		assertEquals(DELETE, method [0]);
 	}
 	
 	@Test
 	void testBody() {
 		
-		Method method = storage.getMethod(PUT, "/execute");
+		Method method = storage.getMethod(PUT, "/tests/execute");
 		Annotation[][] annotations  = method.getParameterAnnotations();
 		assertEquals(RequestBody.class.getName(), annotations[0][0].annotationType().getName());
 	}
 	@Test
 	void testParam() {
-		Method method = storage.getMethod(GET, "/logged");
+		Method method = storage.getMethod(GET, "/users/logged");
 		Annotation[][] annotations  = method.getParameterAnnotations();
 		assertEquals(RequestParam.class.getName(), annotations[0][0].annotationType().getName());
 	}
@@ -78,7 +78,7 @@ class AnnotationTest {
 	@Test
 	void testParams() {
 		
-		Method method = storage.getMethod(GET, "/status");
+		Method method = storage.getMethod(GET, "/tests/status");
 		Annotation[][] annotations  = method.getParameterAnnotations();
 		assertEquals(RequestParam.class.getName(), annotations[0][0].annotationType().getName());
 		assertEquals(RequestParam.class.getName(), annotations[1][0].annotationType().getName());
@@ -87,7 +87,7 @@ class AnnotationTest {
 	
 	@Test
 	void testAll() {
-		Method method = storage.getMethod(DELETE, "/erease");
+		Method method = storage.getMethod(DELETE, "/users/erease");
 		Annotation[][] annotations  = method.getParameterAnnotations();
 		assertEquals(RequestParam.class.getName(), annotations[0][0].annotationType().getName());
 		assertEquals(RequestBody.class.getName(), annotations[1][0].annotationType().getName());
