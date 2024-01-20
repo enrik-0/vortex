@@ -10,6 +10,7 @@ import vortex.annotate.manager.AnnotationManager;
  */
 public class App {
 	public static void main(String[] args) throws IOException {
+	
 		AnnotationManager.getInstance();
 		ServerHttp.runServer(8080);
 	}

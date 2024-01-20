@@ -3,19 +3,19 @@ package vortex.http.exceptions;
 /**
  * @autor Enrique Javier Villar Cea
  */
-public class BodyException extends Exception {
+public class RequestFormatException extends Exception {
 
 	/**
 	 * 
 	 */
-	public BodyException() {
+	public RequestFormatException() {
 		// TODO Auto-generated constructor stub
 	}
 
 	/**
 	 * @param message
 	 */
-	public BodyException(String message) {
+	public RequestFormatException(String message) {
 		super(message);
 		// TODO Auto-generated constructor stub
 	}
@@ -23,7 +23,7 @@ public class BodyException extends Exception {
 	/**
 	 * @param cause
 	 */
-	public BodyException(Throwable cause) {
+	public RequestFormatException(Throwable cause) {
 		super(cause);
 		// TODO Auto-generated constructor stub
 	}
@@ -32,7 +32,7 @@ public class BodyException extends Exception {
 	 * @param message
 	 * @param cause
 	 */
-	public BodyException(String message, Throwable cause) {
+	public RequestFormatException(String message, Throwable cause) {
 		super(message, cause);
 		// TODO Auto-generated constructor stub
 	}
@@ -43,7 +43,7 @@ public class BodyException extends Exception {
 	 * @param enableSuppression
 	 * @param writableStackTrace
 	 */
-	public BodyException(String message, Throwable cause,
+	public RequestFormatException(String message, Throwable cause,
 			boolean enableSuppression, boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
 		// TODO Auto-generated constructor stub

@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import vortex.annotate.annotations.HttpMethod;
 import vortex.annotate.annotations.RequestBody;
 import vortex.annotate.annotations.RequestParam;
+import vortex.annotate.exceptions.UriException;
 import vortex.annotate.manager.AnnotationManager;
 import vortex.annotate.manager.Storage;
 class AnnotationTest {
@@ -62,21 +63,21 @@ class AnnotationTest {
 	}
 	
 	@Test
-	void testBody() {
+	void testBody() throws UriException {
 		
 		Method method = storage.getMethod(PUT, "/tests/execute");
 		Annotation[][] annotations  = method.getParameterAnnotations();
 		assertEquals(RequestBody.class.getName(), annotations[0][0].annotationType().getName());
 	}
 	@Test
-	void testParam() {
+	void testParam() throws UriException {
 		Method method = storage.getMethod(GET, "/users/logged");
 		Annotation[][] annotations  = method.getParameterAnnotations();
 		assertEquals(RequestParam.class.getName(), annotations[0][0].annotationType().getName());
 	}
 	
 	@Test
-	void testParams() {
+	void testParams() throws UriException {
 		
 		Method method = storage.getMethod(GET, "/tests/status");
 		Annotation[][] annotations  = method.getParameterAnnotations();
@@ -86,7 +87,7 @@ class AnnotationTest {
 	}
 	
 	@Test
-	void testAll() {
+	void testAll() throws UriException {
 		Method method = storage.getMethod(DELETE, "/users/erease");
 		Annotation[][] annotations  = method.getParameterAnnotations();
 		assertEquals(RequestParam.class.getName(), annotations[0][0].annotationType().getName());

@@ -1,4 +1,4 @@
-package vortex.httpcontroller;
+package vortex.http.test.controller;
 
 import java.util.Map;
 

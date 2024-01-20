@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import vortex.annotate.annotations.Controller;
 import vortex.annotate.annotations.HttpMethod;
+import vortex.annotate.exceptions.UriException;
 
 /**
  * @Author Enrique Javier Villar Cea
@@ -71,12 +72,14 @@ public final class Storage {
 
 	}
 
-	public Method getMethod(HttpMethod method, String uri) {
-
+	public Method getMethod(HttpMethod method, String uri) throws UriException {
+		try {
 		return (Method) ((HashMap<HttpMethod, Object>) urls.get(method).stream()
 				.filter(map -> {
 					return map.get("uri").equals(uri);
 				}).toArray()[0]).get("call");
+		}catch(ArrayIndexOutOfBoundsException e) {
+			throw new UriException(String.format("the uri %s dosent exists", uri));		}
 	}
 
 	private boolean isMethod(HttpMethod method, String uri) {
@@ -110,12 +113,18 @@ public final class Storage {
 		return runnable;
 	}
 
-	private void fillControllers() throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-		for(Class<?> clazz : getComponent(Controller.class.getName())) {
+	private void fillControllers()
+			throws InstantiationException, IllegalAccessException,
+			IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException {
+		for (Class<?> clazz : getComponent(Controller.class.getName())) {
 			controllers.put(clazz, clazz.getConstructor().newInstance());
 		}
 	}
-	public Object getObjectController(Method method) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+	public Object getObjectController(Method method)
+			throws InstantiationException, IllegalAccessException,
+			IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException {
 		if (controllers == null) {
 			this.controllers = new HashMap<>();
 			fillControllers();

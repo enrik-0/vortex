@@ -7,7 +7,7 @@
 
 	<groupId>kik.framework.vortex</groupId>
 	<artifactId>annotate</artifactId>
-	<version>0.3.1</version>
+	<version>0.4.0</version>
 	<name>annotate</name>
 	<url>http://maven.apache.org</url>
 	<properties>
@@ -20,6 +20,15 @@
 			<artifactId>reflections</artifactId>
 			<version>0.9.12</version>
 		</dependency>
+
+<dependency>
+    <groupId>com.google.code.findbugs</groupId>
+    <artifactId>jsr305</artifactId>
+    <version>3.0.2</version>
+</dependency>
+
+
+
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
@@ -63,7 +72,7 @@
 	</dependencies>
 	<build>
 		<plugins>
-	
+
 		</plugins>
 	</build>
 </project>

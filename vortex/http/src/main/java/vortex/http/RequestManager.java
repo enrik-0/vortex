@@ -13,15 +13,18 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
 
-
 import vortex.annotate.annotations.HttpMethod;
 import vortex.annotate.annotations.RequestBody;
 import vortex.annotate.annotations.RequestParam;
+import vortex.annotate.exceptions.UriException;
 import vortex.annotate.manager.Storage;
 import vortex.http.elements.Param;
+import vortex.http.exceptions.AnnotationNotFoundException;
 import vortex.http.exceptions.BodyException;
+import vortex.http.exceptions.ParameterSintaxException;
+import vortex.http.exceptions.RequestFormatException;
 
-public class RequestManager {
+public final class RequestManager {
 
 	private static RequestManager instance;
 	private static final Logger LOGGER = LoggerFactory
@@ -36,11 +39,11 @@ public class RequestManager {
 		return instance;
 	}
 
-	public void getHandle(HttpExchange request) {
-		LOGGER.debug("get" + request.getRequestURI().getRawPath());
-	}
-
-	public void postHandle(HttpExchange request) {
+	public Object handle(HttpExchange request) throws InstantiationException,
+			IllegalAccessException, IllegalArgumentException,
+			InvocationTargetException, NoSuchMethodException, SecurityException,
+			IOException, BodyException, AnnotationNotFoundException,
+			ParameterSintaxException, RequestFormatException, UriException {
 		LOGGER.debug(request.getRequestURI().getPath());
 
 		Method method = Storage.getInstance().getMethod(
@@ -48,67 +51,40 @@ public class RequestManager {
 				request.getRequestURI().getPath());
 		method.getAnnotatedExceptionTypes();
 
-		if (request.getRequestHeaders().get("content-type") != null) {
-
-			try {
-				executeMethod(method, request);
-			} catch (Exception e) {
-				// TODOe: handle exception
-				e.getStackTrace();
-			}
-		}
+		return executeMethod(method, request,
+				HttpMethod.valueOf(request.getRequestMethod()));
 
 	}
 
-	private Object executeMethod(Method method, HttpExchange request) {
-		Object launcher, response;
+	private Object executeMethod(Method method, HttpExchange request,
+			HttpMethod http) throws InstantiationException,
+			IllegalAccessException, IllegalArgumentException,
+			InvocationTargetException, NoSuchMethodException, SecurityException,
+			IOException, BodyException, AnnotationNotFoundException,
+			ParameterSintaxException, RequestFormatException {
+		Object launcher;
 		Object[] parameters;
-		response = null;
-		try {
-			launcher = Storage.getInstance().getObjectController(method);
-			parameters = getParameters(method, request);
-			response = method.invoke(launcher, parameters);
-		} catch (IllegalAccessException | IllegalArgumentException
-				| InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (BodyException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return response;
+		launcher = Storage.getInstance().getObjectController(method);
+		parameters = getParameters(method, request, http);
+		return method.invoke(launcher, parameters);
 
 	}
 
-	private Object[] getParameters(Method method, HttpExchange request)
-			throws IOException, BodyException {
+	private Object[] getParameters(Method method, HttpExchange request,
+			HttpMethod http)
+			throws IOException, BodyException, AnnotationNotFoundException,
+			ParameterSintaxException, RequestFormatException {
 		List<Param> parameters = getQueryParameters(request);
 		Object body;
 		if (request.getRequestHeaders().get("content-type") != null) {
-			try {
-				body = getBody(request, getBodyClass(method));
-				parameters.add(new Param(RequestBody.class.getName(), body));
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			body = getBody(request, getBodyClass(method, http));
+			parameters.add(new Param(RequestBody.class.getName(), body));
+
 		}
 		return setParameters(method, parameters);
-
 	}
-	private Object[] setParameters(Method method, List<Param> parameters) {
+	private Object[] setParameters(Method method, List<Param> parameters)
+			throws AnnotationNotFoundException, ParameterSintaxException {
 		Parameter methodParameter;
 		Param queryParam;
 		Object buffer;
@@ -121,59 +97,93 @@ public class RequestManager {
 				continue;
 			}
 			methodParameter = methodParameters[i];
-			for (Annotation annotation : parameterAnnotations[i]) {
-				if (annotation.annotationType().getName()
-						.equals(RequestBody.class.getName())) {
-					queryParam = parameters.remove(parameters.size() - 1);
-				} else {
-					queryParam = parameters.remove(0);
-				}
-				if (annotation.annotationType().getName()
-						.equals(RequestParam.class.getName())) {
-				}
-				if (methodParameters[i].getName()
-						.equals(queryParam.getName())) {
-					buffer =  mapper.convertValue(queryParam.getValue(),
-					methodParameters[i].getType());
-					parametersValues.add(buffer);
-				}
-				for (Annotation e : methodParameter.getAnnotations()) {
-					if (e.annotationType().getName()
-							.equals(RequestBody.class.getName())) {
-		buffer =  mapper.convertValue(queryParam.getValue(),
-					methodParameters[i].getType());
-						parametersValues.add(buffer);
-					}
-
-				}
-
-			}
-
+			proccessParameters(parameters, methodParameter, mapper,
+					parametersValues, methodParameters, parameterAnnotations,
+					i);
 		}
 
 		return parametersValues.toArray();
 	}
+	private void proccessParameters(List<Param> parameters,
+			Parameter methodParameter, ObjectMapper mapper,
+			List<Object> parametersValues, Parameter[] methodParameters,
+			Annotation[][] parameterAnnotations, int i)
+			throws ParameterSintaxException, AnnotationNotFoundException {
+		Param queryParam;
+		Object buffer;
+		for (Annotation annotation : parameterAnnotations[i]) {
+			if (annotation.annotationType()
+					.isAssignableFrom(RequestBody.class)) {
+				queryParam = parameters.remove(parameters.size() - 1);
+			} else {
+				queryParam = parameters.remove(0);
+			}
+			if (annotation.annotationType()
+					.isAssignableFrom(RequestParam.class)) {
+				if (methodParameters[i].getName()
+						.equals(queryParam.getName())) {
+					buffer = mapper.convertValue(queryParam.getValue(),
+							methodParameters[i].getType());
+					parametersValues.add(buffer);
+				} else {
+					throw new ParameterSintaxException(String.format(
+							"query parameter %s must have the same name as the method parameter %s",
+							queryParam.getName(), methodParameter.getName()));
+				}
+			}
 
+			mappParameter(methodParameter, queryParam, methodParameters,
+					parametersValues, i);
+
+		}
+	}
+
+	private static void mappParameter(Parameter methodParameter,
+			Param queryParam, Parameter[] methodParameters,
+			List<Object> parametersValues, int i) {
+		Object buffer;
+		ObjectMapper mapper = new ObjectMapper();
+		for (Annotation e : methodParameter.getAnnotations()) {
+			if (e.annotationType().isAssignableFrom(RequestBody.class)) {
+				buffer = mapper.convertValue(queryParam.getValue(),
+						methodParameters[i].getType());
+				parametersValues.add(buffer);
+			}
+
+		}
+
+	}
 	private List<Param> getQueryParameters(HttpExchange request) {
 		String[] queryParams;
 		String[] paramElements;
 		Param parameter;
 		List<Param> parameters = new ArrayList<>();
-		queryParams = request.getRequestURI().getQuery().split("&");
-		for (String queryParam : queryParams) {
-			paramElements = queryParam.split("=");
-			for (int i = 0; i < paramElements.length; i += 2) {
-				parameter = new Param(paramElements[i], paramElements[i + 1]);
-				parameters.add(parameter);
+		if (request.getRequestURI().getQuery() != null) {
+
+			queryParams = request.getRequestURI().getQuery().split("&");
+			for (String queryParam : queryParams) {
+				paramElements = queryParam.split("=");
+				for (int i = 0; i < paramElements.length; i += 2) {
+					parameter = new Param(paramElements[i],
+							paramElements[i + 1]);
+					parameters.add(parameter);
+				}
 			}
 		}
 		return parameters;
 
 	}
-	private Class<?> getBodyClass(Method method) throws BodyException {
+	private Class<?> getBodyClass(Method method, HttpMethod http)
+			throws BodyException, RequestFormatException {
 		byte count = 0;
 		Class<?> clazz = null;
 		Annotation[][] parameterAnnotations = method.getParameterAnnotations();
+
+		if (http.equals(HttpMethod.GET)) {
+			throw new RequestFormatException(
+					String.format("%s dont use body", HttpMethod.GET.name()));
+		}
+
 		for (int i = 0; i < parameterAnnotations.length; i++) {
 			for (Annotation annotation : parameterAnnotations[i]) {
 				if (annotation.annotationType().equals(RequestBody.class)) {

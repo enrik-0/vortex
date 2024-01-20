@@ -130,9 +130,8 @@
   <build>
     		
     <plugins>
-      			
-      <plugin>
         				
+       <plugin>
         <groupId>kik.framework.vortex</groupId>
         				
         <artifactId>vortex-maven-plugin</artifactId>

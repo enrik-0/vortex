@@ -1,40 +1,37 @@
 package vortex.http.exceptions;
 
+
 /**
- * @autor Enrique Javier Villar Cea
+ * @author
  */
-public class BodyException extends Exception {
+public class AnnotationNotFoundException extends Exception {
 
 	/**
 	 * 
 	 */
-	public BodyException() {
-		// TODO Auto-generated constructor stub
+	public AnnotationNotFoundException() {
 	}
 
 	/**
 	 * @param message
 	 */
-	public BodyException(String message) {
+	public AnnotationNotFoundException(String message) {
 		super(message);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
 	 * @param cause
 	 */
-	public BodyException(Throwable cause) {
+	public AnnotationNotFoundException(Throwable cause) {
 		super(cause);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
 	 * @param message
 	 * @param cause
 	 */
-	public BodyException(String message, Throwable cause) {
+	public AnnotationNotFoundException(String message, Throwable cause) {
 		super(message, cause);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -43,7 +40,7 @@ public class BodyException extends Exception {
 	 * @param enableSuppression
 	 * @param writableStackTrace
 	 */
-	public BodyException(String message, Throwable cause,
+	public AnnotationNotFoundException(String message, Throwable cause,
 			boolean enableSuppression, boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
 		// TODO Auto-generated constructor stub
