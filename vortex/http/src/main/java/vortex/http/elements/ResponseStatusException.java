@@ -1,6 +1,7 @@
 package vortex.http.elements;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ResponseStatusException extends Exception implements Response {
@@ -8,7 +9,7 @@ public class ResponseStatusException extends Exception implements Response {
 	private static final long serialVersionUID = 1L;
 	private HttpStatus status;
 	private String body;
-	private Map<String, Object> headers;
+	private Map<String, List<String>> headers;
 
 	public ResponseStatusException(HttpStatus status, String message) {
 		super(message);
@@ -35,12 +36,12 @@ public class ResponseStatusException extends Exception implements Response {
 	}
 
 	@Override
-	public Map<String, Object> getHeaders() {
+	public Map<String, List<String>> getHeaders() {
 		return headers;
 	}
 
 	@Override
-	public void setHeader(String name, Object value) {
+	public void setHeader(String name, List<String> value) {
 
 	}
 }

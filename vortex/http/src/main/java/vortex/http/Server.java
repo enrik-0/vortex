@@ -8,7 +8,7 @@ import vortex.annotate.manager.AnnotationManager;
  * Hello world!
  *
  */
-public class App {
+public class Server {
 	public static void main(String[] args) throws IOException {
 	
 		AnnotationManager.getInstance();

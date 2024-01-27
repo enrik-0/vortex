@@ -6,7 +6,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.sun.net.httpserver.HttpServer;
 
+import vortex.annotate.manager.AnnotationManager;
+
 public final class ServerHttp {
+
+	private static byte DEFAULT_PORT = 80;
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(ServerHttp.class);
 
@@ -15,7 +19,11 @@ public final class ServerHttp {
 	private ServerHttp() {
 		
 	}
+	public static void runServer() throws IOException {
+		runServer(DEFAULT_PORT);
+	}
 	public static void runServer(int port) throws IOException {
+		AnnotationManager.getInstance();
 		server = HttpServer.create();
 		server.bind(new InetSocketAddress(port), 0);
 		server.createContext("/", new Handler(server));

@@ -4,13 +4,9 @@
 	xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>kik.framework</groupId>
-		<artifactId>vortex</artifactId>
-		<version>0.1.0-SNAPSHOT</version>
-	</parent>
+	<groupId>kik.framework.vortex</groupId>
 	<artifactId>http</artifactId>
-	<version>0.4.0</version>
+	<version>0.5.0</version>
 	<name>http</name>
 	<url>http://maven.apache.org</url>
 	<properties>
@@ -31,16 +27,41 @@
 			<version>2.12.5</version>
 		</dependency>
 
+
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<version>5.9.1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<version>5.9.1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>5.9.1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-params</artifactId>
+			<version>5.9.1</version>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>3.8.1</version>
+			<version>4.8.1</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>kik.framework.vortex</groupId>
 			<artifactId>annotate</artifactId>
-			<version>0.4.0</version>
+			<version>0.4.1</version>
 		</dependency>
 
 	</dependencies>

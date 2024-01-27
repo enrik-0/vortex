@@ -30,7 +30,7 @@
     <dependency>
     	<groupId>kik.framework.vortex</groupId>
     	<artifactId>annotate</artifactId>
-    	<version>0.2.1</version>
+    	<version>0.4.1</version>
     </dependency>
   </dependencies>
  

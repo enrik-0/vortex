@@ -1,6 +1,6 @@
 package vortex.http;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 class RequestTest {
 
 	@Test
-	void test() {
+	void atest() {
 		
 		assertEquals(true, true);
 

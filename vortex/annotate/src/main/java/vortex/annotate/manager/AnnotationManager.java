@@ -51,7 +51,8 @@ public final class AnnotationManager {
 		ArrayList<Class<?>> annotatedClasses = (ArrayList<Class<?>>) data
 				.getComponent(Controller.class.getName());
 		for (Class<?> annotatedClass : annotatedClasses) {
-			RequestMapping[] controllers = annotatedClass.getAnnotationsByType(RequestMapping.class);
+			RequestMapping[] controllers = annotatedClass
+					.getAnnotationsByType(RequestMapping.class);
 			for (Method method : annotatedClass.getDeclaredMethods()) {
 				for (Annotation annotation : method.getAnnotations()) {
 					filter(controllers[0], annotation, method);
@@ -61,24 +62,38 @@ public final class AnnotationManager {
 		getRunnable();
 	}
 
-	private void filter(RequestMapping mapping, Annotation annotation, Method method) {
+	private void filter(RequestMapping mapping, Annotation annotation,
+			Method method) {
 		HashMap<String, Object> map = new HashMap<>();
-		
-		map.put("uri", mapping.value() + annotation.toString().split("\"")[1].replace("\\", ""));
+
+		map.put("uri", mapping.value()
+				+ annotation.toString().split("\"")[1].replace("\\", ""));
 		map.put("call", method);
 		switch (annotation.annotationType().getSimpleName()) {
 			case "GetMapping" :
 				data.addUrl(HttpMethod.GET, map);
+				LOGGER.info(String.format("Found %s with uri %s and method %s",
+						HttpMethod.GET.name(), map.get("uri"),
+						((Method) map.get("call")).getName()));
 				break;
 			case "PutMapping" :
 				data.addUrl(HttpMethod.PUT, map);
+				LOGGER.info(String.format("Found %s with uri %s and method %s",
+						HttpMethod.PUT.name(), map.get("uri"),
+						((Method) map.get("call")).getName()));
 				break;
 
 			case "DeleteMapping" :
 				data.addUrl(HttpMethod.DELETE, map);
+				LOGGER.info(String.format("%s with uri %s and method %s",
+						HttpMethod.DELETE.name(), map.get("uri"),
+						((Method) map.get("call")).getName()));
 				break;
 			case "PostMapping" :
 				data.addUrl(HttpMethod.POST, map);
+				LOGGER.info(String.format("Found %s with uri %s and method %s",
+						HttpMethod.POST.name(), map.get("uri"),
+						((Method) map.get("call")).getName()));
 				break;
 			default :
 		}
@@ -101,8 +116,11 @@ public final class AnnotationManager {
 
 	private void seekClasses() {
 		setClasses(Controller.class);
+		LOGGER.debug(String.format("number of %s %d", Controller.class.getSimpleName(), data.getComponent(Controller.class.getName()).size()));
 		setClasses(Service.class);
+		LOGGER.debug(String.format("number of %s %d", Service.class.getSimpleName(), data.getComponent(Service.class.getName()).size()));
 		setClasses(Entity.class);
+		LOGGER.debug(String.format("number of %s %d", Entity.class.getSimpleName(), data.getComponent(Entity.class.getName()).size()));
 	}
 
 	private void getRunnable() {
