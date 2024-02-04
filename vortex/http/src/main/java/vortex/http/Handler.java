@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URISyntaxException;
+import java.util.List;
 
 import vortex.annotate.annotations.HttpMethod;
 import vortex.annotate.exceptions.UriException;
@@ -66,8 +67,12 @@ public class Handler implements HttpHandler {
 	}
 	private static void createResponse(HttpExchange request, Response response)
 			throws IOException {
-		response.getHeaders().forEach((name, value) -> request
-				.getResponseHeaders().add(name, String.valueOf(value)));
+		response.getHeaders().forEach((String name,List<String> values) -> {
+		for (String value : values) {
+			request.getResponseHeaders().add(name, value);
+			}
+
+		});
 
 		request.sendResponseHeaders(response.getStatus().value(), 0);
 		if (response.getBody() != null) {

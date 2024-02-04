@@ -36,6 +36,7 @@ public final class Mock {
 	
 	public static void stop() {
 		ServerHttp.stopServer();
+		instance = null;
 	}
 
 

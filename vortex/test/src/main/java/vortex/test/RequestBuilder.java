@@ -224,7 +224,7 @@ public class RequestBuilder {
 			var byteArrayOutputStream = copyInputStream(inputStream);
 
 			String contentHeader = connection.getHeaderField("Content-type");
-			if ("[application/json]".equals(contentHeader)) {
+			if ("application/json".equals(contentHeader)) {
 
 				try {
 					mapped = MappingUtils.map(

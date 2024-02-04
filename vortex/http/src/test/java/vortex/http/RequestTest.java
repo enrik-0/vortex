@@ -10,8 +10,11 @@ import java.util.Random;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
 import vortex.http.elements.HttpStatus;
 import vortex.http.elements.Response;
+import vortex.http.utils.MappingUtils;
 import vortex.test.Mock;
 import vortex.test.RequestBuilder;
 import vortex.test.exception.AmbiguousMethodException;
@@ -19,10 +22,11 @@ import vortex.test.exception.AmbiguousMethodException;
 /**
  * Unit test for simple App.
  */
+@ExtendWith(MockInitialize.class)
 class RequestTest {
 
 	private static final String HOST = "http://localhost:8080";
-
+/*
 	@BeforeAll
 	static void setUp()
 			throws IOException, InstantiationException, IllegalAccessException,
@@ -34,6 +38,7 @@ class RequestTest {
 	static void shutdown() {
 		Mock.stop();
 	}
+	*/
 
 	@Test
 	void testUriNonExists() throws IOException, AmbiguousMethodException {
@@ -60,7 +65,7 @@ class RequestTest {
 		for (i = 0; i < j; i++) {
 			var map = fillInteger((new Random()).nextInt(30));
 			response = post(map, "/map/integer");
-			assertEquals(map, response.getBody());
+			assertEquals(map,  response.getBody());
 			response = post(map, "/map/integerResponse");
 			assertEquals(map, response.getBody());
 		}
@@ -172,12 +177,12 @@ class RequestTest {
 
 			for (int j = 0; j < length; j++) {
 
-				int chosen = random.nextInt(chars.length());
-				builder.append(chars.charAt(chosen));
+			int chosen = random.nextInt(chars.length());
+			builder.append(chars.charAt(chosen));
 
-			}
+		}
 
-			map.put("string" + i, builder.toString());
+		map.put("string" + i, builder.toString());
 		}
 		return map;
 	}

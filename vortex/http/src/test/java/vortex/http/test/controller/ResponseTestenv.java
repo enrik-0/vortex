@@ -10,7 +10,7 @@ import vortex.http.elements.ResponseStatus;
 public class ResponseTestenv {
 
 	@GetMapping("/addHeader")
-	ResponseStatus<String> addHeader(){
+	public ResponseStatus<String> addHeader(){
 		var response = new ResponseStatus<String>();
 
 		response.setHeader("headerTest", "test1");
