@@ -50,7 +50,14 @@ public enum HttpStatus implements HttpStateCode {
 	 * "https://datatracker.ietf.org/doc/html/rfc2616#section-10.4.3">RFC </a>
 	 * 
 	 */	
-	FORBIDDEN(403, "forbidden access for the resource");
+	FORBIDDEN(403, "forbidden access for the resource"), 
+	/**
+	 * {@code} 404 NOT_FOUND  resource not found
+	 * <a href=
+	 * "https://datatracker.ietf.org/doc/html/rfc2616#section-10.4.4">RFC </a>
+	 * 
+	 */
+	NOT_FOUND(404, "resource not found");
 
 	private final int state;
 	private final Series series;

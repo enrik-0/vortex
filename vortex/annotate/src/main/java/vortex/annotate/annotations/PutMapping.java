@@ -9,10 +9,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * @author Enrique Javier Villar Cea
+ * Identifies a method that handles the {@linkplain #value}
  * @see DeleteMapping
  * @see GetMapping
  * @see PostMapping
+ * @author Enrique Javier Villar Cea
  */
 @Target(METHOD)
 @Retention(RUNTIME)
@@ -21,6 +22,7 @@ public @interface PutMapping {
 
 	/**
 	 * Uri to handle with <b>PUT</b>
+	 * <h1>example:</h1> <code> @PutMapping("/uri")</code>
 	 */
 	String value();
 

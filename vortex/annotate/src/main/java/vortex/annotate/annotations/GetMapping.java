@@ -9,10 +9,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * @author Enrique Javier Villar Cea
+ * 
+ * Identifies a method that handles the {@linkplain #value}
  * @see DeleteMapping
  * @see PostMapping
  * @see PutMapping
+ * @author Enrique Javier Villar Cea
  * 
  */
 @Target(METHOD)
@@ -21,8 +23,9 @@ import java.lang.annotation.Target;
 public @interface GetMapping {
 
 	/**
-	 * Uri to handle with <b>GET</b> 
+	 * Uri to handle with <b>GET</b>  <br>
 	 * Default value <core>"/"</core>
+	 * <h1>example:</h1> <code> @GetMapping("/uri")</code>
 	 */
 	String value() default "/";
 }

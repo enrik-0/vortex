@@ -59,7 +59,7 @@ public final class AnnotationManager {
 				}
 			}
 		}
-		getRunnable();
+		//getRunnable();
 	}
 
 	private void filter(RequestMapping mapping, Annotation annotation,
@@ -128,8 +128,8 @@ public final class AnnotationManager {
 	}
 	public static Set<Class<?>> getClassesAnnotated(String search,
 			Class<? extends Annotation> annotation) {
-		Reflections reflections = new Reflections(search);
-		return reflections.getTypesAnnotatedWith(annotation);
+		Reflections var = new Reflections(search);
+		return var.getTypesAnnotatedWith(annotation);
 
 	}
 

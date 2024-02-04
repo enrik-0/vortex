@@ -7,6 +7,7 @@ import java.util.Map;
 
 import vortex.annotate.annotations.HttpMethod;
 import vortex.annotate.annotations.Nullable;
+import vortex.http.utils.Asserttions;
 import vortex.http.utils.MappingUtils;
 
 /**
@@ -45,7 +46,7 @@ public class ResponseStatus<T> implements Response {
 	}
 
 	public HttpStatus getStatus() {
-		if(state == null) {
+		if (state == null) {
 			state = HttpStatus.OK;
 		}
 		return state;
@@ -68,19 +69,12 @@ public class ResponseStatus<T> implements Response {
 	 *            T
 	 */
 	public void setResponseBody(T body) {
-		this.body = body;
-
+		var contentType = "Content-type";
 		List<String> contentHeader = new ArrayList<>();
-		String contentType = "Content-type";
-		if (!headers.containsKey(contentType) && (body != null)) {
-			if (MappingUtils.isPrimitive(body)) {
-				contentHeader.add("text/plain");
-				setHeader(contentType, contentHeader);
-			} else {
-				contentHeader.add("application/json");
-				setHeader(contentType, contentHeader);
-			}
-		}
+		this.body = body;
+		Asserttions.setContentHeader(contentHeader, body,
+				headers.get(contentType));
+		setHeader(contentType, contentHeader);
 	}
 
 	/**
@@ -104,6 +98,13 @@ public class ResponseStatus<T> implements Response {
 			this.headers.put(name, value);
 		}
 	}
+	
+	public void setHeader(String name, String value) {
+		var list = new ArrayList<String>();
+		list.add(value);
+		setHeader(name, list);
+		
+	}
 
 	/**
 	 * is a {@link ResponseStatus}
@@ -112,7 +113,7 @@ public class ResponseStatus<T> implements Response {
 	 * @return boolean
 	 */
 	public static boolean isResponse(Object object) {
-		return object.getClass() == ResponseStatus.class;
+		return object != null && object.getClass() == ResponseStatus.class;
 	}
 
 }

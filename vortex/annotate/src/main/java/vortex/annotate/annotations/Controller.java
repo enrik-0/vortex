@@ -10,11 +10,17 @@ import java.lang.annotation.Target;
 
 
 /**  
+ * Identifier of a class that have endpoints
+ * @see RequestMapping
+ * @see GetMapping
+ * @see PostMapping
+ * @see PutMapping
+ * @see DeleteMapping
  * @Author: Enrique Javier Villar Cea
  */
 @Target(TYPE)
 @Retention(RUNTIME)
 @Documented
-public @interface Controller {
+public @interface Controller{
 
 }

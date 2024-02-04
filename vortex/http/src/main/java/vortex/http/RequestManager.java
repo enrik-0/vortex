@@ -1,5 +1,6 @@
 package vortex.http;
 import java.io.IOException;
+import com.sun.net.httpserver.HttpExchange;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -9,6 +10,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import vortex.annotate.annotations.HttpMethod;
 import vortex.annotate.annotations.RequestBody;
 import vortex.annotate.annotations.RequestParam;
@@ -36,15 +38,14 @@ public final class RequestManager {
 		return instance;
 	}
 
-	public Object handle(ExchangeHttp request)
-			throws InstantiationException, IllegalAccessException,
-			IllegalArgumentException, InvocationTargetException,
-			NoSuchMethodException, SecurityException, IOException,
-			BodyException, ParameterSintaxException, RequestFormatException,
-			UriException {
+	public Object handle(ExchangeHttp request) throws InstantiationException,
+			IllegalAccessException, IllegalArgumentException,
+			InvocationTargetException, NoSuchMethodException, SecurityException,
+			IOException, BodyException, ParameterSintaxException,
+			RequestFormatException, UriException {
 		LOGGER.debug(request.getRequestURI().getPath());
 
-		Method method = Storage.getInstance().getMethod(
+		var method = Storage.getInstance().getMethod(
 				request.getRequestMethod(), request.getRequestURI().getPath());
 		method.getAnnotatedExceptionTypes();
 
@@ -58,15 +59,14 @@ public final class RequestManager {
 			IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException, IOException,
 			BodyException, ParameterSintaxException, RequestFormatException {
-		Object launcher;
-		Object[] parameters;
-		launcher = Storage.getInstance().getObjectController(method);
-		parameters = getParameters(method, request, http);
+		var launcher = Storage.getInstance().getObjectController(method);
+		Object[] parameters = getParameters(method, request, http);
+		LOGGER.debug(String.format("number of parameters found %d", parameters.length));
 		return method.invoke(launcher, parameters);
 
 	}
 
-	private static Object[] getParameters(Method method, ExchangeHttp request,
+	public static Object[] getParameters(Method method, ExchangeHttp request,
 			HttpMethod http) throws IOException, BodyException,
 			ParameterSintaxException, RequestFormatException {
 		List<Param> parameters = getQueryParameters(request);
@@ -157,13 +157,14 @@ public final class RequestManager {
 					parameter = new Param(paramElements[i],
 							paramElements[i + 1]);
 					parameters.add(parameter);
+					LOGGER.info(String.format("query parameter %s", parameter));
 				}
 			}
 		}
 		return parameters;
 
 	}
-	private static Class<?> getBodyClass(Method method, HttpMethod http)
+	public static Class<?> getBodyClass(Method method, HttpMethod http)
 			throws BodyException, RequestFormatException {
 
 		if (http == HttpMethod.GET) {
@@ -180,6 +181,7 @@ public final class RequestManager {
 				if (annotation.annotationType().equals(RequestBody.class)) {
 					count++;
 					clazz = method.getParameters()[i].getType();
+					LOGGER.debug(String.format("body class is %s", clazz.getSimpleName()));
 				}
 
 			}

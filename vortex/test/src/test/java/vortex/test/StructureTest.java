@@ -3,9 +3,9 @@ package vortex.test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.AfterAll;
@@ -25,7 +25,7 @@ class StructureTest {
 	private static final String LOCALHOST = "http://localhost:8080";
 
 	@BeforeAll
-	static void init() throws IOException {
+	static void init() throws IOException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 		Mock.getInstance();
 	}
 	@AfterAll

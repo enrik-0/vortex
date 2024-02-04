@@ -10,8 +10,8 @@ import java.lang.annotation.Target;
 /**
  *  Gives the request body into the parameter.<br>
  *  <b>GET</b> doesn't have a body.
- *  @author Enrique Javier Villar Cea
  *  @see RequestParam
+ *  @author Enrique Javier Villar Cea
  */
 @Target(PARAMETER)
 @Retention(RUNTIME)

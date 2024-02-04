@@ -2,11 +2,12 @@ package vortex.http;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URISyntaxException;
-
 
 import vortex.annotate.annotations.HttpMethod;
 import vortex.annotate.exceptions.UriException;
+import vortex.annotate.manager.Storage;
 import vortex.http.elements.ExchangeHttp;
 import vortex.http.elements.HttpStatus;
 import vortex.http.elements.Request;
@@ -24,18 +25,13 @@ import com.sun.net.httpserver.HttpServer;
 
 public class Handler implements HttpHandler {
 
-	private HttpServer server;
-
-	public Handler(HttpServer server) {
-		this.server = server;
-	}
-
 	@Override
 	public void handle(HttpExchange request) throws IOException {
-		ExchangeHttp exchange = new ExchangeHttp();
+		var exchange = new ExchangeHttp();
 		Object responseBody = null;
 		try {
 			checkMethod(request.getRequestMethod());
+
 			exchange = new ExchangeHttp(createRequest(request));
 			responseBody = RequestManager.getInstance().handle(exchange);
 		} catch (InstantiationException | IllegalAccessException
@@ -43,12 +39,15 @@ public class Handler implements HttpHandler {
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
 			System.out.println(e.getMessage());
+			System.out.println(e.getTargetException());
 			exchange.setResponse(
 					(ResponseStatusException) e.getTargetException());
 		} catch (NoSuchMethodException | SecurityException | IOException
 				| BodyException | ParameterSintaxException
-				| RequestFormatException 
-				| UriException | URISyntaxException e) {
+				| RequestFormatException | UriException
+				| URISyntaxException e) {
+			exchange.setResponse(
+					new ResponseStatus<String>(HttpStatus.NOT_FOUND, null));
 			e.printStackTrace();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -67,17 +66,19 @@ public class Handler implements HttpHandler {
 	}
 	private static void createResponse(HttpExchange request, Response response)
 			throws IOException {
-		response.getHeaders().forEach((name, value) -> {
-			request.getResponseHeaders().add(name, String.valueOf(value));
-		});
+		response.getHeaders().forEach((name, value) -> request
+				.getResponseHeaders().add(name, String.valueOf(value)));
+
 		request.sendResponseHeaders(response.getStatus().value(), 0);
-		request.getResponseBody()
-				.write(MappingUtils.writeValueAsBytes(response.getBody()));
+		if (response.getBody() != null) {
+			request.getResponseBody()
+					.write(MappingUtils.writeValueAsBytes(response.getBody()));
+		}
 	}
 
 	private static Request createRequest(HttpExchange exchange)
 			throws URISyntaxException {
-		Request request = new Request(exchange.getRequestURI(),
+		var request = new Request(exchange.getRequestURI(),
 				exchange.getRequestMethod());
 		exchange.getRequestHeaders().forEach(request::addHeader);
 		request.setBody(exchange.getRequestBody());
@@ -85,14 +86,14 @@ public class Handler implements HttpHandler {
 		return request;
 	}
 	private static void checkMethod(String method) throws Exception {
-		boolean valid = false;
+		var valid = false;
 		for (HttpMethod http : HttpMethod.values()) {
 			if (http.name().equals(method)) {
 				valid = true;
 			}
 		}
 		if (!valid) {
-			throw new Exception(
+			throw new NoSuchMethodException(
 					String.format("HttpMethod %s not implemented yet", method));
 		}
 	}
