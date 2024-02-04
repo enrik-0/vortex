@@ -157,7 +157,7 @@
 				<configuration>
 
 					<compilerArgument>-Xnocyclecheck</compilerArgument>
-
+	
 
 					<source>8</source>
 
@@ -174,13 +174,8 @@
 	<modules>
 
 		<module>http</module>
-
 		<module>annotate</module>
-
-		<module>vortex-maven-plugin</module>
-
 		<module>test</module>
-
 		<module>server</module>
 
 	</modules>
