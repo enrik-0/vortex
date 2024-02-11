@@ -26,6 +26,7 @@ import com.sun.net.httpserver.HttpServer;
 
 public class Handler implements HttpHandler {
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void handle(HttpExchange request) throws IOException {
 		var exchange = new ExchangeHttp();

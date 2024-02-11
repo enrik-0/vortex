@@ -113,7 +113,7 @@ public class ResponseStatus<T> implements Response {
 	 * @return boolean
 	 */
 	public static boolean isResponse(Object object) {
-		return object != null && object.getClass() == ResponseStatus.class;
+		return object instanceof ResponseStatus<?>;
 	}
 
 }
