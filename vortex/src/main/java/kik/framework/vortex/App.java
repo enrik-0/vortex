@@ -1,13 +1,16 @@
 
 package kik.framework.vortex;
 
-import kik.framework.vortex.annotations.Controller;
-import kik.framework.vortex.manager.AnnotationManager;
+import vortex.annotate.annotations.Controller;
+import vortex.annotate.annotations.Launcher;
+import vortex.annotate.annotations.VortexApplication;
+import vortex.annotate.manager.AnnotationManager;
 
 /**
  * Hello world!
  *
  */
+@VortexApplication
 @Controller
 public class App {
 	/**
