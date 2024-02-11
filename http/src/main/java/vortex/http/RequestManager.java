@@ -1,6 +1,5 @@
 package vortex.http;
 import java.io.IOException;
-import com.sun.net.httpserver.HttpExchange;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

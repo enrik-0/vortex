@@ -191,7 +191,7 @@ public class RequestBuilder {
 
 	private static Response createResponse(HttpURLConnection connection,
 			InputStream input) throws IOException {
-		Response response = new ResponseStatus(
+		Response response = new ResponseStatus<Object>(
 				getResponseBody(connection, input));
 		response.setStatus(HttpStatus.resolve(connection.getResponseCode()));
 		connection.getHeaderFields().forEach(response::setHeader);

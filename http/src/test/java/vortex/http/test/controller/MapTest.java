@@ -32,7 +32,7 @@ public class MapTest {
 	@PostMapping("/stringResponse")
 	public ResponseStatus<Map<String, String>> stringResponse(
 			@RequestBody Map<String, String> data) {
-		return new ResponseStatus(HttpStatus.CREATED, data);
+		return new ResponseStatus<Map<String, String>>(HttpStatus.CREATED, data);
 	}
 	@PostMapping("/boolean")
 	public Map<String, Boolean> bool(@RequestBody Map<String, Boolean> data) {
@@ -41,7 +41,7 @@ public class MapTest {
 	@PostMapping("/booleanResponse")
 	public ResponseStatus<Map<String, Boolean>> boolResponse(
 			@RequestBody Map<String, Boolean> data) {
-		return new ResponseStatus(HttpStatus.CREATED, data);
+		return new ResponseStatus<Map<String, Boolean>>(HttpStatus.CREATED, data);
 	}
 	@PostMapping("/mix")
 	public Map<String, Object> mix(@RequestBody Map<String, Object> data) {
@@ -50,7 +50,7 @@ public class MapTest {
 	@PostMapping("/mixResponse")
 	public ResponseStatus<Map<String, Object>> mixResponse(
 			@RequestBody Map<String, Object> data) {
-		return new ResponseStatus<>(HttpStatus.CREATED, data);
+		return new ResponseStatus<Map<String, Object>>(HttpStatus.CREATED, data);
 	}
 
 	@PostMapping("/maps")
@@ -60,6 +60,6 @@ public class MapTest {
 	@PostMapping("/mapsResponse")
 	public ResponseStatus<Map<String, Object>> mapsResponse(
 			@RequestBody Map<String, Object> data) {
-		return new ResponseStatus<>(HttpStatus.CREATED, data);
+		return new ResponseStatus<Map<String, Object>>(HttpStatus.CREATED, data);
 	}
 }

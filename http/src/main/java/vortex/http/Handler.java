@@ -56,11 +56,11 @@ public class Handler implements HttpHandler {
 		}
 		if (exchange.getResponse() == null
 				&& ResponseStatus.isResponse(responseBody)) {
-			exchange.setResponse((ResponseStatus) responseBody);
+			exchange.setResponse((ResponseStatus<Object>) responseBody);
 		}
 		if (exchange.getResponse() == null) {
 			exchange.setResponse(
-					new ResponseStatus(HttpStatus.OK, responseBody));
+					new ResponseStatus<Object>(HttpStatus.OK, responseBody));
 		}
 		createResponse(request, exchange.getResponse());
 		request.close();

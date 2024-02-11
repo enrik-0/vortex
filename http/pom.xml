@@ -6,7 +6,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>kik.framework.vortex</groupId>
 	<artifactId>http</artifactId>
-	<version>0.5.1</version>
+	<version>0.5.2</version>
 	<name>http</name>
 	<url>http://maven.apache.org</url>
 	<properties>
@@ -57,7 +57,7 @@
 		<dependency>
 			<groupId>kik.framework.vortex</groupId>
 			<artifactId>annotate</artifactId>
-			<version>0.4.1</version>
+			<version>0.4.2</version>
 		</dependency>
 
 

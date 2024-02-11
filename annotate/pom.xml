@@ -7,7 +7,7 @@
 
 	<groupId>kik.framework.vortex</groupId>
 	<artifactId>annotate</artifactId>
-	<version>0.4.1</version>
+	<version>0.4.2</version>
 	<name>annotate</name>
 	<url>http://maven.apache.org</url>
 	<properties>

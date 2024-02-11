@@ -74,12 +74,13 @@ public final class Storage {
 
 	public Method getMethod(HttpMethod method, String uri) throws UriException {
 		try {
-		return (Method) ((HashMap<HttpMethod, Object>) urls.get(method).stream()
-				.filter(map -> {
-					return map.get("uri").equals(uri);
-				}).toArray()[0]).get("call");
-		}catch(ArrayIndexOutOfBoundsException e) {
-			throw new UriException(String.format("the uri %s dosent exists", uri));		}
+			return (Method) urls.get(method).stream().filter(map -> map.get("uri").equals(uri))
+					.toList().get(0).get("call");
+
+		} catch (ArrayIndexOutOfBoundsException e) {
+			throw new UriException(
+					String.format("the uri %s dosent exists", uri));
+		}
 	}
 
 	private boolean isMethod(HttpMethod method, String uri) {
