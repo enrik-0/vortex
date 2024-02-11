@@ -172,7 +172,6 @@
 		<module>http</module>
 		<module>annotate</module>
 		<module>test</module>
-		<module>server</module>
 
 	</modules>
 
