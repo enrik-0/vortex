@@ -191,7 +191,7 @@ public class RequestBuilder {
 
 	private static Response createResponse(HttpURLConnection connection,
 			InputStream input) throws IOException {
-		Response response = new ResponseStatus(
+		Response response = new ResponseStatus<Object>(
 				getResponseBody(connection, input));
 		response.setStatus(HttpStatus.resolve(connection.getResponseCode()));
 		connection.getHeaderFields().forEach(response::setHeader);
@@ -205,7 +205,9 @@ public class RequestBuilder {
 		if (body != null) {
 			var bytes = MappingUtils.writeValueAsBytes(body);
 			ObjectMapper mapper = new ObjectMapper();
+
 			bytes = mapper.writeValueAsString(body).getBytes();
+			bytes = mapper.writeValueAsBytes(body);
 
 			try (OutputStream os = connection.getOutputStream()) {
 				os.write(bytes, 0, bytes.length);

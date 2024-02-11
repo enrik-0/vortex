@@ -4,17 +4,12 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.InetSocketAddress;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import com.sun.net.httpserver.HttpServer;
-
-import vortex.annotate.manager.AnnotationManager;
 
 public final class ServerHttp {
 
 	private static byte DEFAULT_PORT = 80;
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(ServerHttp.class);
+
 
 	private static HttpServer server;
 
@@ -49,7 +44,6 @@ public final class ServerHttp {
 			throws IOException, InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException {
-		AnnotationManager.getInstance();
 		server = HttpServer.create();
 		server.bind(new InetSocketAddress(port), 0);
 		server.createContext("/", handler.getConstructor().newInstance());

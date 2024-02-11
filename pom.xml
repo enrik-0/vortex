@@ -116,13 +116,6 @@
 			<scope>test</scope>
 
 		</dependency>
-
-		<dependency>
-			<groupId>kik.framework.vortex</groupId>
-			<artifactId>annotate</artifactId>
-			<version>0.4.1</version>
-		</dependency>
-
 	</dependencies>
 
 	<build>
