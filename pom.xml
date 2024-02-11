@@ -155,12 +155,15 @@
 				<version>3.1</version>
 
 				<configuration>
-
-					<compilerArgument>-Xnocyclecheck</compilerArgument>
-	
-
+					<compilerArguments>
+                    <verbose/>
+                    <showWarnings>true</showWarnings>
+                    <showDeprecation>true</showDeprecation>
+                    <compilerArgs>
+                        <arg>-Xlint:unchecked</arg>
+                    </compilerArgs>
+                </compilerArguments>
 					<source>8</source>
-
 					<target>8</target>
 
 				</configuration>
