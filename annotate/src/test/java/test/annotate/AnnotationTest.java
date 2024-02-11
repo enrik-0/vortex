@@ -1,4 +1,4 @@
-package vortex.annotate;
+package test.annotate;
 
 import static org.junit.Assert.assertEquals;
 
