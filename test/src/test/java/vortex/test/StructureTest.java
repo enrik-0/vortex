@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import vortex.annotate.annotations.HttpMethod;
+import vortex.annotate.constants.HttpMethod;
 import vortex.http.elements.Response;
 import vortex.http.utils.Asserttions;
 import vortex.http.utils.Regex;
@@ -400,7 +400,7 @@ class StructureTest {
 	
 	private String numberType(long number) {
 		String type = "";
-		type = Regex.isFLOATING("" + number)?"float":type;
+		type = Regex.isFloating("" + number)?"float":type;
 		type = Asserttions.inrange(number, Long.MAX_VALUE, Long.MIN_VALUE)?"long":type;
 		type = Asserttions.inrange(number, Integer.MAX_VALUE, Integer.MIN_VALUE)?"integer":type;
 		type = Asserttions.inrange(number, Byte.MAX_VALUE, Byte.MIN_VALUE)?"byte":type;

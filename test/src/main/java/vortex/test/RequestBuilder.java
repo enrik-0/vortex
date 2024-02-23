@@ -18,7 +18,7 @@ import java.util.Map;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import vortex.annotate.annotations.HttpMethod;
+import vortex.annotate.constants.HttpMethod;
 import vortex.http.elements.HttpStatus;
 import vortex.http.elements.Response;
 import vortex.http.elements.ResponseStatus;
@@ -277,7 +277,7 @@ public class RequestBuilder {
 				body = temp;
 			}
 		} else {
-			if (Regex.isFLOATING(buffer)) {
+			if (Regex.isFloating(buffer)) {
 				body = MappingUtils.map(content, Double.class);
 			}
 		}

@@ -1,6 +1,7 @@
 package vortex.http;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Executable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -10,11 +11,11 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import vortex.annotate.annotations.HttpMethod;
-import vortex.annotate.annotations.RequestBody;
-import vortex.annotate.annotations.RequestParam;
+import vortex.annotate.constants.HttpMethod;
 import vortex.annotate.exceptions.UriException;
 import vortex.annotate.manager.Storage;
+import vortex.annotate.method.parameter.RequestBody;
+import vortex.annotate.method.parameter.RequestParam;
 import vortex.http.elements.ExchangeHttp;
 import vortex.http.elements.Param;
 import vortex.http.exceptions.BodyException;
@@ -152,7 +153,7 @@ public final class RequestManager {
 			queryParams = request.getRequestURI().getQuery().split("&");
 			for (String queryParam : queryParams) {
 				paramElements = queryParam.split("=");
-				for (int i = 0; i < paramElements.length; i += 2) {
+				for (var i = 0; i < paramElements.length; i += 2) {
 					parameter = new Param(paramElements[i],
 							paramElements[i + 1]);
 					parameters.add(parameter);
@@ -163,7 +164,7 @@ public final class RequestManager {
 		return parameters;
 
 	}
-	public static Class<?> getBodyClass(Method method, HttpMethod http)
+	public static Class<?> getBodyClass(Executable method, HttpMethod http)
 			throws BodyException, RequestFormatException {
 
 		if (http == HttpMethod.GET) {

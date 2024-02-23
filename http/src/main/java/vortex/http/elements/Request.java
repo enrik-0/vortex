@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import vortex.annotate.annotations.HttpMethod;
+import vortex.annotate.constants.HttpMethod;
 
 public class Request {
 
@@ -50,7 +50,7 @@ public class Request {
 
 	}
 	private void initialize(URI uri, String method, Map<String, List<String>> headers)
-			throws URISyntaxException {
+			{
 		this.uri = uri;
 		this.method = HttpMethod.valueOf(method);
 		this.headers = new HashMap<>();

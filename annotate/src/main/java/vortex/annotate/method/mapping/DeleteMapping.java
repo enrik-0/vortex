@@ -1,5 +1,5 @@
 
-package vortex.annotate.annotations;
+package vortex.annotate.method.mapping;
 
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
@@ -8,24 +8,21 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-/**
- * 
+/**  
  * Identifies a method that handles the {@linkplain #value}
- * @see DeleteMapping
+ * @see GetMapping
  * @see PostMapping
  * @see PutMapping
- * @author Enrique Javier Villar Cea
- * 
+ * @Author: Enrique Javier Villar Cea
  */
 @Target(METHOD)
 @Retention(RUNTIME)
 @Documented
-public @interface GetMapping {
+public @interface DeleteMapping {
 
 	/**
-	 * Uri to handle with <b>GET</b>  <br>
-	 * Default value <core>"/"</core>
-	 * <h1>example:</h1> <code> @GetMapping("/uri")</code>
+	 * Uri to handle with <b>DELETE</b> <br>
+	 * <h1>example:</h1> <code> @DeleteMapping("/uri")</code>
 	 */
-	String value() default "/";
+	String value();
 }

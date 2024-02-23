@@ -5,7 +5,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
-import vortex.annotate.annotations.HttpMethod;
+import vortex.annotate.constants.HttpMethod;
 public class ExchangeHttp {
 	
 	private Request request;

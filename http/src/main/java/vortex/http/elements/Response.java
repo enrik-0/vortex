@@ -15,15 +15,15 @@ public interface Response{
 	 * 
 	 * @param state {@link HttpStatus}
 	 */
-	void setStatus(HttpStatus state);
+	Response setStatus(HttpStatus state);
 	/**
 	 * @return Map(String, List(String))
 	 */
 	Map<String, List<String>> getHeaders();
-	void setHeader(String name, List<String> value);
+	Response setHeader(String name, List<String> value);
+	Response setHeader(String name, String value);
 	/**
 	 * @return T or null 
 	 */
 	Object getBody();
-
 }

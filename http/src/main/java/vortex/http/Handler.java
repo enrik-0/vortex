@@ -2,13 +2,11 @@ package vortex.http;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.URISyntaxException;
 import java.util.List;
 
-import vortex.annotate.annotations.HttpMethod;
+import vortex.annotate.constants.HttpMethod;
 import vortex.annotate.exceptions.UriException;
-import vortex.annotate.manager.Storage;
 import vortex.http.elements.ExchangeHttp;
 import vortex.http.elements.HttpStatus;
 import vortex.http.elements.Request;
@@ -18,11 +16,10 @@ import vortex.http.elements.ResponseStatusException;
 import vortex.http.exceptions.BodyException;
 import vortex.http.exceptions.ParameterSintaxException;
 import vortex.http.exceptions.RequestFormatException;
+import vortex.http.utils.Asserttions;
 import vortex.http.utils.MappingUtils;
-
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpServer;
 
 public class Handler implements HttpHandler {
 
@@ -32,7 +29,8 @@ public class Handler implements HttpHandler {
 		var exchange = new ExchangeHttp();
 		Object responseBody = null;
 		try {
-			checkMethod(request.getRequestMethod());
+			Asserttions.checkMethod(request.getRequestMethod(), 
+					() -> String.format("HttpMethod %s not implemented yet", request.getRequestMethod()));
 
 			exchange = new ExchangeHttp(createRequest(request));
 			responseBody = RequestManager.getInstance().handle(exchange);
@@ -75,7 +73,8 @@ public class Handler implements HttpHandler {
 
 		});
 
-		request.sendResponseHeaders(response.getStatus().value(), 0);
+		
+		request.sendResponseHeaders(response.getStatus().value(), response.getBody() == null?-1:0);
 		if (response.getBody() != null) {
 			request.getResponseBody()
 					.write(MappingUtils.writeValueAsBytes(response.getBody()));
@@ -91,16 +90,5 @@ public class Handler implements HttpHandler {
 
 		return request;
 	}
-	private static void checkMethod(String method) throws Exception {
-		var valid = false;
-		for (HttpMethod http : HttpMethod.values()) {
-			if (http.name().equals(method)) {
-				valid = true;
-			}
-		}
-		if (!valid) {
-			throw new NoSuchMethodException(
-					String.format("HttpMethod %s not implemented yet", method));
-		}
-	}
+	
 }

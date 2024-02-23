@@ -4,11 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import vortex.annotate.annotations.HttpMethod;
 import vortex.annotate.annotations.Nullable;
 import vortex.http.utils.Asserttions;
-import vortex.http.utils.MappingUtils;
 
 /**
  * @autor Enrique Javier Villar Cea
@@ -20,6 +17,10 @@ public class ResponseStatus<T> implements Response {
 	private Map<String, List<String>> headers;
 
 	public ResponseStatus() {
+		headers = new HashMap<>();
+	}
+	public ResponseStatus(HttpStatus status) {
+		state = status;
 		headers = new HashMap<>();
 	}
 	/**
@@ -52,15 +53,16 @@ public class ResponseStatus<T> implements Response {
 		return state;
 	}
 
-	public void setStatus(HttpStatus state) {
+	public ResponseStatus<T> setStatus(HttpStatus state) {
 		this.state = state;
+		return this;
 	}
 
 	public T getBody() {
 		return body;
 	}
 	/**
-	 * if headers dont have a <b>content-type</b> header <br>
+	 * if headers don't have a <b>content-type</b> header <br>
 	 * the header is added if <b> body is primitive </b> as <b> text/plain</b>
 	 * <br>
 	 * if is not <b> primitive</b> is added as <b>application/json</b>
@@ -74,7 +76,10 @@ public class ResponseStatus<T> implements Response {
 		this.body = body;
 		Asserttions.setContentHeader(contentHeader, body,
 				headers.get(contentType));
-		setHeader(contentType, contentHeader);
+		if(!contentHeader.isEmpty()) {
+			setHeader(contentType, contentHeader);
+			
+		}
 	}
 
 	/**
@@ -93,16 +98,19 @@ public class ResponseStatus<T> implements Response {
 	 * @param value
 	 *            List(String)
 	 */
-	public void setHeader(String name, List<String> value) {
+	public ResponseStatus<T> setHeader(String name, List<String> value) {
 		if (name != null) {
 			this.headers.put(name, value);
 		}
+		return this;
 	}
 	
-	public void setHeader(String name, String value) {
+	@Override
+	public ResponseStatus<T> setHeader(String name, String value) {
 		var list = new ArrayList<String>();
 		list.add(value);
 		setHeader(name, list);
+		return this;
 		
 	}
 

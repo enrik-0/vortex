@@ -18,7 +18,7 @@ import java.util.Map;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import vortex.annotate.annotations.HttpMethod;
+import vortex.annotate.constants.HttpMethod;
 import vortex.http.elements.HttpStatus;
 import vortex.http.elements.Response;
 import vortex.http.elements.ResponseStatus;
@@ -179,18 +179,19 @@ public class RequestBuilder {
 			setHeaders(connection);
 			createBody(connection);
 			// connection.setConnectTimeout(this.timeout);
-
-			return createResponse(connection, connection.getInputStream());
+			Response e = createResponse(connection, connection.getInputStream());
+			return e;
 		} catch (FileNotFoundException e) {
 			return createResponse(connection, connection.getErrorStream());
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
+		} catch (IOException e) {
+			Object  content = getResponseBody(connection, connection.getErrorStream());
+			return new ResponseStatus<>(HttpStatus.resolve(connection.getResponseCode()), content);
 		}
 	}
 
 	private static Response createResponse(HttpURLConnection connection,
 			InputStream input) throws IOException {
+
 		Response response = new ResponseStatus<Object>(
 				getResponseBody(connection, input));
 		response.setStatus(HttpStatus.resolve(connection.getResponseCode()));
@@ -221,10 +222,8 @@ public class RequestBuilder {
 	private static Object getResponseBody(HttpURLConnection connection,
 			InputStream inputStream) throws IOException {
 		try {
-
 			Object mapped = null;
 			var byteArrayOutputStream = copyInputStream(inputStream);
-
 			String contentHeader = connection.getHeaderField("Content-type");
 			if ("application/json".equals(contentHeader)) {
 
@@ -277,7 +276,7 @@ public class RequestBuilder {
 				body = temp;
 			}
 		} else {
-			if (Regex.isFLOATING(buffer)) {
+			if (Regex.isFloating(buffer)) {
 				body = MappingUtils.map(content, Double.class);
 			}
 		}

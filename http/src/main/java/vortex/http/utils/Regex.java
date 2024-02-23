@@ -13,7 +13,7 @@ public final class Regex {
 	public static boolean isIntegerOrLong(String value) {
 		return REAL.matcher(value).matches();
 	}
-	public static boolean isFLOATING(String value) {
+	public static boolean isFloating(String value) {
 		return FLOATING.matcher(value).matches();
 	}
 }

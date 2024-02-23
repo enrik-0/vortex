@@ -2,10 +2,10 @@ package vortex.http.test.controller;
 
 import java.util.Map;
 
-import vortex.annotate.annotations.Controller;
-import vortex.annotate.annotations.PostMapping;
-import vortex.annotate.annotations.RequestBody;
-import vortex.annotate.annotations.RequestMapping;
+import vortex.annotate.components.Controller;
+import vortex.annotate.controller.RequestMapping;
+import vortex.annotate.method.mapping.PostMapping;
+import vortex.annotate.method.parameter.RequestBody;
 import vortex.http.elements.HttpStatus;
 import vortex.http.elements.ResponseStatus;
 

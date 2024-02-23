@@ -1,6 +1,6 @@
 package kik.framework.vortex.assets.entity;
 
-import vortex.annotate.annotations.Entity;
+import vortex.annotate.components.Entity;
 
 @Entity
 public class User {

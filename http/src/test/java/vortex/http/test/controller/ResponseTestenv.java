@@ -1,8 +1,8 @@
 package vortex.http.test.controller;
 
-import vortex.annotate.annotations.Controller;
-import vortex.annotate.annotations.GetMapping;
-import vortex.annotate.annotations.RequestMapping;
+import vortex.annotate.components.Controller;
+import vortex.annotate.controller.RequestMapping;
+import vortex.annotate.method.mapping.GetMapping;
 import vortex.http.elements.ResponseStatus;
 
 @Controller

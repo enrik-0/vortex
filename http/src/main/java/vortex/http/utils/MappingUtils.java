@@ -37,14 +37,10 @@ public final class MappingUtils {
 		
 		return objectMapper.writeValueAsBytes(body);
 	}
-	public static boolean isPrimitive(Object body) {
-		return isPrimitive(body.getClass(), Integer.class, Double.class,
-				Boolean.class, Character.class, Byte.class, Short.class,
-				Long.class, Float.class, String.class) || body.getClass().isPrimitive();
-	}
+	
 	public static String getInputContent(InputStream stream) {
 		String line;
-		StringBuilder builder = new StringBuilder();
+		var builder = new StringBuilder();
 		BufferedReader reader;
 		try {
 			reader = new BufferedReader(new InputStreamReader(stream));
@@ -56,14 +52,6 @@ public final class MappingUtils {
 		return builder.toString();
 	}
 
-	private static boolean isPrimitive(Class<?> bodyClass,
-			Class<?>... classes) {
-		for (Class<?> clazz : classes) {
-			if (bodyClass == clazz) {
-				return true;
-			}
-		}
-		return false;
-	}
+	
 
 }

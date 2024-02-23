@@ -1,8 +1,8 @@
 package vortex.http.elements;
 
 public class Param {
-	String name;
-	Object value;
+	private String name;
+	private Object value;
 
 	public Param(String name, Object value) {
 		this.name = name;

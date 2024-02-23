@@ -1,5 +1,6 @@
 package vortex.http.elements;
 import vortex.annotate.annotations.Nullable;
+import vortex.http.utils.Asserttions;
 /**
  * Enumeration of HTTP status series.
  * <p>
@@ -37,11 +38,11 @@ public enum Series {
 	 *             if this enum has no corresponding constant
 	 */
 	public static Series valueOf(int statusCode) {
-		Series series = resolve(statusCode);
-		if (series == null) {
-			throw new IllegalArgumentException(
-					"No matching constant for [" + statusCode + "]");
-		}
+		var series = resolve(statusCode);
+		Asserttions.isFalse(series == null, () -> 
+			String.format("No matching constant for [%r]", statusCode)
+		);
+
 		return series;
 	}
 

@@ -3,15 +3,15 @@ package kik.framework.vortex.assets.controller;
 import java.util.Map;
 
 import vortex.annotate.annotations.Autowired;
-import vortex.annotate.annotations.Controller;
-import vortex.annotate.annotations.CrossOrigin;
-import vortex.annotate.annotations.DeleteMapping;
-import vortex.annotate.annotations.GetMapping;
-import vortex.annotate.annotations.PostMapping;
-import vortex.annotate.annotations.PutMapping;
-import vortex.annotate.annotations.RequestBody;
-import vortex.annotate.annotations.RequestMapping;
-import vortex.annotate.annotations.RequestParam;
+import vortex.annotate.components.Controller;
+import vortex.annotate.controller.CrossOrigin;
+import vortex.annotate.controller.RequestMapping;
+import vortex.annotate.method.mapping.DeleteMapping;
+import vortex.annotate.method.mapping.GetMapping;
+import vortex.annotate.method.mapping.PostMapping;
+import vortex.annotate.method.mapping.PutMapping;
+import vortex.annotate.method.parameter.RequestBody;
+import vortex.annotate.method.parameter.RequestParam;
 import kik.framework.vortex.assets.service.TestService;
 
 @Controller

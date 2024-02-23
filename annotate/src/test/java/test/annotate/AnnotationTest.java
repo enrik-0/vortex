@@ -8,12 +8,12 @@ import java.lang.reflect.Method;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import vortex.annotate.annotations.HttpMethod;
-import vortex.annotate.annotations.RequestBody;
-import vortex.annotate.annotations.RequestParam;
+import vortex.annotate.constants.HttpMethod;
 import vortex.annotate.exceptions.UriException;
 import vortex.annotate.manager.AnnotationManager;
 import vortex.annotate.manager.Storage;
+import vortex.annotate.method.parameter.RequestBody;
+import vortex.annotate.method.parameter.RequestParam;
 class AnnotationTest {
 
 	private static final HttpMethod DELETE = HttpMethod.DELETE;

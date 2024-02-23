@@ -9,12 +9,12 @@ import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import vortex.annotate.annotations.Controller;
-import vortex.annotate.annotations.Entity;
-import vortex.annotate.annotations.HttpMethod;
-import vortex.annotate.annotations.RequestMapping;
-import vortex.annotate.annotations.Service;
 import vortex.annotate.annotations.VortexApplication;
+import vortex.annotate.components.Controller;
+import vortex.annotate.components.Entity;
+import vortex.annotate.components.Service;
+import vortex.annotate.constants.HttpMethod;
+import vortex.annotate.controller.RequestMapping;
 
 /**
  * @Author: Enrique Javier Villar Cea

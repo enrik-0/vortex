@@ -12,8 +12,8 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import vortex.annotate.annotations.Controller;
-import vortex.annotate.annotations.HttpMethod;
+import vortex.annotate.components.Controller;
+import vortex.annotate.constants.HttpMethod;
 import vortex.annotate.exceptions.UriException;
 
 /**

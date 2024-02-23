@@ -1,4 +1,4 @@
-package vortex.annotate.annotations;
+package vortex.annotate.constants;
 
 public enum HttpMethod {
 
