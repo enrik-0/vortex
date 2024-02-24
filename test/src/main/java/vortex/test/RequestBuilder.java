@@ -19,9 +19,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import vortex.annotate.constants.HttpMethod;
-import vortex.http.elements.HttpStatus;
-import vortex.http.elements.Response;
-import vortex.http.elements.ResponseStatus;
+import vortex.http.exchange.Response;
+import vortex.http.exchange.ResponseStatus;
+import vortex.http.status.HttpStatus;
 import vortex.http.utils.Asserttions;
 import vortex.http.utils.MappingUtils;
 import vortex.http.utils.Regex;

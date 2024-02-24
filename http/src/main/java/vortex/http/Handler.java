@@ -7,15 +7,15 @@ import java.util.List;
 
 import vortex.annotate.constants.HttpMethod;
 import vortex.annotate.exceptions.UriException;
-import vortex.http.elements.ExchangeHttp;
-import vortex.http.elements.HttpStatus;
-import vortex.http.elements.Request;
-import vortex.http.elements.Response;
-import vortex.http.elements.ResponseStatus;
-import vortex.http.elements.ResponseStatusException;
 import vortex.http.exceptions.BodyException;
 import vortex.http.exceptions.ParameterSintaxException;
 import vortex.http.exceptions.RequestFormatException;
+import vortex.http.exchange.ExchangeHttp;
+import vortex.http.exchange.Request;
+import vortex.http.exchange.Response;
+import vortex.http.exchange.ResponseStatus;
+import vortex.http.exchange.ResponseStatusException;
+import vortex.http.status.HttpStatus;
 import vortex.http.utils.Asserttions;
 import vortex.http.utils.MappingUtils;
 import com.sun.net.httpserver.HttpHandler;
@@ -46,8 +46,9 @@ public class Handler implements HttpHandler {
 				| BodyException | ParameterSintaxException
 				| RequestFormatException | UriException
 				| URISyntaxException e) {
-			exchange.setResponse(
-					new ResponseStatus<String>(HttpStatus.NOT_FOUND, null));
+			HttpStatus w = HttpStatus.NOT_FOUND;
+			ResponseStatus<String> r = new ResponseStatus<String>(w, null);
+			exchange.setResponse(r);
 			e.printStackTrace();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

@@ -1,4 +1,4 @@
-package vortex.http.elements;
+package vortex.http.exchange;
 
 import java.io.InputStream;
 import java.net.URI;

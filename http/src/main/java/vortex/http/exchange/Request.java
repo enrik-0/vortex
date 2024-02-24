@@ -1,4 +1,4 @@
-package vortex.http.elements;
+package vortex.http.exchange;
 
 import java.io.InputStream;
 import java.net.URI;
@@ -37,51 +37,62 @@ public class Request {
 	private void initialize(URI uri, String method) throws URISyntaxException {
 		initialize(uri, method, new HashMap<>());
 	}
-	public void addHeader(String name, List<String> value) {
-		headers.put(name, value);
 
-	}
 	private void initialize(String uri, String method,
 			Map<String, List<String>> headers) throws URISyntaxException {
-		this.uri = new URI(uri);
-		this.method = HttpMethod.valueOf(method);
-		this.headers = new HashMap<>();
-		headers.forEach(this::addHeader);
-
+		initialize(new URI(uri), method, headers);
 	}
-	private void initialize(URI uri, String method, Map<String, List<String>> headers)
-			{
+	private void initialize(URI uri, String method,
+			Map<String, List<String>> headers) {
 		this.uri = uri;
 		this.method = HttpMethod.valueOf(method);
 		this.headers = new HashMap<>();
 		headers.forEach(this::addHeader);
 
 	}
-	
+	public Request addHeader(String name, List<String> value) {
+		headers.put(name, value);
+		return this;
+
+	}
 	public InputStream getBody() {
 		return body;
+
 	}
-	public void setBody(InputStream body) {
+	public Request setBody(InputStream body) {
 		this.body = body;
-		
+		return this;
+
 	}
 	public URI getUri() {
 		return uri;
 	}
-	public void setUri(URI uri) {
+	public Request setUri(String uri) throws URISyntaxException {
+		return setUri(new URI(uri));
+	}
+	public Request setUri(URI uri) {
 		this.uri = uri;
+		return this;
 	}
 	public Map<String, List<String>> getHeaders() {
-		return headers;
+		var copy = new HashMap<String, List<String>>();
+		headers.forEach(copy::put);
+		return copy;
 	}
-	public void setHeaders(Map<String, List<String>> headers) {
-		this.headers = headers;
+	public Request setHeaders(Map<String, List<String>> headers) {
+		headers.forEach(this.headers::put);
+		return this;
 	}
 	public HttpMethod getMethod() {
 		return method;
 	}
-	public void setMethod(HttpMethod method) {
+	public Request setMethod(String method) {
+		
+		return setMethod(HttpMethod.valueOf(method));
+	}
+	public Request setMethod(HttpMethod method) {
 		this.method = method;
+		return this;
 	}
 
 }
