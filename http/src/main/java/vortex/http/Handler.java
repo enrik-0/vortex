@@ -46,8 +46,9 @@ public class Handler implements HttpHandler {
 				| BodyException | ParameterSintaxException
 				| RequestFormatException | UriException
 				| URISyntaxException e) {
-			exchange.setResponse(
-					new ResponseStatus<String>(HttpStatus.NOT_FOUND, null));
+			HttpStatus w = HttpStatus.NOT_FOUND;
+			ResponseStatus<String> r = new ResponseStatus<String>(w, null);
+			exchange.setResponse(r);
 			e.printStackTrace();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

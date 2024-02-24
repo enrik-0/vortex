@@ -42,9 +42,6 @@ class RequestTest {
 
 	@Test
 	void testUriNonExists() throws IOException, AmbiguousMethodException {
-		for(HttpStatus s : HttpStatus.values()) {
-			System.out.println(s.name());
-		}
 		Response response = new RequestBuilder().post(HOST + "/buenas").perform();
 		assertEquals(HttpStatus.NOT_FOUND, response.getStatus());
 

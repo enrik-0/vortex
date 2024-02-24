@@ -16,7 +16,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import vortex.annotate.constants.HttpMethod;
-import vortex.http.elements.Response;
+import vortex.http.exchange.Response;
 import vortex.http.utils.Asserttions;
 import vortex.http.utils.Regex;
 import vortex.test.exception.AmbiguousMethodException;

@@ -17,7 +17,7 @@ public enum Series {
 	private final int value;
 
 	Series(int value) {
-		Asserttions.inrange(value,Series.values().length , 1);
+		Asserttions.inrange(value, 5, 1);
 		this.value = value;
 	}
 

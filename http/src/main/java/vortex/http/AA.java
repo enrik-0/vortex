@@ -12,7 +12,6 @@ public class AA {
 	}
 
 	public static void main(String[] args) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, IOException {
-		Series.valueOf(100000);
 		ServerHttp.runServer(8080);
 
 	}
