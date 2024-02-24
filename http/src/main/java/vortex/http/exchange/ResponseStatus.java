@@ -1,10 +1,13 @@
-package vortex.http.elements;
+package vortex.http.exchange;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javassist.bytecode.stackmap.TypeData.UninitThis;
 import vortex.annotate.annotations.Nullable;
+import vortex.http.status.HttpStatus;
 import vortex.http.utils.Asserttions;
 
 /**
@@ -70,7 +73,7 @@ public class ResponseStatus<T> implements Response {
 	 * @param body
 	 *            T
 	 */
-	public void setResponseBody(T body) {
+	public ResponseStatus<T> setResponseBody(T body) {
 		var contentType = "Content-type";
 		List<String> contentHeader = new ArrayList<>();
 		this.body = body;
@@ -80,6 +83,7 @@ public class ResponseStatus<T> implements Response {
 			setHeader(contentType, contentHeader);
 			
 		}
+		return this;
 	}
 
 	/**
@@ -98,6 +102,7 @@ public class ResponseStatus<T> implements Response {
 	 * @param value
 	 *            List(String)
 	 */
+	@Override
 	public ResponseStatus<T> setHeader(String name, List<String> value) {
 		if (name != null) {
 			this.headers.put(name, value);

@@ -3,7 +3,7 @@ package vortex.http.test.controller;
 import vortex.annotate.components.Controller;
 import vortex.annotate.controller.RequestMapping;
 import vortex.annotate.method.mapping.GetMapping;
-import vortex.http.elements.ResponseStatus;
+import vortex.http.exchange.ResponseStatus;
 
 @Controller
 @RequestMapping("/responseStatus")

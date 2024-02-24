@@ -1,13 +1,18 @@
-package vortex.http.elements;
+package vortex.http.exchange;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ResponseStatusException extends Exception implements Response {
+import vortex.http.status.HttpStatus;
+import vortex.http.utils.MappingUtils;
 
-	private static final long serialVersionUID = 1L;
+public class ResponseStatusException extends Exception implements Response{
+
+	/**
+	 * 
+	 */
 	private HttpStatus status;
 	private String body;
 	private Map<String, List<String>> headers;
@@ -28,7 +33,7 @@ public class ResponseStatusException extends Exception implements Response {
 	}
 
 	public static boolean isResponse(Object object) {
-		return object.getClass() == ResponseStatus.class;
+		return object.getClass() == ResponseStatusException.class;
 	}
 
 	public String getBody() {
@@ -58,6 +63,12 @@ public class ResponseStatusException extends Exception implements Response {
 		if (name != null) {
 			this.headers.put(name, value);
 		}
+		return this;
+	}
+	
+
+	public ResponseStatusException setBody(String body) {
+		this.body = body;
 		return this;
 	}
 

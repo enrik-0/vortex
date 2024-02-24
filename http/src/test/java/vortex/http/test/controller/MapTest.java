@@ -6,8 +6,8 @@ import vortex.annotate.components.Controller;
 import vortex.annotate.controller.RequestMapping;
 import vortex.annotate.method.mapping.PostMapping;
 import vortex.annotate.method.parameter.RequestBody;
-import vortex.http.elements.HttpStatus;
-import vortex.http.elements.ResponseStatus;
+import vortex.http.exchange.ResponseStatus;
+import vortex.http.status.HttpStatus;
 
 @Controller
 @RequestMapping("/map")
