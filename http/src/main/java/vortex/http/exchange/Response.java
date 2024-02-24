@@ -1,7 +1,9 @@
-package vortex.http.elements;
+package vortex.http.exchange;
 
 import java.util.List;
 import java.util.Map;
+
+import vortex.http.status.HttpStatus;
 /**
  * @autor Enrique Javier Villar Cea
  */

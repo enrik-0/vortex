@@ -12,8 +12,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import vortex.http.elements.HttpStatus;
-import vortex.http.elements.Response;
+import vortex.http.exchange.Response;
+import vortex.http.status.HttpStatus;
 import vortex.http.utils.MappingUtils;
 import vortex.test.Mock;
 import vortex.test.RequestBuilder;

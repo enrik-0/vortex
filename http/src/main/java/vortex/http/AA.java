@@ -3,7 +3,7 @@ package vortex.http;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
-import vortex.http.elements.Series;
+import vortex.http.status.Series;
 
 public class AA {
 

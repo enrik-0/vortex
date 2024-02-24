@@ -1,4 +1,4 @@
-package vortex.http.elements;
+package vortex.http.status;
 
 /**
  * 

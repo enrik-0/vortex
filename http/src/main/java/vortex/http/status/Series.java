@@ -1,4 +1,4 @@
-package vortex.http.elements;
+package vortex.http.status;
 import vortex.annotate.annotations.Nullable;
 import vortex.http.utils.Asserttions;
 /**
@@ -17,6 +17,7 @@ public enum Series {
 	private final int value;
 
 	Series(int value) {
+		Asserttions.inrange(value,Series.values().length , 1);
 		this.value = value;
 	}
 

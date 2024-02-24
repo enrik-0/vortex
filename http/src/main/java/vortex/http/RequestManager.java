@@ -16,11 +16,11 @@ import vortex.annotate.exceptions.UriException;
 import vortex.annotate.manager.Storage;
 import vortex.annotate.method.parameter.RequestBody;
 import vortex.annotate.method.parameter.RequestParam;
-import vortex.http.elements.ExchangeHttp;
 import vortex.http.elements.Param;
 import vortex.http.exceptions.BodyException;
 import vortex.http.exceptions.ParameterSintaxException;
 import vortex.http.exceptions.RequestFormatException;
+import vortex.http.exchange.ExchangeHttp;
 import vortex.http.utils.MappingUtils;
 
 public final class RequestManager {
@@ -129,8 +129,18 @@ public final class RequestManager {
 		}
 	}
 
+	/**
+	 * 
+	 * 
+	 * @param methodParameter
+	 * @param queryParam
+	 * @param methodParameters
+	 * @param parametersValues
+	 * @param i
+	 */
 	private static void mappParameter(Parameter methodParameter,
 			Param queryParam, Parameter[] methodParameters,
+			 
 			List<Object> parametersValues, int i) {
 		Object buffer;
 		for (Annotation e : methodParameter.getAnnotations()) {

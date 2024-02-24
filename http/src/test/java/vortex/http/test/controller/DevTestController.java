@@ -11,8 +11,8 @@ import vortex.annotate.method.mapping.PostMapping;
 import vortex.annotate.method.mapping.PutMapping;
 import vortex.annotate.method.parameter.RequestBody;
 import vortex.annotate.method.parameter.RequestParam;
-import vortex.http.elements.HttpStatus;
-import vortex.http.elements.ResponseStatus;
+import vortex.http.exchange.ResponseStatus;
+import vortex.http.status.HttpStatus;
 
 /**
  * 

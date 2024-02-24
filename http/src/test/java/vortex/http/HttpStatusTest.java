@@ -7,8 +7,8 @@ import java.io.IOException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import vortex.http.elements.HttpStatus;
-import vortex.http.elements.Response;
+import vortex.http.exchange.Response;
+import vortex.http.status.HttpStatus;
 import vortex.test.RequestBuilder;
 import vortex.test.exception.AmbiguousMethodException;
 
