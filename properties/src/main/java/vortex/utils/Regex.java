@@ -1,4 +1,4 @@
-package vortex.http.utils;
+package vortex.utils;
 
 import java.util.regex.Pattern;
 

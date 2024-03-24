@@ -1,11 +1,7 @@
-package vortex.http.utils;
+package vortex.utils;
 
 import java.util.List;
 import java.util.function.Supplier;
-
-import vortex.annotate.annotations.Nullable;
-import vortex.annotate.constants.HttpMethod;
-
 public final class Asserttions {
 
 	private Asserttions() {
@@ -22,9 +18,8 @@ public final class Asserttions {
 		}
 	}
 
-	@Nullable
-	private static String nullSafeGet(
-			@Nullable Supplier<String> messageSupplier) {
+	public static String nullSafeGet(
+			Supplier<String> messageSupplier) {
 		return (messageSupplier != null ? messageSupplier.get() : null);
 	}
 
@@ -58,16 +53,5 @@ public final class Asserttions {
 		}
 		return contentHeaders;
 	}
-	public static void checkMethod(String method, Supplier<String> message) throws NoSuchMethodException {
-		var valid = false;
-		for (HttpMethod http : HttpMethod.values()) {
-			if (http.name().equals(method)) {
-				valid = true;
-			}
-		}
-		if (!valid) {
-			throw new NoSuchMethodException(
-					nullSafeGet(message));
-		}
-	}
+
 }

@@ -4,9 +4,14 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.function.Supplier;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import vortex.annotate.constants.HttpMethod;
 import vortex.annotate.exceptions.UriException;
+import vortex.annotate.manager.Storage;
 import vortex.http.exceptions.BodyException;
 import vortex.http.exceptions.ParameterSintaxException;
 import vortex.http.exceptions.RequestFormatException;
@@ -16,21 +21,29 @@ import vortex.http.exchange.Response;
 import vortex.http.exchange.ResponseStatus;
 import vortex.http.exchange.ResponseStatusException;
 import vortex.http.status.HttpStatus;
-import vortex.http.utils.Asserttions;
-import vortex.http.utils.MappingUtils;
+import vortex.properties.exception.FormatPatternException;
+import vortex.utils.Asserttions;
+import vortex.utils.MappingUtils;
+
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpExchange;
 
 public class Handler implements HttpHandler {
 
-	@SuppressWarnings("unchecked")
+	private static final Logger LOGGER = LoggerFactory.getLogger(Handler.class);
 	@Override
 	public void handle(HttpExchange request) throws IOException {
 		var exchange = new ExchangeHttp();
 		Object responseBody = null;
 		try {
-			Asserttions.checkMethod(request.getRequestMethod(), 
+			checkMethod(request.getRequestMethod(), 
 					() -> String.format("HttpMethod %s not implemented yet", request.getRequestMethod()));
+			Storage.getInstance().getUrls().forEach((h,a) ->{
+				System.out.println("method" + h.name());
+				a.forEach(m ->{
+					System.out.println(m.get("uri"));
+				});
+			});
 
 			exchange = new ExchangeHttp(createRequest(request));
 			responseBody = RequestManager.getInstance().handle(exchange);
@@ -46,21 +59,21 @@ public class Handler implements HttpHandler {
 				| BodyException | ParameterSintaxException
 				| RequestFormatException | UriException
 				| URISyntaxException e) {
-			HttpStatus w = HttpStatus.NOT_FOUND;
-			ResponseStatus<String> r = new ResponseStatus<String>(w, null);
-			exchange.setResponse(r);
+			ResponseStatus<String> response = new ResponseStatus<>(HttpStatus.NOT_FOUND, null);
+			exchange.setResponse(response);
 			e.printStackTrace();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (FormatPatternException e) {
+			LOGGER.error(e.getMessage());
+			ResponseStatus<String> response = new ResponseStatus<>(HttpStatus.BAD_REQUEST, null);
+			exchange.setResponse(response);
 		}
 		if (exchange.getResponse() == null
-				&& ResponseStatus.isResponse(responseBody)) {
+			&& ResponseStatus.isResponse(responseBody)) {
 			exchange.setResponse((ResponseStatus<Object>) responseBody);
 		}
 		if (exchange.getResponse() == null) {
-			exchange.setResponse(
-					new ResponseStatus<Object>(HttpStatus.OK, responseBody));
+			ResponseStatus<Object> response = new ResponseStatus<>(HttpStatus.OK, responseBody);
+			exchange.setResponse(response);
 		}
 		createResponse(request, exchange.getResponse());
 		request.close();
@@ -91,5 +104,16 @@ public class Handler implements HttpHandler {
 
 		return request;
 	}
-	
+		public static void checkMethod(String method, Supplier<String> message) throws NoSuchMethodException {
+		var valid = false;
+		for (HttpMethod http : HttpMethod.values()) {
+			if (http.name().equals(method)) {
+				valid = true;
+			}
+		}
+		if (!valid) {
+			throw new NoSuchMethodException(
+					Asserttions.nullSafeGet(message));
+		}
+	}
 }

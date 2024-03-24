@@ -22,10 +22,9 @@ import vortex.annotate.constants.HttpMethod;
 import vortex.http.exchange.Response;
 import vortex.http.exchange.ResponseStatus;
 import vortex.http.status.HttpStatus;
-import vortex.http.utils.Asserttions;
-import vortex.http.utils.MappingUtils;
-import vortex.http.utils.Regex;
 import vortex.test.exception.AmbiguousMethodException;
+import vortex.utils.Asserttions;
+import vortex.utils.MappingUtils;
 
 public class RequestBuilder {
 
@@ -261,28 +260,12 @@ public class RequestBuilder {
 			}
 			buffer = builder.toString();
 		}
-		body = buffer;
-		if (Regex.isBoolean(buffer)) {
-			body = MappingUtils.map(content, Boolean.class);
-		} else if (Regex.isIntegerOrLong(buffer)) {
-			temp = (Long) MappingUtils.map(content, Long.class);
-			if (Asserttions.inrange(temp, Byte.MAX_VALUE, Byte.MIN_VALUE)) {
-				body = MappingUtils.map(content, byte.class);
-
-			} else if (Asserttions.inrange(temp, Integer.MAX_VALUE,
-					Integer.MIN_VALUE)) {
-				body = MappingUtils.map(buffer, Integer.class);
-			} else {
-				body = temp;
-			}
-		} else {
-			if (Regex.isFloating(buffer)) {
-				body = MappingUtils.map(content, Double.class);
-			}
-		}
+		body = MappingUtils.mapToPrimitive(content, buffer);
 
 		return body;
 	}
+
+
 
 	private static ByteArrayOutputStream copyInputStream(
 			InputStream inputStream) throws IOException {

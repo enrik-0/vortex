@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import vortex.http.status.HttpStatus;
-import vortex.http.utils.MappingUtils;
 
 public class ResponseStatusException extends Exception implements Response{
 

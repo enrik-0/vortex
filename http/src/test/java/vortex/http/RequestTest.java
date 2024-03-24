@@ -3,19 +3,14 @@ package vortex.http;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import vortex.http.exchange.Response;
 import vortex.http.status.HttpStatus;
-import vortex.http.utils.MappingUtils;
-import vortex.test.Mock;
 import vortex.test.RequestBuilder;
 import vortex.test.exception.AmbiguousMethodException;
 

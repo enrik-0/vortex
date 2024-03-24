@@ -2,7 +2,8 @@ package vortex.http.status;
 
 import java.io.Serializable;
 
-import vortex.http.utils.Asserttions;
+import vortex.utils.Asserttions;
+
 
 public interface HttpStateCode extends Serializable {
 

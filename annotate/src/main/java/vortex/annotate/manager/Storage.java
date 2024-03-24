@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import vortex.annotate.components.Controller;
 import vortex.annotate.constants.HttpMethod;
 import vortex.annotate.exceptions.UriException;
+import vortex.properties.kinds.Server;
 
 /**
  * @Author Enrique Javier Villar Cea
@@ -35,6 +36,9 @@ public final class Storage {
 	private HashMap<Class<?>, Object> controllers;
 	private Set<Class<?>> runnable;
 
+	public EnumMap<HttpMethod, ArrayList<Map<String, Object>>> getUrls() {
+		return urls;
+	}
 	private Storage() {
 		this.urls = new EnumMap<>(HttpMethod.class);
 		this.classes = new HashMap<>();
@@ -74,8 +78,9 @@ public final class Storage {
 
 	public Method getMethod(HttpMethod method, String uri) throws UriException {
 		try {
-			return (Method) urls.get(method).stream().filter(map -> map.get("uri").equals(uri))
-					.toList().get(0).get("call");
+			return (Method) urls.get(method).stream()
+					.filter(map -> map.get("uri").equals(uri)).toList().get(0)
+					.get("call");
 
 		} catch (ArrayIndexOutOfBoundsException e) {
 			throw new UriException(
@@ -92,6 +97,9 @@ public final class Storage {
 
 	}
 	public HttpMethod[] checkType(String uri) {
+		uri = (Server.CONTEXT_PATH.value().equals("/")
+				? ""
+				: Server.CONTEXT_PATH) + uri;
 		ArrayList<HttpMethod> type = new ArrayList<>();
 		if (isMethod(HttpMethod.GET, uri)) {
 			type.add(HttpMethod.GET);

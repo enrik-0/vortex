@@ -7,10 +7,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import vortex.annotate.constants.HttpMethod;
 import vortex.annotate.exceptions.UriException;
 import vortex.annotate.manager.Storage;
@@ -21,8 +17,10 @@ import vortex.http.exceptions.BodyException;
 import vortex.http.exceptions.ParameterSintaxException;
 import vortex.http.exceptions.RequestFormatException;
 import vortex.http.exchange.ExchangeHttp;
-import vortex.http.utils.MappingUtils;
-
+import vortex.properties.exception.FormatPatternException;
+import vortex.utils.MappingUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 public final class RequestManager {
 
 	private static RequestManager instance;
@@ -42,7 +40,7 @@ public final class RequestManager {
 			IllegalAccessException, IllegalArgumentException,
 			InvocationTargetException, NoSuchMethodException, SecurityException,
 			IOException, BodyException, ParameterSintaxException,
-			RequestFormatException, UriException {
+			RequestFormatException, UriException, FormatPatternException {
 		LOGGER.debug(request.getRequestURI().getPath());
 
 		var method = Storage.getInstance().getMethod(
@@ -58,7 +56,7 @@ public final class RequestManager {
 			throws InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException, IOException,
-			BodyException, ParameterSintaxException, RequestFormatException {
+			BodyException, ParameterSintaxException, RequestFormatException, FormatPatternException {
 		var launcher = Storage.getInstance().getObjectController(method);
 		Object[] parameters = getParameters(method, request, http);
 		LOGGER.debug(String.format("number of parameters found %d", parameters.length));
@@ -68,7 +66,7 @@ public final class RequestManager {
 
 	public static Object[] getParameters(Method method, ExchangeHttp request,
 			HttpMethod http) throws IOException, BodyException,
-			ParameterSintaxException, RequestFormatException {
+			ParameterSintaxException, RequestFormatException, FormatPatternException {
 		List<Param> parameters = getQueryParameters(request);
 		Object body;
 		if (request.getRequestHeaders().get("Content-type") != null) {
@@ -85,10 +83,7 @@ public final class RequestManager {
 		List<Object> parametersValues = new ArrayList<>();
 		Parameter[] methodParameters = method.getParameters();
 		Annotation[][] parameterAnnotations = method.getParameterAnnotations();
-		for (int i = 0; i < method.getParameterCount(); i++) {
-			if (parameters.isEmpty()) {
-				continue;
-			}
+		for (int i = 0; i < method.getParameterCount() && !parameters.isEmpty(); i++) {
 			methodParameter = methodParameters[i];
 			proccessParameters(parameters, methodParameter, parametersValues,
 					methodParameters, parameterAnnotations, i);
@@ -153,7 +148,7 @@ public final class RequestManager {
 		}
 
 	}
-	private static List<Param> getQueryParameters(ExchangeHttp request) {
+	private static List<Param> getQueryParameters(ExchangeHttp request) throws FormatPatternException {
 		String[] queryParams;
 		String[] paramElements;
 		Param parameter;

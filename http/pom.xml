@@ -22,8 +22,17 @@
 			<artifactId>jackson-databind</artifactId>
 			<version>2.16.1</version>
 		</dependency>
-
-
+	<dependency>
+		<groupId>kik.framework.vortex</groupId>
+		<artifactId>properties</artifactId>
+		<version>0.1.0</version>
+	</dependency>
+	
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.32</version>
+		</dependency>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
