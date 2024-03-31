@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 
 import vortex.annotate.constants.HttpMethod;
 import vortex.annotate.exceptions.UriException;
-import vortex.annotate.manager.Storage;
 import vortex.http.exceptions.BodyException;
 import vortex.http.exceptions.ParameterSintaxException;
 import vortex.http.exceptions.RequestFormatException;
@@ -38,13 +37,6 @@ public class Handler implements HttpHandler {
 		try {
 			checkMethod(request.getRequestMethod(), 
 					() -> String.format("HttpMethod %s not implemented yet", request.getRequestMethod()));
-			Storage.getInstance().getUrls().forEach((h,a) ->{
-				System.out.println("method" + h.name());
-				a.forEach(m ->{
-					System.out.println(m.get("uri"));
-				});
-			});
-
 			exchange = new ExchangeHttp(createRequest(request));
 			responseBody = RequestManager.getInstance().handle(exchange);
 		} catch (InstantiationException | IllegalAccessException

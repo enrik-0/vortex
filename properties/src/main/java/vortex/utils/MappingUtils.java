@@ -4,16 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.util.Date;
-
-import org.apache.log4j.lf5.util.DateFormatManager;
-import org.codehaus.plexus.component.configurator.converters.basic.DateConverter;
-
-import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -33,19 +26,36 @@ public final class MappingUtils {
 		SimpleDateFormat userFormat;
 		SimpleDateFormat newFormat;
 		Date userFormatted;
-		String newDate;
 		try {
 			userFormat = new SimpleDateFormat(datePattern);
 			newFormat = new SimpleDateFormat(parsePattern);
 
 			userFormatted = userFormat.parse(dateToParse);
-			newDate = newFormat.format(userFormatted);
-			return newDate;
+			return newFormat.format(userFormatted);
 		}catch(IllegalArgumentException | ParseException e) {
 			System.out.println("date format dosent exists");
 			return null;
 		} 
 	
+	}
+	
+	public static String parseDate(String dateToParse, String parsePattern) {
+	    final String[] formats = {"dd-MM-yyyy", 
+		    "MM-dd-yyyy", "yyyy-dd-MM", "dd-yyyy-MM", "dd/MM/yyyy", 
+		    "MM/dd/yyyy", "yyyy/dd/MM", "yyyy/MM/dd"};
+	    String datePattern = null;
+	    for(String format : formats) {
+		 var sdf = new SimpleDateFormat(format);
+	            sdf.setLenient(false);	
+	            try {
+	                sdf.parse(dateToParse);
+	                datePattern = format;
+			break;
+	            } catch (ParseException e) {
+	            }
+	    }
+	    
+	    return parseDate(dateToParse, datePattern , parsePattern);
 	}
 
 	public static Object map(Object body, Class<?> expected) {

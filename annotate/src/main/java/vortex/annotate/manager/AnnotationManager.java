@@ -4,20 +4,17 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Set;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import vortex.annotate.annotations.VortexApplication;
 import vortex.annotate.components.Controller;
 import vortex.annotate.components.Entity;
 import vortex.annotate.components.Service;
 import vortex.annotate.constants.HttpMethod;
 import vortex.annotate.controller.RequestMapping;
+import vortex.properties.kinds.Application;
 import vortex.properties.kinds.Server;
-
 /**
  * @Author: Enrique Javier Villar Cea
  * @Date: 04/01/2024
@@ -32,7 +29,6 @@ public final class AnnotationManager {
     private AnnotationManager() {
 
 	initialize();
-
     }
 
     public static AnnotationManager getInstance() {
@@ -59,51 +55,71 @@ public final class AnnotationManager {
 		}
 	    }
 	}
-	// getRunnable();
     }
 
     private void filter(RequestMapping mapping, Annotation annotation, Method method) {
 	HashMap<String, Object> map = new HashMap<>();
-	String uri = null;
-
-	StringBuilder builder = new StringBuilder();
-
-	String contextPath = Server.CONTEXT_PATH.value().equals("/") ? "" : (String) Server.CONTEXT_PATH.value();
+	var builder = new StringBuilder();
+	String contextPath = "/".equals(Server.CONTEXT_PATH.value()) ? "" : (String) Server.CONTEXT_PATH.value();
 	builder.append(contextPath);
 	builder.append(mapping.value());
 	builder.append(annotation.toString().split("\"")[1].replace("\\", ""));
 	map.put("uri", builder.toString());
 	map.put("call", method);
-	switch (annotation.annotationType().getSimpleName()) {
+	methodAssignmet(annotation.getClass().getSimpleName(), map);
+	
+
+    }
+   private void methodAssignmet(String annotationName, HashMap<String, Object> map) {
+       	switch (annotationName) {
 	case "GetMapping":
-	    data.addUrl(HttpMethod.GET, map);
-	    LOGGER.info(String.format("Found %s with uri %s and method %s", HttpMethod.GET.name(), map.get("uri"),
-		    ((Method) map.get("call")).getName()));
+	    assignMethod(HttpMethod.GET, map);
 	    break;
 	case "PutMapping":
-	    data.addUrl(HttpMethod.PUT, map);
-	    LOGGER.info(String.format("Found %s with uri %s and method %s", HttpMethod.PUT.name(), map.get("uri"),
-		    ((Method) map.get("call")).getName()));
+	    assignMethod(HttpMethod.PUT, map);
 	    break;
 
 	case "DeleteMapping":
-	    data.addUrl(HttpMethod.DELETE, map);
-	    LOGGER.info(String.format("%s with uri %s and method %s", HttpMethod.DELETE.name(), map.get("uri"),
-		    ((Method) map.get("call")).getName()));
+	    assignMethod(HttpMethod.DELETE, map);
 	    break;
 	case "PostMapping":
-	    data.addUrl(HttpMethod.POST, map);
-	    LOGGER.info(String.format("Found %s with uri %s and method %s", HttpMethod.POST.name(), map.get("uri"),
-		    ((Method) map.get("call")).getName()));
+	    assignMethod(HttpMethod.POST, map);
 	    break;
+	case "OptionsMapping":
+	    assignMethod(HttpMethod.OPTIONS, map);
+	    break;
+	case "HeadMapping":
+	    assignMethod(HttpMethod.HEAD, map);
+	    break;
+	case "TraceMapping":
+	    assignMethod(HttpMethod.TRACE, map);
+	    break;
+	case "ConnectMapping":
+	    assignMethod(HttpMethod.CONNECT, map);
+	    break;
+	case "PatchMapping":
+	    assignMethod(HttpMethod.PATCH, map);
+	    break;
+
 	default:
+	}
+   }
+
+
+    private void assignMethod(HttpMethod method, HashMap<String, Object> map) {
+	final var LOG_MESSAGE = "Found %s with uri %s and method %s";
+	data.addUrl(method, map);
+	if ((boolean) Application.DEBUG.value()) {
+	LOGGER.debug(String.format(LOG_MESSAGE, method.name(), map.get("uri"),
+		((Method) map.get("call")).getName()));
 	}
     }
 
     private void setClasses(Class<? extends Annotation> annotation) {
-	data.addAnnotationType(annotation.getName());
-	Reflections reflections = new Reflections("");
+	var reflections = new Reflections("");
 	Set<Class<?>> annotatedClasses = reflections.getTypesAnnotatedWith(annotation);
+	data.addAnnotationType(annotation.getName());
+
 	for (Class<?> annotatedClass : annotatedClasses) {
 	    data.addClass(annotation.getName(), annotatedClass);
 	    if (LOGGER.isDebugEnabled()) {
@@ -116,23 +132,26 @@ public final class AnnotationManager {
 
     private void seekClasses() {
 	setClasses(Controller.class);
-	LOGGER.debug(String.format("number of %s %d", Controller.class.getSimpleName(),
-		data.getComponent(Controller.class.getName()).size()));
+	final var LOG_MESSAGE = "number of %s %d";
+	if((boolean) Application.DEBUG.value()){
+	    LOGGER.debug(String.format(LOG_MESSAGE, Controller.class.getSimpleName(),
+		    data.getComponent(Controller.class.getName()).size()));
+	}
 	setClasses(Service.class);
-	LOGGER.debug(String.format("number of %s %d", Service.class.getSimpleName(),
+	if((boolean) Application.DEBUG.value()){
+	LOGGER.debug(String.format(LOG_MESSAGE, Service.class.getSimpleName(),
 		data.getComponent(Service.class.getName()).size()));
+	}
 	setClasses(Entity.class);
-	LOGGER.debug(String.format("number of %s %d", Entity.class.getSimpleName(),
+	if((boolean) Application.DEBUG.value()){
+	LOGGER.debug(String.format(LOG_MESSAGE, Entity.class.getSimpleName(),
 		data.getComponent(Entity.class.getName()).size()));
-    }
-
-    private void getRunnable() {
-	data.setRunnable(getClassesAnnotated("", VortexApplication.class));
+	}
     }
 
     public static Set<Class<?>> getClassesAnnotated(String search, Class<? extends Annotation> annotation) {
-	Reflections var = new Reflections(search);
-	return var.getTypesAnnotatedWith(annotation);
+	var reflections = new Reflections(search);
+	return reflections.getTypesAnnotatedWith(annotation);
 
     }
 

@@ -1,21 +1,41 @@
 package vortex.properties;
-
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import org.junit.jupiter.api.Test;
-
 import vortex.utils.MappingUtils;
 
-class DateTest 
-{
-	@Test
-    void DateFormatTest() { 
-		String[] dateFormats = {
-				"dd-mm-yyyy", "mm-dd-yyyy",
-				"yyyy-mm-dd", "yyyy-dd-mm", "dd-yyyy-mm", "dd-mm-yy"
-		};
-		MappingUtils.parseDate("2020/12/02", dateFormats[1], "");
-		
+class DateTest {
+
+    @Test
+    void testValidDateParsing() {
+        String dateToParse = "2022-01-01";
+        String datePattern = "yyyy-MM-dd";
+        String parsePattern = "dd/MM/yyyy";
+
+        String parsedDate = MappingUtils.parseDate(dateToParse, datePattern, parsePattern);
+
+        assertEquals("01/01/2022", parsedDate);
     }
-          
-    
-	
-}
+
+    @Test
+    void testInvalidDateFormat() {
+        String dateToParse = "2022/01/01";
+        String datePattern = "yyyy-MM-dd";
+        String parsePattern = "dd/MM/yyyy";
+
+        String parsedDate = MappingUtils.parseDate(dateToParse, datePattern, parsePattern);
+
+        assertNull(parsedDate);
+    }
+
+    @Test
+    void testInvalidParsePattern() {
+        String dateToParse = "2022-01-01";
+        String datePattern = "yyyy-MM-dd";
+        String parsePattern = "invalidPattern"; 
+
+        String parsedDate = MappingUtils.parseDate(dateToParse, datePattern, parsePattern);
+
+        assertNull(parsedDate);
+    }
+    }
