@@ -1,6 +1,7 @@
 package test.annotate;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -26,9 +27,12 @@ class AnnotationTest {
 
 	@BeforeAll
 	static void init() throws Exception {
-		manager = AnnotationManager.getInstance();
+		AnnotationManager.getInstance();
+    manager = AnnotationManager.getInstance();
 		storage = Storage.getInstance();
-	}
+    storage.getUrls();
+    storage.getRunnable();
+  }
 
 	@Test
 	void testGet() {
@@ -46,6 +50,17 @@ class AnnotationTest {
 		assertEquals(POST, method[0]);
 	}
 
+  @Test
+  void testNonExistingMethod(){
+    boolean failure = false;
+    try {
+        storage.getMethod(HttpMethod.PATCH, "/dev");
+        assertTrue(failure);
+
+    } catch (Exception e) {
+        assertTrue(!failure);
+  }
+  }
 	@Test
 	void testPut() {
 		HttpMethod[] method = storage.checkType("/tests/execute");

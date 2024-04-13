@@ -202,6 +202,7 @@ public class RequestBuilder {
 
 	private void createBody(HttpURLConnection connection)
 			throws JsonProcessingException {
+
 		if (body != null) {
 			var bytes = MappingUtils.writeValueAsBytes(body);
 			ObjectMapper mapper = new ObjectMapper();
@@ -213,8 +214,8 @@ public class RequestBuilder {
 				os.write(bytes, 0, bytes.length);
 
 			} catch (IOException e) {
-				e.printStackTrace();
-			}
+            connection.getURL();
+			}     
 		}
 	}
 
@@ -222,6 +223,8 @@ public class RequestBuilder {
 			InputStream inputStream) throws IOException {
 		try {
 			Object mapped = null;
+      if(inputStream != null){
+
 			var byteArrayOutputStream = copyInputStream(inputStream);
 			String contentHeader = connection.getHeaderField("Content-type");
 			if ("application/json".equals(contentHeader)) {
@@ -237,10 +240,10 @@ public class RequestBuilder {
 			} else {
 				mapped = getResponseBody(byteArrayOutputStream.toByteArray());
 			}
+      }
 
 			return mapped;
 		} catch (Exception e) {
-			e.printStackTrace();
 			return null;
 		}
 

@@ -129,7 +129,7 @@ public final class FileReader {
 				}
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+        return value;
 		}
 		return value;
 

@@ -1,4 +1,4 @@
-package vortex.properties;
+package vortex.properties.dataTest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import org.junit.jupiter.api.Test;
@@ -35,7 +35,17 @@ class DateTest {
         String parsePattern = "invalidPattern"; 
 
         String parsedDate = MappingUtils.parseDate(dateToParse, datePattern, parsePattern);
+        System.out.println(parsedDate);
 
         assertNull(parsedDate);
+    }
+    @Test
+    void testUnknownOriginalPattern(){
+        String date = "2/12/2022";
+        String parsePattern = "yyyy-mm-dd";
+
+        String parsed = MappingUtils.parseDate(date, parsePattern);
+
+        assertEquals("2022-12-02", parsed);
     }
     }

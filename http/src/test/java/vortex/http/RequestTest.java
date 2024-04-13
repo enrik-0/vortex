@@ -11,6 +11,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import vortex.http.exchange.Response;
 import vortex.http.status.HttpStatus;
+import vortex.properties.kinds.Element;
+import vortex.properties.kinds.Patterns;
 import vortex.test.RequestBuilder;
 import vortex.test.exception.AmbiguousMethodException;
 
@@ -48,8 +50,43 @@ class RequestTest {
 		Response response = new RequestBuilder().put(HOST + "/users/register")
 				.setBody(body).perform();
 		assertEquals(body, response.getBody());
-	}
 
+  }
+    @Test
+    void testGetWithBody() throws IOException, AmbiguousMethodException {
+        Response response = new RequestBuilder().get(HOST + "/users/getWBody").setBody("hello").perform();
+        assertEquals(HttpStatus.OK, response.getStatus());
+    }
+  @Test
+  void testParam() throws IOException, AmbiguousMethodException {
+      String uri = "/users/logged?username=id";
+      Response response = new RequestBuilder().get(HOST + uri).perform();
+      assertEquals(HttpStatus.OK, response.getStatus());
+
+      
+  }
+@Test
+  void testParamBadParam() throws IOException, AmbiguousMethodException {
+      String uri = "/users/logged?user=id";
+      Response response = new RequestBuilder().get(HOST + uri).perform();
+      assertEquals(HttpStatus.NOT_FOUND, response.getStatus());
+
+      
+  }
+@Test
+void testSendedBodyWhenNotRequired() throws IOException, AmbiguousMethodException {
+    String uri = "/users/BodyTest";
+    Response response = new RequestBuilder().post(HOST + uri).setBody("test").perform();
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatus());
+    
+}
+@Test
+void testPatternNonRecursive() throws IOException, AmbiguousMethodException {
+    String uri = "/test/PatternNonRecursiveFailed?pattern=0";
+    Patterns.getInstance().addPattern("pattern","[0-9][a-z]", false);
+    Response response = new RequestBuilder().get(HOST + uri).perform();
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatus());
+}
 	@Test
 	void testMapResponseInteger() throws IOException, AmbiguousMethodException {
 		Response response;

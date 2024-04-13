@@ -23,11 +23,19 @@ public final class Asserttions {
 		return (messageSupplier != null ? messageSupplier.get() : null);
 	}
 
-	public static boolean inrange(long value, long max, long min) {
+	public static boolean inRange(long value, long max, long min) {
 		return value >= min && value <= max;
 
 	}
-	public static boolean isPrimitive(Object body) {
+
+	public static boolean inRange(int value, int max, int min) {
+      return inRange((long) value, (long) max, (long) min);
+}
+
+	public static boolean inRange(byte value, byte max, byte min) {
+      return inRange((long) value, (long) max, (long) min);
+
+}		public static boolean isPrimitive(Object body) {
 		return isPrimitive(body.getClass(), Integer.class, Double.class,
 				Boolean.class, Character.class, Byte.class, Short.class,
 				Long.class, Float.class, String.class)

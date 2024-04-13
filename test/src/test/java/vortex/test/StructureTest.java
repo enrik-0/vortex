@@ -16,6 +16,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import vortex.annotate.constants.HttpMethod;
 import vortex.http.exchange.Response;
+import vortex.http.status.HttpStatus;
 import vortex.test.exception.AmbiguousMethodException;
 import vortex.utils.Asserttions;
 import vortex.utils.Regex;
@@ -81,6 +82,12 @@ class StructureTest {
 		assertEquals("2", builder.getRequestHeaders().get("buenas"));
 
 	}
+
+  @Test
+  void badRequest() throws IOException, AmbiguousMethodException {
+      Response response = new RequestBuilder().get(LOCALHOST + "/dontwork").perform();
+      assertEquals(HttpStatus.NOT_FOUND, response.getStatus());
+  }
 
 	@ParameterizedTest
 	@CsvSource({

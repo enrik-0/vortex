@@ -35,10 +35,13 @@ public final class Storage {
     private Storage() {
 	this.urls = new EnumMap<>(HttpMethod.class);
 	this.classes = new HashMap<>();
-	urls.put(HttpMethod.GET, new ArrayList<>());
-	urls.put(HttpMethod.POST, new ArrayList<>());
-	urls.put(HttpMethod.PUT, new ArrayList<>());
-	urls.put(HttpMethod.DELETE, new ArrayList<>());
+    for(HttpMethod method : HttpMethod.values()){
+    urls.put(method, new ArrayList<>());
+    }
+    try {
+    fillControllers();
+    } catch (Exception e) {
+    }
     }
 
     public static Storage getInstance() {

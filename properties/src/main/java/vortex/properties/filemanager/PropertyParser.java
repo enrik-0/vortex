@@ -30,7 +30,6 @@ public class PropertyParser {
 			 try {
 				 return FileReader.searchInDefault(name);
 				} catch (IOException e) {
-				 e.printStackTrace();
 				 return null;
 					}
 			  }); 

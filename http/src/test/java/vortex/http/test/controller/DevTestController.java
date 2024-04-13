@@ -29,6 +29,10 @@ public class DevTestController {
 		// execute
 		Server.Data.A.value();
 	}
+  @GetMapping("/PatternNonRecursive")
+  public void patternNonRecursive(@RequestParam String testId ) {
+
+  }
 
 	@PostMapping("/analyze")
 	public Map<String, Object> analyzeTestResults(@RequestBody Map<String, Object> testData) {

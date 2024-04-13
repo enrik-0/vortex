@@ -34,17 +34,13 @@ public class App {
 				.getResource("application-dev.properties");
 		if (resourceUrl != null) {
 			File file = new File(resourceUrl.getFile());
-			Scanner scanner = new Scanner(file);
 			System.err.println(file);
 		} else {
 			System.err.println(
 					"El recurso no fue encontrado. Creando la carpeta y el archivo...");
 
-			// Obtener la ruta del directorio src/main/resources de manera
-			// compatible con todos los sistemas operativos
 			Path resourcesPath = Paths.get("src", "main", "resources");
 
-			// Crear la carpeta si no existe
 			if (!Files.exists(resourcesPath)) {
 				try {
 					Files.createDirectories(resourcesPath);
@@ -53,23 +49,20 @@ public class App {
 				} catch (IOException e) {
 					System.err.println(
 							"Error al crear la carpeta: " + e.getMessage());
-					return; // Salir del programa si no se puede crear la
-							// carpeta
 				}
 			}
 
-			// Crear el archivo
 			File newFile = new File(resourcesPath.toFile(),
 					"application-dev.properties");
 			if (newFile.createNewFile()) {
 				System.err.println(
 						"Archivo creado en: " + newFile.getAbsolutePath());
-				// Puedes escribir en el archivo recién creado si lo deseas
-				FileWriter writer = new FileWriter(newFile);
-				// Aquí puedes escribir lo que necesites en el archivo
+        try(FileWriter writer = new FileWriter(newFile)){
+
 				writer.write("# Propiedades de la aplicación dev");
 				writer.close();
 			}
+        }
 		}
 
 	}

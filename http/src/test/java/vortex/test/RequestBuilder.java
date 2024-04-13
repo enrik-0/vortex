@@ -59,7 +59,9 @@ public class RequestBuilder {
 
 	public RequestBuilder setBody(Object set) {
 
+		if(method != HttpMethod.GET){
 		body = set;
+		}
 		return this;
 	}
 	/**
@@ -222,6 +224,7 @@ public class RequestBuilder {
 			InputStream inputStream) throws IOException {
 		try {
 			Object mapped = null;
+        if(inputStream != null){
 			var byteArrayOutputStream = copyInputStream(inputStream);
 			String contentHeader = connection.getHeaderField("Content-type");
 			if ("application/json".equals(contentHeader)) {
@@ -236,6 +239,8 @@ public class RequestBuilder {
 				}
 			} else {
 				mapped = getResponseBody(byteArrayOutputStream.toByteArray());
+
+        }
 			}
 
 			return mapped;

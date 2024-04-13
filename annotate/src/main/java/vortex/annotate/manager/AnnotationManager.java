@@ -66,7 +66,7 @@ public final class AnnotationManager {
 	builder.append(annotation.toString().split("\"")[1].replace("\\", ""));
 	map.put("uri", builder.toString());
 	map.put("call", method);
-	methodAssignmet(annotation.getClass().getSimpleName(), map);
+	methodAssignmet(annotation.annotationType().getSimpleName(), map);
 	
 
     }

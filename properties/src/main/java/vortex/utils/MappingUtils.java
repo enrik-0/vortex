@@ -40,9 +40,9 @@ public final class MappingUtils {
 	}
 	
 	public static String parseDate(String dateToParse, String parsePattern) {
-	    final String[] formats = {"dd-MM-yyyy", 
-		    "MM-dd-yyyy", "yyyy-dd-MM", "dd-yyyy-MM", "dd/MM/yyyy", 
-		    "MM/dd/yyyy", "yyyy/dd/MM", "yyyy/MM/dd"};
+	    final String[] formats = {"dd-mm-yyyy", 
+		    "MM-dd-yyyy", "yyyy-dd-mm", "dd-yyyy-mm", "dd/mm/yyyy", 
+		    "MM/dd/yyyy", "yyyy/dd/mm", "yyyy/mm/dd"};
 	    String datePattern = null;
 	    for(String format : formats) {
 		 var sdf = new SimpleDateFormat(format);
@@ -64,6 +64,9 @@ public final class MappingUtils {
 
 	public static Object map(InputStream body, Class<?> expected)
 			throws IOException {
+		if(expected == String.class){
+			return getInputContent(body);
+		}
 		return objectMapper.readValue(body, expected);
 	}
 	public static Object map(byte[] body, Class<?> expected)
@@ -96,10 +99,10 @@ public final class MappingUtils {
 			body = MappingUtils.map(content, Boolean.class);
 		} else if (Regex.isIntegerOrLong(buffer)) {
 			temp = (Long) MappingUtils.map(content, Long.class);
-			if (Asserttions.inrange(temp, Byte.MAX_VALUE, Byte.MIN_VALUE)) {
+			if (Asserttions.inRange(temp, Byte.MAX_VALUE, Byte.MIN_VALUE)) {
 				body = MappingUtils.map(content, byte.class);
 
-			} else if (Asserttions.inrange(temp, Integer.MAX_VALUE,
+			} else if (Asserttions.inRange(temp, Integer.MAX_VALUE,
 					Integer.MIN_VALUE)) {
 				body = MappingUtils.map(buffer, Integer.class);
 			} else {

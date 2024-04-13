@@ -4,7 +4,7 @@ import java.util.regex.Pattern;
 
 public final class Regex {
 	private  static final Pattern REAL = Pattern.compile("-?\\d+");
-	private static  final Pattern FLOATING = Pattern.compile("-?\\d+\\.?\\d*");
+	private static  final Pattern FLOATING = Pattern.compile("\\d+(\\.\\d+)?([eE][-+]?\\d+)?");
 	private Regex() {
 	}
 	public static boolean isBoolean(String value) {

@@ -7,7 +7,7 @@ public class FormatPatternException extends Exception {
 	public FormatPatternException(String elementWithoutThePattern,
 			Element pattern) {
 		super(String.format(
-				"The parameter %s, dosent comply the given regex named %s with value %s",
+				"The parameter %s, doesn't comply the given regex named %s with value %s",
 				elementWithoutThePattern, pattern.getName(),
 				pattern.getPattern().pattern()));
 	}

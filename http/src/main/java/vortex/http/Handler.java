@@ -30,46 +30,54 @@ import com.sun.net.httpserver.HttpExchange;
 public class Handler implements HttpHandler {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Handler.class);
+
 	@Override
 	public void handle(HttpExchange request) throws IOException {
 		var exchange = new ExchangeHttp();
 		Object responseBody = null;
 		try {
-			checkMethod(request.getRequestMethod(), 
+			checkMethod(request.getRequestMethod(),
 					() -> String.format("HttpMethod %s not implemented yet", request.getRequestMethod()));
 			exchange = new ExchangeHttp(createRequest(request));
 			responseBody = RequestManager.getInstance().handle(exchange);
 		} catch (InstantiationException | IllegalAccessException
 				| IllegalArgumentException e) {
-			e.printStackTrace();
+        System.out.println(e.getMessage());
 		} catch (InvocationTargetException e) {
 			System.out.println(e.getMessage());
 			System.out.println(e.getTargetException());
 			exchange.setResponse(
 					(ResponseStatusException) e.getTargetException());
 		} catch (NoSuchMethodException | SecurityException | IOException
-				| BodyException | ParameterSintaxException
+				| ParameterSintaxException
 				| RequestFormatException | UriException
 				| URISyntaxException e) {
 			ResponseStatus<String> response = new ResponseStatus<>(HttpStatus.NOT_FOUND, null);
 			exchange.setResponse(response);
-			e.printStackTrace();
-		} catch (FormatPatternException e) {
-			LOGGER.error(e.getMessage());
+		} catch (BodyException e) {
 			ResponseStatus<String> response = new ResponseStatus<>(HttpStatus.BAD_REQUEST, null);
 			exchange.setResponse(response);
 		}
-		if (exchange.getResponse() == null
-			&& ResponseStatus.isResponse(responseBody)) {
-			exchange.setResponse((ResponseStatus<Object>) responseBody);
-		}
-		if (exchange.getResponse() == null) {
-			ResponseStatus<Object> response = new ResponseStatus<>(HttpStatus.OK, responseBody);
+	catch(
+
+	FormatPatternException e)
+	{
+			LOGGER.error(e.getMessage());
+			ResponseStatus<String> response = new ResponseStatus<>(HttpStatus.BAD_REQUEST, null);
 			exchange.setResponse(response);
-		}
-		createResponse(request, exchange.getResponse());
+		}if(exchange.getResponse()==null&&ResponseStatus.isResponse(responseBody))
+	{
+		exchange.setResponse((ResponseStatus<Object>) responseBody);
+	}if(exchange.getResponse()==null)
+	{
+		ResponseStatus<Object> response = new ResponseStatus<>(HttpStatus.OK, responseBody);
+		exchange.setResponse(response);
+	}
+
+	createResponse(request, exchange.getResponse());
 		request.close();
 	}
+
 	private static void createResponse(HttpExchange request, Response response)
 			throws IOException {
 		response.getHeaders().forEach((String name,List<String> values) -> {
@@ -96,7 +104,8 @@ public class Handler implements HttpHandler {
 
 		return request;
 	}
-		public static void checkMethod(String method, Supplier<String> message) throws NoSuchMethodException {
+
+	public static void checkMethod(String method, Supplier<String> message) throws NoSuchMethodException {
 		var valid = false;
 		for (HttpMethod http : HttpMethod.values()) {
 			if (http.name().equals(method)) {
