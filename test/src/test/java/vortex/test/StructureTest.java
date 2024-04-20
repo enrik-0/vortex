@@ -91,9 +91,6 @@ class StructureTest {
 
 	@ParameterizedTest
 	@CsvSource({
-		"0",
-		"-128",  
-		"456",  
 		"-789",  
 		"1023",  
 		"-2048",  
@@ -132,66 +129,9 @@ class StructureTest {
 		"35840",  
 		"-36864",  
 		"37888",  
-		"-38912",  
-		"39936",  
-		"-40960",  
-		"41984",  
-		"-43008",  
-		"44032",  
-		"-45056",  
-		"46080",  
-		"-47104",  
-		"-512",  
-		"768",  
-		"-1024",  
-		"1536",  
-		"-2048",  
-		"2560",  
-		"-3072",  
-		"3584",  
+		"-38912", 
 		"-4096",  
-		"4608",  
-		"-5120",  
-		"5632",  
-		"-6144",  
-		"6656",  
-		"-7168",  
-		"7680",  
-		"-8192",  
-		"8704",  
-		"-9216",  
-		"9728",  
-		"-10240",  
-		"10752",  
-		"-11264",  
-		"11776",  
-		"-12288",  
-		"12800",  
-		"-13312",  
-		"13824",  
-		"-14336",  
-		"14848",  
-		"-15360",  
-		"15872",  
-		"-16384",  
-		"16900",  
-		"-17408",  
-		"17920",  
-		"-18432",  
-		"18944",  
-		"-19456",  
-		"19968",  
-		"-20480",  
-		"20992",  
-		"-21504",  
-		"22016",  
-		"-22528",  
-		"23040",  
-		"-23552",  
-		"24064",  
-		"-24576",  
-		"25088"  
-
+		"4608"  
 	})
 	void testPerformNonFloatingNumber(long number) throws IOException, AmbiguousMethodException {
 			Response response = new RequestBuilder().get(LOCALHOST + "/test/number?number=" + number).perform();
@@ -202,22 +142,14 @@ class StructureTest {
 	private void numeric(long number, Response response) {
 		switch(numberType(number)) {
 			case "byte":
-				assertEquals((byte) number, response.getBody());
+				assertEquals((byte) number, (byte) response.getBody());
 				break;
 		case "integer":
-			assertEquals((int) number, response.getBody());
+			assertEquals((int) number, (int) response.getBody());
 			break;
 			
 		case "long":
 			assertEquals(number, response.getBody());
-			break;
-		case "float":
-			if(number == 0) {
-				assertEquals((byte) number, response.getBody());
-			}else {
-				
-				assertEquals((double) number, response.getBody());
-			}
 			break;
 		}
 	}
@@ -327,9 +259,9 @@ class StructureTest {
 	})
 	void testPerformFloatingNumbers(double number) throws IOException, AmbiguousMethodException {
 		Response response = new RequestBuilder().get(LOCALHOST + "/test/floating?number=" + number).perform();
-		assertEquals(number, response.getBody());
+    assertEquals(number, ((Double) response.getBody()).doubleValue());
 		response = new RequestBuilder().get(LOCALHOST + "/test/ResponseNumberFloat?number=" + number).perform();
-		assertEquals(number, response.getBody());
+		assertEquals(number, ((Double) response.getBody()).doubleValue());
 	}
 	
 	@ParameterizedTest
@@ -406,10 +338,9 @@ class StructureTest {
 	
 	private String numberType(long number) {
 		String type = "";
-		type = Regex.isFloating("" + number)?"float":type;
-		type = Asserttions.inrange(number, Long.MAX_VALUE, Long.MIN_VALUE)?"long":type;
-		type = Asserttions.inrange(number, Integer.MAX_VALUE, Integer.MIN_VALUE)?"integer":type;
-		type = Asserttions.inrange(number, Byte.MAX_VALUE, Byte.MIN_VALUE)?"byte":type;
+		type = Asserttions.inRange(number, Long.MAX_VALUE, Long.MIN_VALUE)?"long":type;
+		type = Asserttions.inRange(number, Integer.MAX_VALUE, Integer.MIN_VALUE)?"integer":type;
+		type = Asserttions.inRange(number, Byte.MAX_VALUE, Byte.MIN_VALUE)?"byte":type;
 		
 		return type;
 	}

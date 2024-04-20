@@ -65,9 +65,11 @@ public class Handler implements HttpHandler {
 			LOGGER.error(e.getMessage());
 			ResponseStatus<String> response = new ResponseStatus<>(HttpStatus.BAD_REQUEST, null);
 			exchange.setResponse(response);
-		}if(exchange.getResponse()==null&&ResponseStatus.isResponse(responseBody))
-	{
+		}
+  if(exchange.getResponse()==null&&ResponseStatus.isResponse(responseBody))	{
+
 		exchange.setResponse((ResponseStatus<Object>) responseBody);
+
 	}if(exchange.getResponse()==null)
 	{
 		ResponseStatus<Object> response = new ResponseStatus<>(HttpStatus.OK, responseBody);

@@ -17,7 +17,7 @@ public enum Series {
 	private static final int MAX_VALUE = 5;
 	private static final int MIN_VALUE = 1;
 	Series(int value) {
-		Asserttions.inrange(value, MAX_VALUE, MIN_VALUE);
+		Asserttions.inRange(value, MAX_VALUE, MIN_VALUE);
 		this.value = value;
 	}
 
