@@ -58,6 +58,7 @@ public final class AnnotationManager {
     }
 
     private void filter(RequestMapping mapping, Annotation annotation, Method method) {
+	
 	HashMap<String, Object> map = new HashMap<>();
 	var builder = new StringBuilder();
 	String contextPath = "/".equals(Server.CONTEXT_PATH.value()) ? "" : (String) Server.CONTEXT_PATH.value();
@@ -66,6 +67,7 @@ public final class AnnotationManager {
 	builder.append(annotation.toString().split("\"")[1].replace("\\", ""));
 	map.put("uri", builder.toString());
 	map.put("call", method);
+
 	methodAssignmet(annotation.annotationType().getSimpleName(), map);
 	
 

@@ -9,13 +9,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import vortex.http.exchange.Response;
+import vortex.properties.kinds.Server;
 import vortex.test.RequestBuilder;
 import vortex.test.exception.AmbiguousMethodException;
 
 @ExtendWith(MockInitialize.class)
 class ResponseStatusTest {
 
-	private static final String HOST = "http://localhost:8080";
+	private static final String HOST = "http://localhost:" + Server.PORT.value();
 
 	@Test
 	void testAddHeader() throws IOException, AmbiguousMethodException {

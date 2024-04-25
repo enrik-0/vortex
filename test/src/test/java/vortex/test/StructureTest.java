@@ -17,13 +17,16 @@ import org.junit.jupiter.params.provider.CsvSource;
 import vortex.annotate.constants.HttpMethod;
 import vortex.http.exchange.Response;
 import vortex.http.status.HttpStatus;
+import vortex.properties.kinds.Server;
 import vortex.test.exception.AmbiguousMethodException;
 import vortex.utils.Asserttions;
+import vortex.utils.MappingUtils;
 import vortex.utils.Regex;
+import vortex.utils.StringUtils;
 
 class StructureTest {
 
-	private static final String LOCALHOST = "http://localhost:8080";
+	private static final String LOCALHOST = "http://localhost:" + Server.PORT.value();
 
 	@BeforeAll
 	static void init() throws IOException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
@@ -156,6 +159,7 @@ class StructureTest {
 
 	@ParameterizedTest
 	@CsvSource({
+	    "-1.2",
 		"0",
 		"0.0",
 		"-12.345",  
@@ -259,7 +263,8 @@ class StructureTest {
 	})
 	void testPerformFloatingNumbers(double number) throws IOException, AmbiguousMethodException {
 		Response response = new RequestBuilder().get(LOCALHOST + "/test/floating?number=" + number).perform();
-    assertEquals(number, ((Double) response.getBody()).doubleValue());
+		Object w =  MappingUtils.mapToPrimitive(response.getBody(), "" + number);
+		assertEquals(number, w);
 		response = new RequestBuilder().get(LOCALHOST + "/test/ResponseNumberFloat?number=" + number).perform();
 		assertEquals(number, ((Double) response.getBody()).doubleValue());
 	}

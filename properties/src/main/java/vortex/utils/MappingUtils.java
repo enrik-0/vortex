@@ -121,6 +121,31 @@ public final class MappingUtils {
 		}
 		return body;
 	}
-	
+		public static Object mapToPrimitive(Object content,
+			String buffer) throws IOException {
+		Long temp;
+		Object body;
+		if (Regex.isBoolean(buffer)) {
+			body = MappingUtils.map(content, Boolean.class);
+		} else if (Regex.isIntegerOrLong(buffer)) {
+			temp = (Long) MappingUtils.map(content, Long.class);
+			if (Asserttions.inRange(temp, Byte.MAX_VALUE, Byte.MIN_VALUE)) {
+				body = MappingUtils.map(content, byte.class);
+
+			} else if (Asserttions.inRange(temp, Integer.MAX_VALUE,
+					Integer.MIN_VALUE)) {
+				body = MappingUtils.map(buffer, Integer.class);
+			} else {
+				body = temp;
+			}
+		} else {
+			if (Regex.isFloating(buffer)) {
+				body = MappingUtils.map(content, Double.class);
+			}else {
+					body = MappingUtils.map(buffer, String.class);
+			}
+		}
+		return body;
+	}
 
 }

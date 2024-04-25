@@ -43,6 +43,7 @@ public class Handler implements HttpHandler {
 		} catch (InstantiationException | IllegalAccessException
 				| IllegalArgumentException e) {
         System.out.println(e.getMessage());
+        exchange.setResponse(new ResponseStatusException(HttpStatus.BAD_REQUEST));
 		} catch (InvocationTargetException e) {
 			System.out.println(e.getMessage());
 			System.out.println(e.getTargetException());
@@ -57,6 +58,11 @@ public class Handler implements HttpHandler {
 		} catch (BodyException e) {
 			ResponseStatus<String> response = new ResponseStatus<>(HttpStatus.BAD_REQUEST, null);
 			exchange.setResponse(response);
+		}
+		catch(RuntimeException e) {
+		    ResponseStatus<String> response = new ResponseStatus<>(HttpStatus.BAD_REQUEST, null);
+		    exchange.setResponse(response);
+		    
 		}
 	catch(
 

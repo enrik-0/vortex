@@ -13,6 +13,7 @@ import vortex.http.exchange.Response;
 import vortex.http.status.HttpStatus;
 import vortex.properties.kinds.Element;
 import vortex.properties.kinds.Patterns;
+import vortex.properties.kinds.Server;
 import vortex.test.RequestBuilder;
 import vortex.test.exception.AmbiguousMethodException;
 
@@ -22,7 +23,7 @@ import vortex.test.exception.AmbiguousMethodException;
 @ExtendWith(MockInitialize.class)
 class RequestTest {
 
-	private static final String HOST = "http://localhost:8080";
+	private static final String HOST = "http://localhost:" + Server.PORT.value();
 /*
 	@BeforeAll
 	static void setUp()
@@ -55,7 +56,7 @@ class RequestTest {
     @Test
     void testGetWithBody() throws IOException, AmbiguousMethodException {
         Response response = new RequestBuilder().get(HOST + "/users/getWBody").setBody("hello").perform();
-        assertEquals(HttpStatus.OK, response.getStatus());
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatus());
     }
   @Test
   void testParam() throws IOException, AmbiguousMethodException {
@@ -69,7 +70,7 @@ class RequestTest {
   void testParamBadParam() throws IOException, AmbiguousMethodException {
       String uri = "/users/logged?user=id";
       Response response = new RequestBuilder().get(HOST + uri).perform();
-      assertEquals(HttpStatus.NOT_FOUND, response.getStatus());
+      assertEquals(HttpStatus.BAD_REQUEST, response.getStatus());
 
       
   }

@@ -8,8 +8,12 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
+
 import vortex.annotate.constants.HttpMethod;
 import vortex.annotate.exceptions.UriException;
+import vortex.annotate.manager.AnnotationUtilities;
 import vortex.annotate.manager.Storage;
 import vortex.annotate.method.parameter.RequestBody;
 import vortex.annotate.method.parameter.RequestParam;
@@ -33,8 +37,8 @@ public final class RequestManager {
     }
 
     public static RequestManager getInstance() {
-	    synchronized (RequestManager.class) {
-		if (instance == null) {
+	synchronized (RequestManager.class) {
+	    if (instance == null) {
 		instance = new RequestManager();
 
 	    }
@@ -58,7 +62,7 @@ public final class RequestManager {
     private static Object executeMethod(Method method, ExchangeHttp request, HttpMethod http)
 	    throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 	    NoSuchMethodException, SecurityException, IOException, BodyException, ParameterSintaxException,
-	    RequestFormatException, FormatPatternException {
+	    RequestFormatException, FormatPatternException{
 	var launcher = Storage.getInstance().getObjectController(method);
 	Object[] parameters = getParameters(method, request, http);
 	return method.invoke(launcher, parameters);
@@ -66,8 +70,11 @@ public final class RequestManager {
     }
 
     public static Object[] getParameters(Method method, ExchangeHttp request, HttpMethod http) throws IOException,
-	    BodyException, ParameterSintaxException, RequestFormatException, FormatPatternException {
+	    BodyException, ParameterSintaxException, RequestFormatException, FormatPatternException{
 	List<Param> parameters = getQueryParameters(request);
+	if(method.getParameterCount() < parameters.size()) {
+	    throw new RequestFormatException();
+	}
 	Object body;
 	if (request.getRequestHeaders().get("Content-type") != null) {
 	    body = MappingUtils.map(request.getRequestBody(), getBodyClass(method, http));
@@ -77,7 +84,7 @@ public final class RequestManager {
 	return setParameters(method, parameters);
     }
 
-    private static Object[] setParameters(Method method, List<Param> parameters) throws ParameterSintaxException {
+    private static Object[] setParameters(Method method, List<Param> parameters) throws ParameterSintaxException{
 	Parameter methodParameter;
 	List<Object> parametersValues = new ArrayList<>();
 	Parameter[] methodParameters = method.getParameters();
@@ -90,29 +97,17 @@ public final class RequestManager {
 
 	return parametersValues.toArray();
     }
-
     private static void proccessParameters(List<Param> parameters, Parameter methodParameter,
 	    List<Object> parametersValues, Parameter[] methodParameters, Annotation[][] parameterAnnotations, int i)
-	    throws ParameterSintaxException {
+	    throws ParameterSintaxException{
 	Param queryParam;
 	Object buffer;
-	for (Annotation annotation : parameterAnnotations[i]) {
+	for (Annotation annotation : methodParameter.getAnnotations()) {
 	    if (annotation.annotationType().isAssignableFrom(RequestBody.class)) {
 		queryParam = parameters.remove(parameters.size() - 1);
 	    } else {
 		queryParam = parameters.remove(0);
 	    }
-	    if (annotation.annotationType().isAssignableFrom(RequestParam.class)) {
-		if (methodParameters[i].getName().equals(queryParam.getName())) {
-		    buffer = MappingUtils.map(queryParam.getValue(), methodParameters[i].getType());
-		    parametersValues.add(buffer);
-		} else {
-		    throw new ParameterSintaxException(
-			    String.format("query parameter %s must have the same name as the method parameter %s",
-				    queryParam.getName(), methodParameter.getName()));
-		}
-	    }
-
 	    mappParameter(methodParameter, queryParam, methodParameters, parametersValues, i);
 
 	}
@@ -126,20 +121,42 @@ public final class RequestManager {
      * @param methodParameters
      * @param parametersValues
      * @param i
+     * @throws ParameterSintaxException, Exception 
      */
     private static void mappParameter(Parameter methodParameter, Param queryParam, Parameter[] methodParameters,
 
 	    List<Object> parametersValues, int i) {
-	Object buffer;
 	for (Annotation e : methodParameter.getAnnotations()) {
-	    if (e.annotationType().isAssignableFrom(RequestBody.class)) {
-		buffer = MappingUtils.map(queryParam.getValue(), methodParameters[i].getType());
+
+	    AnnotationUtilities.isAnnotated(RequestBody.class, e, (var q) -> {
+		Object buffer = MappingUtils.map(queryParam.getValue(), methodParameters[i].getType());
 		parametersValues.add(buffer);
-	    }
+	    });
 
-	}
+		
+		
+	    AnnotationUtilities.isAnnotated(RequestParam.class, e, (var q) -> {
+		try {
+		    
+		if (methodParameters[i].getName().equals(queryParam.getName())) {
+		    Object buffer = MappingUtils.map(queryParam.getValue(), methodParameters[i].getType());
+		    parametersValues.add(buffer);
+		} else {
+		    throw new ParameterSintaxException(
+			    String.format("query parameter %s must have the same name as the method parameter %s",
+				    queryParam.getName(), methodParameter.getName()));
+		}
+		}catch(ParameterSintaxException paramException) {
+		    throw new RuntimeException(paramException);
 
-    }
+		    
+		}
+	    });
+
+
+	}}
+
+    
 
     private static List<Param> getQueryParameters(ExchangeHttp request) throws FormatPatternException {
 	String[] queryParams;
