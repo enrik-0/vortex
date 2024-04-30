@@ -1,4 +1,5 @@
 package vortex.http.status;
+
 import vortex.utils.Asserttions;
 /**
  * Enumeration of HTTP status series.
@@ -55,6 +56,7 @@ public enum Series {
 	 *            the HTTP status code (potentially non-standard)
 	 * @return the corresponding {@code Series}, or {@code null} if not found
 	 */
+
 	public static Series resolve(int statusCode) {
 		int seriesCode = statusCode / HttpStateCode.MINIMUN_STATE;
 		for (Series series : values()) {

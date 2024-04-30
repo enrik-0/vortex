@@ -1,0 +1,16 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+properties,vortex.properties.filemanager,PropertyParser,5,42,1,3,3,12,1,6,0,5
+properties,vortex.properties.filemanager,FileReader,46,220,12,20,11,63,9,13,1,5
+properties,vortex.properties,App,123,0,6,0,33,0,6,0,3,0
+properties,vortex.properties.exception,FormatPatternException,22,0,0,0,4,0,1,0,1,0
+properties,vortex.properties.kinds,Server.Data,0,33,0,0,0,7,0,3,0,3
+properties,vortex.properties.kinds,Element,29,79,5,11,11,20,8,10,3,7
+properties,vortex.properties.kinds,Patterns,2,130,3,23,2,36,3,15,0,5
+properties,vortex.properties.kinds,Data,3,0,0,0,1,0,1,0,1,0
+properties,vortex.properties.kinds,Server,0,45,0,0,0,10,0,3,0,3
+properties,vortex.properties.kinds,Data.Format,27,0,0,0,7,0,3,0,3,0
+properties,vortex.properties.kinds,Application,27,0,0,0,6,0,3,0,3,0
+properties,vortex.utils,Regex,0,29,0,4,0,5,0,6,0,4
+properties,vortex.utils,MappingUtils,56,215,11,17,17,52,7,17,1,9
+properties,vortex.utils,StringUtils,3,35,0,0,1,8,1,2,1,2
+properties,vortex.utils,Asserttions,27,118,8,16,6,15,7,14,2,7

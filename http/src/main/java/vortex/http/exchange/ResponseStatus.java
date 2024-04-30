@@ -9,6 +9,7 @@ import javassist.bytecode.stackmap.TypeData.UninitThis;
 import vortex.http.status.HttpStatus;
 import vortex.utils.Asserttions;
 
+
 /**
  * @autor Enrique Javier Villar Cea
  */
@@ -31,6 +32,7 @@ public class ResponseStatus<T> implements Response {
 	 *            <b>T</b>
 	 */
 	public ResponseStatus(T body) {
+
 		headers = new HashMap<>();
 		setResponseBody(body);
 	}
@@ -42,6 +44,7 @@ public class ResponseStatus<T> implements Response {
 	 * @param body
 	 *            <b>T</b>
 	 */
+
 	public ResponseStatus(HttpStatus status, T body) {
 		state = status;
 		headers = new HashMap<>();

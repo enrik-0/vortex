@@ -7,6 +7,7 @@ import java.util.Map;
 
 import vortex.http.status.HttpStatus;
 
+
 public class ResponseStatusException extends Exception implements Response{
 
 	/**

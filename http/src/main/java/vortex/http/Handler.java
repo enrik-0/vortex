@@ -20,6 +20,7 @@ import vortex.http.exchange.Response;
 import vortex.http.exchange.ResponseStatus;
 import vortex.http.exchange.ResponseStatusException;
 import vortex.http.status.HttpStatus;
+
 import vortex.properties.exception.FormatPatternException;
 import vortex.utils.Asserttions;
 import vortex.utils.MappingUtils;
@@ -58,6 +59,7 @@ public class Handler implements HttpHandler {
 		} catch (BodyException e) {
 			ResponseStatus<String> response = new ResponseStatus<>(HttpStatus.BAD_REQUEST, null);
 			exchange.setResponse(response);
+
 		}
 		catch(RuntimeException e) {
 		    ResponseStatus<String> response = new ResponseStatus<>(HttpStatus.BAD_REQUEST, null);
