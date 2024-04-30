@@ -13,6 +13,11 @@ import java.lang.annotation.Target;
  * @see GetMapping
  * @see PostMapping
  * @see PutMapping
+ * @see ConnectMapping
+ * @see HeadMapping
+ * @see OptionsMapping
+ * @see PatchMapping
+ * @see TraceMapping
  * @Author: Enrique Javier Villar Cea
  */
 @Target(METHOD)
@@ -21,7 +26,7 @@ import java.lang.annotation.Target;
 public @interface DeleteMapping {
 
 	/**
-	 * Uri to handle with <b>DELETE</b> <br>
+	 * Uri to handle with <b>{@linkplain DELETE} <br>
 	 * <h1>example:</h1> <code> @DeleteMapping("/uri")</code>
 	 */
 	String value();

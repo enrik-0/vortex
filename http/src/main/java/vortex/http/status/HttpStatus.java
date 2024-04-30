@@ -343,7 +343,8 @@ GATEWAY_TIMEOUT(504," The server, while acting as a gateway or proxy, did not re
 	private final Series series;
 	private final String meaning;
 
-	HttpStatus(int state, String meaning) {
+	HttpStatus(int state, String meaning){
+
 		this.state = state;
 		this.series = Series.valueOf(state);
 		this.meaning = meaning;

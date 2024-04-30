@@ -14,6 +14,9 @@ import vortex.annotate.method.parameter.RequestParam;
 import vortex.http.exchange.ResponseStatus;
 import vortex.http.status.HttpStatus;
 
+import vortex.properties.kinds.Server;
+
+
 /**
  * 
  */
@@ -26,7 +29,12 @@ public class DevTestController {
 	@PutMapping("/execute")
 	public void executeTest(@RequestBody Map<String, Object> testData) {
 		// execute
+		Server.Data.A.value();
 	}
+  @GetMapping("/PatternNonRecursive")
+  public void patternNonRecursive(@RequestParam String testId ) {
+
+  }
 
 	@PostMapping("/analyze")
 	public Map<String, Object> analyzeTestResults(@RequestBody Map<String, Object> testData) {

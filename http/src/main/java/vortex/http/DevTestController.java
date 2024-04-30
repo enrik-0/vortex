@@ -21,6 +21,9 @@ import vortex.annotate.method.parameter.RequestParam;
 public class DevTestController {
 
 
+    @GetMapping("/PatternNonRecursiveFailed")
+    public void patternNonRecursive(@RequestParam String pattern) {}
+
 	@PutMapping("/execute")
 	public void executeTest(@RequestBody Map<String, Object> testData) {
 		// execute

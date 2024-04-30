@@ -22,10 +22,10 @@ import vortex.annotate.constants.HttpMethod;
 import vortex.http.exchange.Response;
 import vortex.http.exchange.ResponseStatus;
 import vortex.http.status.HttpStatus;
-import vortex.http.utils.Asserttions;
-import vortex.http.utils.MappingUtils;
-import vortex.http.utils.Regex;
+
 import vortex.test.exception.AmbiguousMethodException;
+import vortex.utils.Asserttions;
+import vortex.utils.MappingUtils;
 
 public class RequestBuilder {
 
@@ -179,18 +179,19 @@ public class RequestBuilder {
 			setHeaders(connection);
 			createBody(connection);
 			// connection.setConnectTimeout(this.timeout);
-
-			return createResponse(connection, connection.getInputStream());
+			Response e = createResponse(connection, connection.getInputStream());
+			return e;
 		} catch (FileNotFoundException e) {
 			return createResponse(connection, connection.getErrorStream());
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
+		} catch (IOException e) {
+			Object  content = getResponseBody(connection, connection.getErrorStream());
+			return new ResponseStatus<>(HttpStatus.resolve(connection.getResponseCode()), content);
 		}
 	}
 
 	private static Response createResponse(HttpURLConnection connection,
 			InputStream input) throws IOException {
+
 		Response response = new ResponseStatus<Object>(
 				getResponseBody(connection, input));
 		response.setStatus(HttpStatus.resolve(connection.getResponseCode()));
@@ -202,6 +203,7 @@ public class RequestBuilder {
 
 	private void createBody(HttpURLConnection connection)
 			throws JsonProcessingException {
+
 		if (body != null) {
 			var bytes = MappingUtils.writeValueAsBytes(body);
 			ObjectMapper mapper = new ObjectMapper();
@@ -213,18 +215,18 @@ public class RequestBuilder {
 				os.write(bytes, 0, bytes.length);
 
 			} catch (IOException e) {
-				e.printStackTrace();
-			}
+            connection.getURL();
+			}     
 		}
 	}
 
 	private static Object getResponseBody(HttpURLConnection connection,
 			InputStream inputStream) throws IOException {
 		try {
-
 			Object mapped = null;
-			var byteArrayOutputStream = copyInputStream(inputStream);
+      if(inputStream != null){
 
+			var byteArrayOutputStream = copyInputStream(inputStream);
 			String contentHeader = connection.getHeaderField("Content-type");
 			if ("application/json".equals(contentHeader)) {
 
@@ -239,10 +241,10 @@ public class RequestBuilder {
 			} else {
 				mapped = getResponseBody(byteArrayOutputStream.toByteArray());
 			}
+      }
 
 			return mapped;
 		} catch (Exception e) {
-			e.printStackTrace();
 			return null;
 		}
 
@@ -263,27 +265,12 @@ public class RequestBuilder {
 			buffer = builder.toString();
 		}
 		body = buffer;
-		if (Regex.isBoolean(buffer)) {
-			body = MappingUtils.map(content, Boolean.class);
-		} else if (Regex.isIntegerOrLong(buffer)) {
-			temp = (Long) MappingUtils.map(content, Long.class);
-			if (Asserttions.inrange(temp, Byte.MAX_VALUE, Byte.MIN_VALUE)) {
-				body = MappingUtils.map(content, byte.class);
-
-			} else if (Asserttions.inrange(temp, Integer.MAX_VALUE,
-					Integer.MIN_VALUE)) {
-				body = MappingUtils.map(buffer, Integer.class);
-			} else {
-				body = temp;
-			}
-		} else {
-			if (Regex.isFloating(buffer)) {
-				body = MappingUtils.map(content, Double.class);
-			}
-		}
+		body = MappingUtils.mapToPrimitive(content, buffer);
 
 		return body;
 	}
+
+
 
 	private static ByteArrayOutputStream copyInputStream(
 			InputStream inputStream) throws IOException {

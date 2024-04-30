@@ -1,11 +1,7 @@
-package vortex.http.utils;
+package vortex.utils;
 
 import java.util.List;
 import java.util.function.Supplier;
-
-import vortex.annotate.annotations.Nullable;
-import vortex.annotate.constants.HttpMethod;
-
 public final class Asserttions {
 
 	private Asserttions() {
@@ -22,17 +18,24 @@ public final class Asserttions {
 		}
 	}
 
-	@Nullable
-	private static String nullSafeGet(
-			@Nullable Supplier<String> messageSupplier) {
+	public static String nullSafeGet(
+			Supplier<String> messageSupplier) {
 		return (messageSupplier != null ? messageSupplier.get() : null);
 	}
 
-	public static boolean inrange(long value, long max, long min) {
+	public static boolean inRange(long value, long max, long min) {
 		return value >= min && value <= max;
 
 	}
-	public static boolean isPrimitive(Object body) {
+
+	public static boolean inRange(int value, int max, int min) {
+      return inRange((long) value, (long) max, (long) min);
+}
+
+	public static boolean inRange(byte value, byte max, byte min) {
+      return inRange((long) value, (long) max, (long) min);
+
+}		public static boolean isPrimitive(Object body) {
 		return isPrimitive(body.getClass(), Integer.class, Double.class,
 				Boolean.class, Character.class, Byte.class, Short.class,
 				Long.class, Float.class, String.class)
@@ -58,16 +61,5 @@ public final class Asserttions {
 		}
 		return contentHeaders;
 	}
-	public static void checkMethod(String method, Supplier<String> message) throws NoSuchMethodException {
-		var valid = false;
-		for (HttpMethod http : HttpMethod.values()) {
-			if (http.name().equals(method)) {
-				valid = true;
-			}
-		}
-		if (!valid) {
-			throw new NoSuchMethodException(
-					nullSafeGet(message));
-		}
-	}
+
 }

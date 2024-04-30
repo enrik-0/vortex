@@ -12,7 +12,7 @@ public final class Mock {
 	private static Mock instance;
 	
 	private Mock() throws IOException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-		ServerHttp.runServer(8080);
+		ServerHttp.runServer();
 	}
 	/**
 	 * 
@@ -35,7 +35,8 @@ public final class Mock {
 	
 	public static void stop() {
 		ServerHttp.stopServer();
-	}
+    instance = null;
+	} 
 
 
 }

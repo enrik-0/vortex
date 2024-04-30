@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import javassist.bytecode.stackmap.TypeData.UninitThis;
-import vortex.annotate.annotations.Nullable;
 import vortex.http.status.HttpStatus;
-import vortex.http.utils.Asserttions;
+import vortex.utils.Asserttions;
+
 
 /**
  * @autor Enrique Javier Villar Cea
@@ -31,7 +31,8 @@ public class ResponseStatus<T> implements Response {
 	 * @param body
 	 *            <b>T</b>
 	 */
-	public ResponseStatus(@Nullable T body) {
+	public ResponseStatus(T body) {
+
 		headers = new HashMap<>();
 		setResponseBody(body);
 	}
@@ -43,7 +44,8 @@ public class ResponseStatus<T> implements Response {
 	 * @param body
 	 *            <b>T</b>
 	 */
-	public ResponseStatus(HttpStatus status, @Nullable T body) {
+
+	public ResponseStatus(HttpStatus status, T body) {
 		state = status;
 		headers = new HashMap<>();
 		setResponseBody(body);

@@ -9,7 +9,8 @@
 *.nar
 
 *.ear
-
+.scannerwork
+.settings
 *.zip
 
 *.tar.gz

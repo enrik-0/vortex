@@ -44,6 +44,13 @@ public class DevUserController {
 	
 	
 
+  @PostMapping("/BodyTest")
+  public void bodyTest() {}
+ 
+  @GetMapping("/getWBody")
+  public void getWBody(@RequestBody Map<String, Object> data) {
+
+  }
 	@PostMapping("/erease")
 	public Map<String, Object> delete(@RequestParam String token,
 			@RequestBody Map<String, Object> data, @RequestParam int years) throws ResponseStatusException {

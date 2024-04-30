@@ -1,6 +1,6 @@
 package vortex.http.status;
-import vortex.annotate.annotations.Nullable;
-import vortex.http.utils.Asserttions;
+
+import vortex.utils.Asserttions;
 /**
  * Enumeration of HTTP status series.
  * <p>
@@ -15,9 +15,10 @@ public enum Series {
 	SERVER_ERROR(5);
 
 	private final int value;
-
+	private static final int MAX_VALUE = 5;
+	private static final int MIN_VALUE = 1;
 	Series(int value) {
-		Asserttions.inrange(value, 5, 1);
+		Asserttions.inRange(value, MAX_VALUE, MIN_VALUE);
 		this.value = value;
 	}
 
@@ -55,7 +56,7 @@ public enum Series {
 	 *            the HTTP status code (potentially non-standard)
 	 * @return the corresponding {@code Series}, or {@code null} if not found
 	 */
-	@Nullable
+
 	public static Series resolve(int statusCode) {
 		int seriesCode = statusCode / HttpStateCode.MINIMUN_STATE;
 		for (Series series : values()) {
