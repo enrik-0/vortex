@@ -8,12 +8,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Function;
-
 import vortex.annotate.constants.HttpMethod;
 import vortex.annotate.exceptions.UriException;
-import vortex.annotate.manager.AnnotationUtilities;
 import vortex.annotate.manager.Storage;
 import vortex.annotate.method.parameter.RequestBody;
 import vortex.annotate.method.parameter.RequestParam;
@@ -126,20 +122,22 @@ public final class RequestManager {
     private static void mappParameter(Parameter methodParameter, Param queryParam, Parameter[] methodParameters,
 
 	    List<Object> parametersValues, int i) {
+	Object buffer;
 	for (Annotation e : methodParameter.getAnnotations()) {
 
-	    AnnotationUtilities.isAnnotated(RequestBody.class, e, (var q) -> {
-		Object buffer = MappingUtils.map(queryParam.getValue(), methodParameters[i].getType());
-		parametersValues.add(buffer);
-	    });
+	    if (e.annotationType().isAssignableFrom(RequestBody.class)) {
 
+		buffer = MappingUtils.map(queryParam.getValue(), methodParameters[i].getType());
+		parametersValues.add(buffer);
+	    } 
 		
+	    if(e.annotationType().isAssignableFrom(RequestParam.class)) {
 		
-	    AnnotationUtilities.isAnnotated(RequestParam.class, e, (var q) -> {
 		try {
 		    
 		if (methodParameters[i].getName().equals(queryParam.getName())) {
-		    Object buffer = MappingUtils.map(queryParam.getValue(), methodParameters[i].getType());
+
+		    buffer = MappingUtils.map(queryParam.getValue(), methodParameters[i].getType());
 		    parametersValues.add(buffer);
 		} else {
 		    throw new ParameterSintaxException(
@@ -151,8 +149,7 @@ public final class RequestManager {
 
 		    
 		}
-	    });
-
+	    }
 
 	}}
 
