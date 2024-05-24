@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>App.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">properties</a> &gt; <a href="index.source.html" class="el_package">vortex.properties</a> &gt; <span class="el_source">App.java</span></div><h1>App.java</h1><pre class="source lang-java linenums">package vortex.properties;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Scanner;
+
+import vortex.properties.filemanager.FileReader;
+import vortex.properties.kinds.Patterns;
+import vortex.properties.kinds.Server;
+
+/**
+ * Hello world!
+ *
+ */
+<span class="nc" id="L20">public class App {</span>
+	public static void main(String[] args) throws IOException {
+<span class="nc" id="L22">		FileReader.readPropertyFile(&quot;application-dev.properties&quot;);</span>
+<span class="nc" id="L23">		System.out.println(Patterns.getInstance().getPattern(&quot;email&quot;).getName());</span>
+<span class="nc" id="L24">		System.out.println(Patterns.getInstance().getPattern(&quot;emailEmpresa&quot;).getName());</span>
+<span class="nc" id="L25">		System.out.println(Patterns.getInstance().getPattern(&quot;EmpresaEmail&quot;).getName());</span>
+<span class="nc" id="L26">		System.out.println(Patterns.getInstance().getPattern(&quot;buenas&quot;).getName());</span>
+<span class="nc" id="L27">		System.out.println(Patterns.getInstance().getPattern(&quot;adiosBuenas&quot;).getName());</span>
+<span class="nc" id="L28">		System.out.println(Patterns.getInstance().getPattern(&quot;buenasAdios&quot;).getName());</span>
+
+<span class="nc" id="L30">	}</span>
+	public static void detectResources(String directoryPath)
+			throws IOException {
+<span class="nc" id="L33">		URL resourceUrl = Thread.currentThread().getContextClassLoader()</span>
+<span class="nc" id="L34">				.getResource(&quot;application-dev.properties&quot;);</span>
+<span class="nc bnc" id="L35" title="All 2 branches missed.">		if (resourceUrl != null) {</span>
+<span class="nc" id="L36">			File file = new File(resourceUrl.getFile());</span>
+<span class="nc" id="L37">			System.err.println(file);</span>
+<span class="nc" id="L38">		} else {</span>
+<span class="nc" id="L39">			System.err.println(</span>
+					&quot;El recurso no fue encontrado. Creando la carpeta y el archivo...&quot;);
+
+<span class="nc" id="L42">			Path resourcesPath = Paths.get(&quot;src&quot;, &quot;main&quot;, &quot;resources&quot;);</span>
+
+<span class="nc bnc" id="L44" title="All 2 branches missed.">			if (!Files.exists(resourcesPath)) {</span>
+				try {
+<span class="nc" id="L46">					Files.createDirectories(resourcesPath);</span>
+<span class="nc" id="L47">					System.err.println(&quot;Carpeta creada en: &quot;</span>
+<span class="nc" id="L48">							+ resourcesPath.toAbsolutePath());</span>
+<span class="nc" id="L49">				} catch (IOException e) {</span>
+<span class="nc" id="L50">					System.err.println(</span>
+<span class="nc" id="L51">							&quot;Error al crear la carpeta: &quot; + e.getMessage());</span>
+<span class="nc" id="L52">				}</span>
+			}
+
+<span class="nc" id="L55">			File newFile = new File(resourcesPath.toFile(),</span>
+					&quot;application-dev.properties&quot;);
+<span class="nc bnc" id="L57" title="All 2 branches missed.">			if (newFile.createNewFile()) {</span>
+<span class="nc" id="L58">				System.err.println(</span>
+<span class="nc" id="L59">						&quot;Archivo creado en: &quot; + newFile.getAbsolutePath());</span>
+<span class="nc" id="L60">        try(FileWriter writer = new FileWriter(newFile)){</span>
+
+<span class="nc" id="L62">				writer.write(&quot;# Propiedades de la aplicación dev&quot;);</span>
+<span class="nc" id="L63">				writer.close();</span>
+			}
+        }
+		}
+
+<span class="nc" id="L68">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

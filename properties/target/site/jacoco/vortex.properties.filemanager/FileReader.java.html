@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FileReader.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">properties</a> &gt; <a href="index.source.html" class="el_package">vortex.properties.filemanager</a> &gt; <span class="el_source">FileReader.java</span></div><h1>FileReader.java</h1><pre class="source lang-java linenums">package vortex.properties.filemanager;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.Scanner;
+import java.util.StringJoiner;
+import java.util.regex.Pattern;
+import vortex.properties.kinds.Element;
+import vortex.properties.kinds.Patterns;
+import vortex.properties.kinds.Server;
+import vortex.utils.MappingUtils;
+public final class FileReader {
+
+	private static final char COMMENT = '#';
+<span class="fc" id="L18">	private static final Pattern FAMILY_DELIMITER = Pattern.compile(&quot;\\.&quot;,</span>
+			Pattern.UNICODE_CHARACTER_CLASS);
+	private static final String DELIMITER = &quot;=&quot;;
+<span class="fc" id="L21">	private static final Pattern PROPERTY_FORMAT = Pattern.compile(</span>
+			&quot;^\\w+(?:\\.\\w+)*(?:\\.\\w+)?\\s*=\\s*.+$&quot;,
+			Pattern.UNICODE_CHARACTER_CLASS);
+
+	private FileReader() {
+	}
+	public static void readPropertyFile(String fileToRead) throws IOException {
+<span class="fc" id="L28">		HashMap&lt;String, Object&gt; lines = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L29">		InputStream resource = Thread.currentThread().getContextClassLoader()</span>
+<span class="fc" id="L30">				.getResourceAsStream(fileToRead);</span>
+<span class="pc bpc" id="L31" title="1 of 2 branches missed.">		if (resource != null) {</span>
+<span class="nc" id="L32">			processStream(resource, lines);</span>
+		}
+<span class="fc" id="L34">		PropertyParser.getInstance().setProperties(lines);</span>
+<span class="fc" id="L35">		System.out.println(Server.Data.A.value());</span>
+<span class="fc" id="L36">		System.out.println(Server.PORT.value());</span>
+<span class="fc" id="L37">	}</span>
+	private static HashMap&lt;String, Object&gt; processLine(String line,
+			HashMap&lt;String, Object&gt; map) throws IOException {
+		String content;
+<span class="fc" id="L41">		var joiner = new StringJoiner(DELIMITER);</span>
+<span class="fc" id="L42">		String[] splitted = line.split(DELIMITER);</span>
+<span class="fc bfc" id="L43" title="All 2 branches covered.">		for (var i = 1; i &lt; splitted.length; i++) {</span>
+<span class="fc" id="L44">			joiner.add(splitted[i]);</span>
+		}
+<span class="fc" id="L46">		content = joiner.toString().strip();</span>
+<span class="fc" id="L47">		Object value = MappingUtils.mapToPrimitive(</span>
+<span class="fc" id="L48">				content.getBytes(Charset.defaultCharset()), content);</span>
+
+<span class="fc bfc" id="L50" title="All 2 branches covered.">		if (splitted[0].contains(&quot;pattern&quot;)) {</span>
+
+<span class="fc" id="L52">			processPattern(splitted[0], content);</span>
+		} else {
+<span class="fc" id="L54">			map.put(splitted[0].strip(), value);</span>
+		}
+
+<span class="fc" id="L57">		return map;</span>
+
+	}
+
+	private static void processPattern(String property, Object content) {
+<span class="fc" id="L62">		final var RECURSIVE = &quot;recursive&quot;;</span>
+		String pattern;
+		boolean isRecursive;
+<span class="fc" id="L65">		String[] parts = property.split(FAMILY_DELIMITER.pattern());</span>
+<span class="pc bpc" id="L66" title="1 of 2 branches missed.">		String patternName = parts.length &gt; 1 ? parts[1] : &quot;&quot;;</span>
+
+<span class="fc" id="L68">		Element element = null;</span>
+<span class="fc" id="L69">		Element existance = Patterns.getInstance().getPattern(patternName);</span>
+
+<span class="pc bpc" id="L71" title="1 of 2 branches missed.">		if (!patternName.isEmpty()) {</span>
+<span class="fc bfc" id="L72" title="All 2 branches covered.">			if (existance != null) {</span>
+<span class="pc bpc" id="L73" title="1 of 2 branches missed.">				pattern = existance.getPattern() != null</span>
+<span class="fc" id="L74">						? existance.getPattern().pattern()</span>
+<span class="pc" id="L75">						: &quot;&quot;;</span>
+<span class="fc" id="L76">				isRecursive = existance.isRecursive();</span>
+
+<span class="fc bfc" id="L78" title="All 2 branches covered.">				if (property.contains(RECURSIVE)) {</span>
+<span class="fc" id="L79">					isRecursive = (boolean) MappingUtils.map(content,</span>
+							Boolean.class);
+				}
+
+<span class="fc" id="L83">				element = new Element(patternName, pattern, isRecursive);</span>
+			} else {
+<span class="fc" id="L85">				pattern = &quot;&quot;;</span>
+<span class="fc" id="L86">				isRecursive = false;</span>
+
+<span class="fc bfc" id="L88" title="All 2 branches covered.">				if (property.contains(RECURSIVE)) {</span>
+<span class="fc" id="L89">					isRecursive = (boolean) MappingUtils.map(content,</span>
+							Boolean.class);
+				} else {
+<span class="fc" id="L92">					pattern = (String) content;</span>
+				}
+
+<span class="fc" id="L95">				element = new Element(patternName, pattern, isRecursive);</span>
+			}
+		}
+<span class="fc" id="L98">		Patterns.getInstance().addPattern(element);</span>
+<span class="fc" id="L99">	}</span>
+	private static HashMap&lt;String, Object&gt; processStream(InputStream stream,
+			HashMap&lt;String, Object&gt; lines) throws IOException {
+		String line;
+<span class="nc" id="L103">		try (var scanner = new Scanner(stream, UTF_8)) {</span>
+<span class="nc bnc" id="L104" title="All 2 branches missed.">			while (scanner.hasNextLine()) {</span>
+<span class="nc" id="L105">				line = scanner.nextLine();</span>
+<span class="nc bnc" id="L106" title="All 4 branches missed.">				if (!line.isEmpty() &amp;&amp; line.charAt(0) != COMMENT</span>
+<span class="nc bnc" id="L107" title="All 2 branches missed.">						&amp;&amp; PROPERTY_FORMAT.matcher(line).matches()) {</span>
+<span class="nc" id="L108">					processLine(line.strip(), lines);</span>
+				}
+			}
+		}
+<span class="nc" id="L112">		return lines;</span>
+	}
+	public static Object searchInDefault(String name) throws IOException {
+<span class="fc" id="L115">		var next = true;</span>
+		String line;
+<span class="fc" id="L117">		Object value = null;</span>
+<span class="fc" id="L118">		HashMap&lt;String, Object&gt; map = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L119">		InputStream resource = Thread.currentThread().getContextClassLoader()</span>
+<span class="fc" id="L120">				.getResourceAsStream(&quot;default-dev.properties&quot;);</span>
+<span class="fc" id="L121">		try (var scanner = new Scanner(resource, UTF_8)) {</span>
+<span class="fc bfc" id="L122" title="All 4 branches covered.">			while (scanner.hasNextLine() &amp;&amp; next) {</span>
+<span class="fc" id="L123">				line = scanner.nextLine();</span>
+<span class="fc" id="L124">				processLine(line, map);</span>
+<span class="fc bfc" id="L125" title="All 2 branches covered.">				if (map.get(name) != null) {</span>
+
+<span class="fc" id="L127">					value = map.get(name);</span>
+<span class="fc" id="L128">					next = false;</span>
+				}
+			}
+<span class="nc" id="L131">		} catch (IOException e) {</span>
+<span class="nc" id="L132">        return value;</span>
+<span class="fc" id="L133">		}</span>
+<span class="fc" id="L134">		return value;</span>
+
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
