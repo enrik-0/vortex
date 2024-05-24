@@ -29,4 +29,6 @@ public @interface PatchMapping {
 	 * <h1>example:</h1> <code> @PatchMapping("/uri")</code>
 	 */
 	String value();
+
+	String[] uris() default {};
 }

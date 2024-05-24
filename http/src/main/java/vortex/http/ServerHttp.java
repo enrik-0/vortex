@@ -10,6 +10,9 @@ import org.slf4j.LoggerFactory;
 import com.sun.net.httpserver.HttpServer;
 
 import java.util.concurrent.Executors;
+
+import vortex.annotate.exceptions.InitiateServerException;
+import vortex.annotate.exceptions.UriException;
 import vortex.annotate.manager.AnnotationManager;
 import vortex.properties.kinds.Server;
 import vortex.utils.MappingUtils;
@@ -27,13 +30,13 @@ public final class ServerHttp {
 	public static void runServer()
 			throws IOException, InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException,
-			NoSuchMethodException, SecurityException {
+			NoSuchMethodException, SecurityException, UriException, InitiateServerException {
 		runServer((int) Server.PORT.value(), Handler.class);
 	}
 	public static void runServer(int port)
 			throws IOException, InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException,
-			NoSuchMethodException, SecurityException {
+			NoSuchMethodException, SecurityException, UriException, InitiateServerException {
 		runServer(port, Handler.class);
 	}
 
@@ -49,11 +52,13 @@ public final class ServerHttp {
 	 * @throws IllegalArgumentException
 	 * @throws IllegalAccessException
 	 * @throws InstantiationException
+	 * @throws UriException 
+	 * @throws InitiateServerException 
 	 */
 	public static void runServer(int port, Class<? extends HttpHandler> handler)
 			throws IOException, InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException,
-			NoSuchMethodException, SecurityException {
+			NoSuchMethodException, SecurityException, UriException, InitiateServerException {
 		int threadNumber;
 		AnnotationManager.getInstance();
 		try {

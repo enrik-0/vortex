@@ -29,4 +29,6 @@ public @interface TraceMapping {
 	 * <h1>example:</h1> <code> @TraceMapping("/uri")</code>
 	 */
 	String value();
+
+	String[] uris() default {};
 }

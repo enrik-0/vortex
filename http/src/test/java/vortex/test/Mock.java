@@ -3,6 +3,8 @@ package vortex.test;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
+import vortex.annotate.exceptions.InitiateServerException;
+import vortex.annotate.exceptions.UriException;
 import vortex.http.ServerHttp;
 
 
@@ -12,7 +14,7 @@ public final class Mock {
 
 	private static Mock instance;
 	
-	private Mock() throws IOException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+	private Mock() throws IOException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, UriException, InitiateServerException {
 		ServerHttp.runServer();
 	}
 	/**
@@ -25,8 +27,10 @@ public final class Mock {
 	 * @throws IllegalArgumentException 
 	 * @throws IllegalAccessException 
 	 * @throws InstantiationException 
+	 * @throws UriException 
+	 * @throws InitiateServerException 
 	 */
-	public static Mock getInstance() throws IOException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException{
+	public static Mock getInstance() throws IOException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, UriException, InitiateServerException{
 		if(instance == null) {
 			instance = new Mock();
 		}

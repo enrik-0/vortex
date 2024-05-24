@@ -11,6 +11,8 @@ import java.util.List;
 import vortex.annotate.constants.HttpMethod;
 import vortex.annotate.exceptions.UriException;
 import vortex.annotate.manager.Storage;
+import vortex.annotate.method.parameter.Header;
+import vortex.annotate.method.parameter.HttpRequest;
 import vortex.annotate.method.parameter.RequestBody;
 import vortex.annotate.method.parameter.RequestParam;
 import vortex.http.elements.Param;
@@ -18,6 +20,7 @@ import vortex.http.exceptions.BodyException;
 import vortex.http.exceptions.ParameterSintaxException;
 import vortex.http.exceptions.RequestFormatException;
 import vortex.http.exchange.ExchangeHttp;
+import vortex.http.exchange.Request;
 import vortex.properties.exception.FormatPatternException;
 import vortex.properties.kinds.Application;
 import vortex.utils.MappingUtils;
@@ -50,8 +53,6 @@ public final class RequestManager {
 	}
 
 	var method = Storage.getInstance().getMethod(request.getRequestMethod(), request.getRequestURI().getPath());
-	method.getAnnotatedExceptionTypes();
-
 	return executeMethod(method, request, request.getRequestMethod());
     }
 
@@ -77,38 +78,41 @@ public final class RequestManager {
 	    parameters.add(new Param(RequestBody.class.getName(), body));
 
 	}
-	return setParameters(method, parameters);
+	return setParameters(method,request.getRequest(), parameters);
     }
 
-    private static Object[] setParameters(Method method, List<Param> parameters) throws ParameterSintaxException{
+    private static Object[] setParameters(Method method, Request request, List<Param> parameters) throws ParameterSintaxException{
 	Parameter methodParameter;
 	List<Object> parametersValues = new ArrayList<>();
 	Parameter[] methodParameters = method.getParameters();
 	Annotation[][] parameterAnnotations = method.getParameterAnnotations();
-	for (int i = 0; i < method.getParameterCount() && !parameters.isEmpty(); i++) {
+	for (int i = 0; i < method.getParameterCount() ; i++) {
 	    methodParameter = methodParameters[i];
 	    proccessParameters(parameters, methodParameter, parametersValues, methodParameters, parameterAnnotations,
-		    i);
+		    i, request);
 	}
 
 	return parametersValues.toArray();
     }
     private static void proccessParameters(List<Param> parameters, Parameter methodParameter,
-	    List<Object> parametersValues, Parameter[] methodParameters, Annotation[][] parameterAnnotations, int i)
+	    List<Object> parametersValues, Parameter[] methodParameters, Annotation[][] parameterAnnotations, int i, Request request)
 	    throws ParameterSintaxException{
 	Param queryParam;
 	Object buffer;
 	for (Annotation annotation : methodParameter.getAnnotations()) {
 	    if (annotation.annotationType().isAssignableFrom(RequestBody.class)) {
 		queryParam = parameters.remove(parameters.size() - 1);
-	    } else {
+	    } else if(annotation.annotationType().isAssignableFrom(Header.class) || 
+		    annotation.annotationType().isAssignableFrom(HttpRequest.class)) {
+		queryParam = null;
+	    }
+	    else {
 		queryParam = parameters.remove(0);
 	    }
-	    mappParameter(methodParameter, queryParam, methodParameters, parametersValues, i);
+	    mappParameter(methodParameter, queryParam, methodParameters, parametersValues, i, request);
 
 	}
     }
-
     /**
      * 
      * 
@@ -121,7 +125,7 @@ public final class RequestManager {
      */
     private static void mappParameter(Parameter methodParameter, Param queryParam, Parameter[] methodParameters,
 
-	    List<Object> parametersValues, int i) {
+	    List<Object> parametersValues, int i, Request request) {
 	Object buffer;
 	for (Annotation e : methodParameter.getAnnotations()) {
 
@@ -149,6 +153,26 @@ public final class RequestManager {
 
 		    
 		}
+	    }
+	    if(e.annotationType().isAssignableFrom(Header.class)) {
+		System.out.println(e.toString());
+		String requestedHeader = e.toString().split("\\(")[1].substring(1).substring(0,
+			e.toString().split("\\(")[1].substring(1).length() -2 );
+		List<String> list = request.getHeader(requestedHeader);
+		if(list == null) {
+		    buffer = null;
+		    parametersValues.add(buffer);
+		}else
+		if(list.size() == 1) {
+		    parametersValues.add(list.get(0));
+		}
+		else {
+		    parametersValues.add(list);
+		}
+	    }
+	    if(e.annotationType().isAssignableFrom(HttpRequest.class)) {
+
+		parametersValues.add(request);
 	    }
 
 	}}

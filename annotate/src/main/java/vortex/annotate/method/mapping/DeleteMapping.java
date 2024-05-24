@@ -30,4 +30,6 @@ public @interface DeleteMapping {
 	 * <h1>example:</h1> <code> @DeleteMapping("/uri")</code>
 	 */
 	String value();
+
+	String[] uris() default {};
 }

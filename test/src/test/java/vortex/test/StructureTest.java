@@ -15,6 +15,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import vortex.annotate.constants.HttpMethod;
+import vortex.annotate.exceptions.InitiateServerException;
+import vortex.annotate.exceptions.UriException;
 import vortex.http.exchange.Response;
 
 import vortex.http.status.HttpStatus;
@@ -31,7 +33,7 @@ class StructureTest {
 	private static final String LOCALHOST = "http://localhost:" + Server.PORT.value();
 
 	@BeforeAll
-	static void init() throws IOException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+	static void init() throws IOException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, UriException, InitiateServerException {
 		Mock.getInstance();
 	}
 	@AfterAll

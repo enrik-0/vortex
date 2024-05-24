@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: vortex.properties.dataTest.DateTest
 -------------------------------------------------------------------------------
-Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.529 s -- in vortex.properties.dataTest.DateTest
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.775 s -- in vortex.properties.dataTest.DateTest
