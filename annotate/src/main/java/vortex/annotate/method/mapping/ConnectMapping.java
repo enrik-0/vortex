@@ -29,4 +29,6 @@ public @interface ConnectMapping {
 	 * <h1>example:</h1> <code> @ConnectMapping("/uri")</code>
 	 */
 	String value();
+
+	String[] uris() default {};
 }

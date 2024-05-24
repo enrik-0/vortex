@@ -55,6 +55,10 @@ public class Request {
 		return this;
 
 	}
+	public List<String> getHeader(String name){
+	     return headers.get(name);
+	}
+	
 	public InputStream getBody() {
 		return body;
 

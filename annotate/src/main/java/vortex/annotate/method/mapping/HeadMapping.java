@@ -29,4 +29,6 @@ public @interface HeadMapping {
 	 * <h1>example:</h1> <code> @HeadMapping("/uri")</code>
 	 */
 	String value();
+
+	String[] uris() default {};
 }

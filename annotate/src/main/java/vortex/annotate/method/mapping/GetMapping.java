@@ -34,4 +34,5 @@ public @interface GetMapping {
 	 * <h1>example:</h1> <code> @GetMapping("/uri")</code>
 	 */
 	String value() default "/";
+	String[] uris() default {};
 }

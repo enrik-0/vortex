@@ -30,4 +30,6 @@ public @interface PostMapping {
 	 * <h1>example:</h1> <code> @PostMapping("/uri")</code>
 	 */
 	String value();
+
+	String[] uris() default {};
 }

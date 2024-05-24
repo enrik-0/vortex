@@ -41,8 +41,8 @@ public final class MappingUtils {
 	
 	public static String parseDate(String dateToParse, String parsePattern) {
 <span class="fc" id="L43">	    final String[] formats = {&quot;dd-mm-yyyy&quot;, </span>
-<span class="fc" id="L44">		    &quot;MM-dd-yyyy&quot;, &quot;yyyy-dd-mm&quot;, &quot;dd-yyyy-mm&quot;, &quot;dd/mm/yyyy&quot;, </span>
-<span class="fc" id="L45">		    &quot;MM/dd/yyyy&quot;, &quot;yyyy/dd/mm&quot;, &quot;yyyy/mm/dd&quot;};</span>
+		    &quot;MM-dd-yyyy&quot;, &quot;yyyy-dd-mm&quot;, &quot;dd-yyyy-mm&quot;, &quot;dd/mm/yyyy&quot;, 
+		    &quot;MM/dd/yyyy&quot;, &quot;yyyy/dd/mm&quot;, &quot;yyyy/mm/dd&quot;};
 <span class="fc" id="L46">	    String datePattern = null;</span>
 <span class="pc bpc" id="L47" title="1 of 2 branches missed.">	    for(String format : formats) {</span>
 <span class="fc" id="L48">		 var sdf = new SimpleDateFormat(format);</span>
@@ -87,8 +87,8 @@ public final class MappingUtils {
 <span class="fc bfc" id="L87" title="All 2 branches covered.">			while ((line = reader.readLine()) != null) {</span>
 <span class="fc" id="L88">				builder.append(line);</span>
 			}
-<span class="pc" id="L90">		} catch (Exception e) {</span>
-		}
+<span class="nc" id="L90">		} catch (Exception e) {</span>
+<span class="fc" id="L91">		}</span>
 <span class="fc" id="L92">		return builder.toString();</span>
 	}
 	public static Object mapToPrimitive(byte[] content,
@@ -102,19 +102,19 @@ public final class MappingUtils {
 <span class="fc bfc" id="L102" title="All 2 branches covered.">			if (Asserttions.inRange(temp, Byte.MAX_VALUE, Byte.MIN_VALUE)) {</span>
 <span class="fc" id="L103">				body = MappingUtils.map(content, byte.class);</span>
 
-<span class="fc" id="L105">			} else if (Asserttions.inRange(temp, Integer.MAX_VALUE,</span>
-<span class="fc bfc" id="L106" title="All 2 branches covered.">					Integer.MIN_VALUE)) {</span>
+<span class="fc bfc" id="L105" title="All 2 branches covered.">			} else if (Asserttions.inRange(temp, Integer.MAX_VALUE,</span>
+					Integer.MIN_VALUE)) {
 <span class="fc" id="L107">				body = MappingUtils.map(buffer, Integer.class);</span>
-<span class="fc" id="L108">			} else {</span>
+			} else {
 <span class="fc" id="L109">				body = temp;</span>
 			}
-<span class="fc" id="L111">		} else {</span>
+		} else {
 <span class="fc bfc" id="L112" title="All 2 branches covered.">			if (Regex.isFloating(buffer)) {</span>
 <span class="fc" id="L113">				body = MappingUtils.map(content, Double.class);</span>
-<span class="fc" id="L114">			}else {</span>
+			}else {
 <span class="fc bfc" id="L115" title="All 2 branches covered.">				if(content.length != 0) {</span>
 <span class="fc" id="L116">					body = MappingUtils.map(buffer, String.class);</span>
-<span class="fc" id="L117">				}else {</span>
+				}else {
 <span class="fc" id="L118">					body = &quot;&quot;;</span>
 				}
 			}
@@ -132,16 +132,16 @@ public final class MappingUtils {
 <span class="nc bnc" id="L132" title="All 2 branches missed.">			if (Asserttions.inRange(temp, Byte.MAX_VALUE, Byte.MIN_VALUE)) {</span>
 <span class="nc" id="L133">				body = MappingUtils.map(content, byte.class);</span>
 
-<span class="nc" id="L135">			} else if (Asserttions.inRange(temp, Integer.MAX_VALUE,</span>
-<span class="nc bnc" id="L136" title="All 2 branches missed.">					Integer.MIN_VALUE)) {</span>
+<span class="nc bnc" id="L135" title="All 2 branches missed.">			} else if (Asserttions.inRange(temp, Integer.MAX_VALUE,</span>
+					Integer.MIN_VALUE)) {
 <span class="nc" id="L137">				body = MappingUtils.map(buffer, Integer.class);</span>
-<span class="nc" id="L138">			} else {</span>
+			} else {
 <span class="nc" id="L139">				body = temp;</span>
 			}
-<span class="nc" id="L141">		} else {</span>
+		} else {
 <span class="nc bnc" id="L142" title="All 2 branches missed.">			if (Regex.isFloating(buffer)) {</span>
 <span class="nc" id="L143">				body = MappingUtils.map(content, Double.class);</span>
-<span class="nc" id="L144">			}else {</span>
+			}else {
 <span class="nc" id="L145">					body = MappingUtils.map(buffer, String.class);</span>
 			}
 		}

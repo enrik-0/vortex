@@ -29,4 +29,6 @@ public @interface OptionsMapping {
 	 * <h1>example:</h1> <code> @OptionsMapping("/uri")</code>
 	 */
 	String value();
+
+	String[] uris() default {};
 }

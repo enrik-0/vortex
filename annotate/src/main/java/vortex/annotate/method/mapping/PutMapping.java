@@ -31,4 +31,6 @@ public @interface PutMapping {
 	 */
 	String value();
 
+	String[] uris() default {};
+
 }

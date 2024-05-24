@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 import vortex.annotate.components.Controller;
 import vortex.annotate.constants.HttpMethod;
+import vortex.annotate.exceptions.InitiateServerException;
 import vortex.annotate.exceptions.UriException;
 import vortex.properties.kinds.Server;
 
@@ -61,8 +62,16 @@ public final class Storage {
 	return buffer;
     }
 
-    public void addUrl(HttpMethod method, Map<String, Object> url) {
+    public void addUrl(HttpMethod method, Map<String, Object> url) throws InitiateServerException {
+	try {
+	Method call = getMethod(method, (String) url.get("uri"));
+	if(!call.getName().equals(((Method) url.get("call")).getName())) {
+	throw new InitiateServerException(String.format("Server won't initiate becauase there are more "
+		+ "that one method assign to this uri %s", (String) url.get("uri")));
+	}
+	}catch(UriException e ) {
 	urls.get(method).add(url);
+	}
     }
 
     public void addAnnotationType(String name) {

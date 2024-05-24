@@ -31,6 +31,9 @@ public class ExchangeHttp {
 		return request.getHeaders();
 	}
 	
+	public Request getRequest() {
+	    return request;
+	}
 	public InputStream getRequestBody() {
 		return request.getBody();
 	}

@@ -39,5 +39,4 @@ public @interface RequestMapping{
 	 * <h1>example:</h1> <code> @RequestMapping(uris = {"/uri", "/uri2", "uri3"})</code>
 	 */
 	String[] uris() default {};
-
 }
