@@ -6,6 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 import vortex.annotate.exceptions.InitiateServerException;
 import vortex.annotate.exceptions.UriException;
 import vortex.http.ServerHttp;
+import vortex.properties.filemanager.FileReader;
 
 
 
@@ -14,6 +15,7 @@ public final class Mock {
 	private static Mock instance;
 	
 	private Mock() throws IOException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, UriException, InitiateServerException {
+	    	FileReader.readPropertyFile("application-test.properties");
 		ServerHttp.runServer();
 	}
 	/**
@@ -29,7 +31,9 @@ public final class Mock {
 	 * @throws UriException 
 	 * @throws InitiateServerException 
 	 */
-	public static Mock getInstance() throws IOException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, UriException, InitiateServerException{
+	public static Mock getInstance() throws IOException, InstantiationException, 
+	IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+	NoSuchMethodException, SecurityException, UriException, InitiateServerException{
 		if(instance == null) {
 			instance = new Mock();
 		}
