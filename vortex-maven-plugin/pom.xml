@@ -11,7 +11,7 @@
 
 	<groupId>kik.framework.vortex</groupId>
 	<artifactId>vortex-maven-plugin</artifactId>
-	<version>0.2.0</version>
+	<version>1.0.0</version>
 	<packaging>maven-plugin</packaging>
 
 	<name>vortex-maven-plugin Maven Plugin</name>
@@ -56,12 +56,12 @@
 		<dependency>
 			<groupId>kik.framework.vortex</groupId>
 			<artifactId>http</artifactId>
-			<version>0.5.2</version>
+			<version>0.6.0</version>
 		</dependency>
 		<dependency>
 			<groupId>kik.framework.vortex</groupId>
 			<artifactId>properties</artifactId>
-			<version>0.3.5</version>
+			<version>0.4.0</version>
 		</dependency>
 	</dependencies>
 

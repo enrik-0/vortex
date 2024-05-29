@@ -2,6 +2,7 @@ package org.vortex.maven.plugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
@@ -10,6 +11,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
 
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
@@ -54,7 +56,21 @@ public class VortexMojo extends AbstractMojo {
 		}
 
 	    }
-
+	    InputStream input = VortexMojo.class.getClassLoader().getResourceAsStream("META-INF/maven/kik.framework.vortex/vortex-maven-plugin/pom.properties");
+	    Properties prop = new Properties();
+            prop.load(input);
+            String version = prop.getProperty("version");
+	    System.out.println();
+	    System.out.println("⠀⠀⠀⠀⠀⣠⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀              __     __         _            \r\n"
+	    	+ "⠀⠀⠀⠀⠠⡏⠤⠀⠂⠂⣂⣵⣿⣿⣿⣿⣿⣿⣿⣶⣆⠂⠂⠈⠈⠀⠀⠀⠀⠀           \\ \\   / /__  _ __| |_ _____  __\r\n"
+	    	+ "⠀⠀⠀⠀⠀⠀⠀⠀⢀⣶⣿⣿⡿⠛⠉⠉⠉⠛⢿⣿⣿⣷⣄⡀⠀⠀⠀⠀⠀⠀             \\ \\ / / _ \\| '__| __/ _ \\ \\/ /\r\n"
+	    	+ "⠀⠀⠀⠀⠀⠀⢀⣴⣿⣿⣿⠋⠀⠀⠀⠀⠀⠀⠀⠙⣿⣿⣿⣿⣶⣤⣀⡀⠀⢀              \\   / (_) | |  | ||  __/>  < \r\n"
+	    	+ "⠀⠀⣀⠰⣀⢿⣿⣿⣿⣿⣿⣀⣀⣀⣀⣀⣀⣰⣰⣶⣿⣿⣿⣿⣿⠿⠿⠁⠉⠁             \\_/ \\___/|_|   \\__\\___/_/\\_\\\r\n"
+	    	+ "⠈⠀⠀⠀⠈⠉⠛⠛⠛⠛⣿⣿⡽⣏⠉⠉⠉⠉⠉⣽⣿⠉⠉⠀⠀⠀⠀⠀⠀⠀\r\n"
+	    	+ "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠻⣷⣦⣄⣀⣠⣴⣾⡿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀\r\n"
+	    	+ "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠛⠿⠿⠿⠟⠋⠀⠀⠀⠀⠀⠀⠀\r\n"
+	    	+ "");
+	    System.out.println("Vortex version " + version);
 	    FileReader.readPropertyFile("application-dev.properties");
 	    ServerHttp.runServer(loader);
 	} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
