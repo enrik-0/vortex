@@ -29,9 +29,6 @@ public final class FileReader {
 		HashMap<String, Object> lines = new HashMap<>();
 		InputStream resource = Thread.currentThread().getContextClassLoader()
 				.getResourceAsStream(fileToRead);
-		for (int i = 0; i < 1000; i++) {
-		    System.err.println(resource);
-		}
 		if (resource != null) {
 			processStream(resource, lines);
 		}
