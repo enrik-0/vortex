@@ -8,9 +8,11 @@ vortex\utils\MappingUtils.class
 vortex\properties\App.class
 vortex\properties\kinds\Application.class
 vortex\properties\exception\FormatPatternException.class
+vortex\properties\kinds\Vortex$Test.class
 vortex\properties\kinds\Data$Format.class
 vortex\properties\kinds\Element.class
 vortex\properties\kinds\Data.class
 vortex\properties\kinds\Server$Data.class
 vortex\utils\Regex.class
+vortex\properties\kinds\Vortex.class
 vortex\properties\kinds\Patterns.class

@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 import vortex.properties.kinds.Element;
 import vortex.properties.kinds.Patterns;
 import vortex.properties.kinds.Server;
+import vortex.properties.kinds.Vortex;
 import vortex.utils.MappingUtils;
 public final class FileReader {
 
@@ -28,12 +29,13 @@ public final class FileReader {
 		HashMap<String, Object> lines = new HashMap<>();
 		InputStream resource = Thread.currentThread().getContextClassLoader()
 				.getResourceAsStream(fileToRead);
+		for (int i = 0; i < 1000; i++) {
+		    System.err.println(resource);
+		}
 		if (resource != null) {
 			processStream(resource, lines);
 		}
 		PropertyParser.getInstance().setProperties(lines);
-		System.out.println(Server.Data.A.value());
-		System.out.println(Server.PORT.value());
 	}
 	private static HashMap<String, Object> processLine(String line,
 			HashMap<String, Object> map) throws IOException {
