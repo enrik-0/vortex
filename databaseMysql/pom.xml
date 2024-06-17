@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>kik.framework.vortex</groupId>
+	<artifactId>databaseMysql</artifactId>
+	<version>0.1.0</version>
+	<name>databaseMysql</name>
+	<url>http://maven.apache.org</url>
+	<properties>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>31.1-jre</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.objenesis</groupId>
+			<artifactId>objenesis</artifactId>
+			<version>3.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>kik.framework.vortex</groupId>
+			<artifactId>databaseManager</artifactId>
+			<version>0.2.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jgrapht</groupId>
+			<artifactId>jgrapht-core</artifactId>
+			<version>1.5.1</version>
+		</dependency>
+	</dependencies>
+</project>

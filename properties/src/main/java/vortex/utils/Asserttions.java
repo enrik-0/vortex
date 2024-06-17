@@ -1,5 +1,6 @@
 package vortex.utils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 public final class Asserttions {
@@ -60,6 +61,9 @@ public final class Asserttions {
 			}
 		}
 		return contentHeaders;
+	}
+	public static boolean isList(Object object) {
+	    return object.getClass().equals(ArrayList.class) || object.getClass().getSuperclass().equals(List.class) || object.getClass().equals(List.class);
 	}
 
 }
