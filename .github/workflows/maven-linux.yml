@@ -32,7 +32,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-- name: Checkout code
+    - name: Checkout code
       uses: actions/checkout@v2
 
     - name: Wait for MySQL to be ready
