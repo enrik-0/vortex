@@ -10,7 +10,7 @@ name: Java CI on Windows
 
 on:
   push: 
-    branches: [ "main" ]
+    branches: [ "main", "database-mysql"]
   pull_request:  
     branches: [ "main", "develop", "database-mysql" ]
 
