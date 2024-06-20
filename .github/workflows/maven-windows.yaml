@@ -32,8 +32,8 @@ jobs:
 
     - name: Configure MySQL
       run: |
-        "C:\tools\mysql\current\bin\mysqladmin.exe" -u root password '1234'
-        "C:\tools\mysql\current\bin\mysql.exe" -u root -p1234 -e "CREATE DATABASE test;"
+        Start-Process "C:\tools\mysql\current\bin\mysqladmin.exe" -ArgumentList "-u root password '1234'" -Wait
+        Start-Process "C:\tools\mysql\current\bin\mysql.exe" -ArgumentList "-u root -p1234 -e 'CREATE DATABASE test;'" -Wait
 
     - name: Checkout submodules
       uses: actions/checkout@v2
