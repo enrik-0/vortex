@@ -6,19 +6,24 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Java CI at Ubuntu
+name: Java CI on Ubuntu
 
 on:
-  push: 
-   branches: [ "main" ]
-  pull_request:  
+  push:
+    branches: [ "main" ]
+  pull_request:
     branches: [ "main", "develop" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
     services:
       mysql:
-        image: mysql:5.7  # Puedes cambiar la versión de MySQL si es necesario
+        image: mysql:5.7  # You can change the MySQL version if needed
         env:
-          MYSQL_ROOT_PASSWORD: 1234 # Cambia esta contraseña según tus necesidades
-          MYSQL_DATABASE: test  # Cambia el nombre de la base de datos según tus necesidades
+          MYSQL_ROOT_PASSWORD: 1234 # Change this password as per your requirements
+          MYSQL_DATABASE: test  # Change the database name as per your requirements
         options: >-
           --health-cmd="mysqladmin ping --silent"
           --health-interval=10s
@@ -26,10 +31,6 @@ on:
           --health-retries=3
         ports:
           - 3306:3306
-jobs:
-  build:
-
-    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
@@ -48,14 +49,18 @@ jobs:
           echo 'MySQL did not become ready in time'
           exit 1
         fi
-    - uses: actions/checkout@v3
+
+    - name: Checkout submodules
+      uses: actions/checkout@v3
       with:
         submodules: true
+
     - name: Set up JDK 17
       uses: actions/setup-java@v3
       with:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
+
     - name: Test with Maven
       run: mvn install
