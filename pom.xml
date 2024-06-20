@@ -188,12 +188,9 @@
 
 		<module>properties</module>
 
-		<module>vortex-maven-plugin</module>
-
 		<module>databaseManager</module>
 
 		<module>databaseMysql</module>
-
 		<module>Initializer</module>
 
 	</modules>
