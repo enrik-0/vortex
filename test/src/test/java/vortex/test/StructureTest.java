@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.AfterAll;
@@ -15,6 +16,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+
+import kik.framework.vortex.databasemanager.exception.RelationTypeException;
 import vortex.annotate.constants.HttpMethod;
 import vortex.annotate.exceptions.InitiateServerException;
 import vortex.annotate.exceptions.UriException;
@@ -35,7 +38,7 @@ class StructureTest {
 
     @BeforeAll
     static void init() throws IOException, InstantiationException, IllegalAccessException, IllegalArgumentException,
-	    InvocationTargetException, NoSuchMethodException, SecurityException, UriException, InitiateServerException {
+	    InvocationTargetException, NoSuchMethodException, SecurityException, UriException, InitiateServerException, SQLException, RelationTypeException {
 	Mock.getInstance();
     }
 

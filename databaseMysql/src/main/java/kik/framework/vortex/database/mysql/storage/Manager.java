@@ -19,12 +19,15 @@ import kik.framework.vortex.databasemanager.storage.Relation;
 import kik.framework.vortex.databasemanager.storage.StorageManager;
 import vortex.annotate.components.Entity;
 import vortex.annotate.manager.Storage;
+import vortex.properties.kinds.Database;
 
 public class Manager extends StorageManager {
 
     public Manager() throws SQLException, RelationTypeException {
-
+	if(Database.Credentials.URL.value() != null) {
+	    
 	initialize(Storage.getInstance());
+	}
     }
 
     public Manager(Storage storage) throws SQLException, RelationTypeException {

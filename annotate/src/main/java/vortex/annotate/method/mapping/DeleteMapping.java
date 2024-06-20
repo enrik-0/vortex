@@ -29,7 +29,7 @@ public @interface DeleteMapping {
 	 * Uri to handle with <b>{@linkplain DELETE} <br>
 	 * <h1>example:</h1> <code> @DeleteMapping("/uri")</code>
 	 */
-	String value();
+	String value() default "";
 
 	String[] uris() default {};
 }

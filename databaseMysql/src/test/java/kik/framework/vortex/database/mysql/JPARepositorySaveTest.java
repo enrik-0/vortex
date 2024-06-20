@@ -50,8 +50,9 @@ public class JPARepositorySaveTest {
 
 	AnnotationManager.getInstance();
 	TableCreator.getInstance().createTable(Person.class);
-	TableCreator.getInstance().createTable(Library.class);
+	TableCreator.getInstance().createTable(Book.class);
 	TableCreator.getInstance().createTable(Truck.class);
+	var r = DatabaseStorage.getInstance().getAllTables();
 
 	Connector.getInstance().sendRequest(
 		TableCreator.getInstance().createStatement(DatabaseStorage.getInstance().getTable(User.class)));

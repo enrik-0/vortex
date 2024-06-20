@@ -1,5 +1,6 @@
 package kik.framework.vortex.database.mysql.assets;
 
+
 import kik.framework.vortex.databasemanager.annotation.ID;
 import kik.framework.vortex.databasemanager.annotation.ManyToOne;
 import vortex.annotate.components.Entity;

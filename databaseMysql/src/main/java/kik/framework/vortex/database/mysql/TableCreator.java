@@ -232,11 +232,6 @@ public class TableCreator implements TableCreatorInterface {
 	return foreignJoiner.toString();
     }
 
-    private RecordInfo createRecord(String origin, String fieldName, RecordParameters data, boolean id, boolean unique,
-	    boolean nullable, boolean saved) throws DataTypeException {
-	return createRecord(origin, fieldName, data.originalClass(), data, id, unique, nullable, saved);
-    }
-
     public String createStatement(DBTable table) throws DataTypeException, SQLException {
 	String sql;
 	var joiner = new StringJoiner(",");

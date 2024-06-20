@@ -28,7 +28,7 @@ public @interface OptionsMapping {
 	 * Uri to handle with <b>{@linkplain OPTIONS} <br>
 	 * <h1>example:</h1> <code> @OptionsMapping("/uri")</code>
 	 */
-	String value();
+	String value() default "";
 
 	String[] uris() default {};
 }

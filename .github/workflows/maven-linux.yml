@@ -13,15 +13,44 @@ on:
    branches: [ "main" ]
   pull_request:  
     branches: [ "main", "develop" ]
+    services:
+      mysql:
+        image: mysql:5.7  # Puedes cambiar la versión de MySQL si es necesario
+        env:
+          MYSQL_ROOT_PASSWORD: 1234 # Cambia esta contraseña según tus necesidades
+          MYSQL_DATABASE: test  # Cambia el nombre de la base de datos según tus necesidades
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+        ports:
+          - 3306:3306
 jobs:
   build:
 
     runs-on: ubuntu-latest
 
     steps:
+- name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Wait for MySQL to be ready
+      run: |
+        for i in {30..0}; do
+          if docker exec ${{ job.services.mysql.id }} mysqladmin ping --silent; then
+            break
+          fi
+          echo 'MySQL is unavailable - sleeping'
+          sleep 1
+        done
+        if [ "$i" = 0 ]; then
+          echo 'MySQL did not become ready in time'
+          exit 1
+        fi
     - uses: actions/checkout@v3
       with:
-        submodules: true # Configurar submódulos a true
+        submodules: true
     - name: Set up JDK 17
       uses: actions/setup-java@v3
       with:

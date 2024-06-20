@@ -12,7 +12,8 @@ public class Library {
     private String street;
 
     private long idLibrary;
-    @OneToMany(cascade = true)
+    
+    @OneToMany
     private List<Book> books;
     public Library(String name, String street, long id,List<Book> books) {
 	this.name = name;

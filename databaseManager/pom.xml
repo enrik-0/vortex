@@ -5,9 +5,16 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>kik.framework.vortex</groupId>
 	<artifactId>databaseManager</artifactId>
-	<version>0.2.0</version>
+	<version>0.8.0</version>
 	<name>databaseManager</name>
 	<url>http://maven.apache.org</url>
+	<distributionManagement>
+		<repository>
+			<id>github</id>
+			<name>GitHub enrik-0 Apache Maven Packages</name>
+			<url>https://maven.pkg.github.com/enrik-0/vortex</url>
+		</repository>
+	</distributionManagement>
 	<properties>
 		<maven.compiler.source>17</maven.compiler.source>
 		<maven.compiler.target>17</maven.compiler.target>
@@ -25,7 +32,7 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>8.0.29</version>
 		</dependency>
-<dependency>
+		<dependency>
 			<groupId>org.objenesis</groupId>
 			<artifactId>objenesis</artifactId>
 			<version>3.3</version>
@@ -33,7 +40,7 @@
 		<dependency>
 			<groupId>kik.framework.vortex</groupId>
 			<artifactId>properties</artifactId>
-			<version>0.4.0</version>
+			<version>0.8.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.reflections</groupId>
@@ -43,7 +50,7 @@
 		<dependency>
 			<groupId>kik.framework.vortex</groupId>
 			<artifactId>annotate</artifactId>
-			<version>0.5.0</version>
+			<version>0.8.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
@@ -74,7 +81,7 @@
 			<artifactId>jgrapht-core</artifactId>
 			<version>1.5.1</version>
 		</dependency>
-	<dependency>
+		<dependency>
 			<groupId>com.github.javafaker</groupId>
 			<artifactId>javafaker</artifactId>
 			<version>1.0.2</version>
@@ -84,18 +91,40 @@
 	</dependencies>
 	<build>
 		<plugins>
+			  <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.3.0</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+			  </plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.1</version>
-				<configuration>
-					<source>${maven.compiler.source}</source>
-					<target>${maven.compiler.target}</target>
-					<compilerArgs>
-						<arg>-Xlint:unchecked</arg>
-					</compilerArgs>
-				</configuration>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>3.1.1</version>
+				<executions>
+					<execution>
+						<id>deploy-javadoc</id>
+						<phase>deploy</phase>
+						<goals>
+							<goal>deploy-file</goal>
+						</goals>
+						<configuration>
+							<file>${project.build.directory}/site/apidocs</file>
+							<classifier>javadoc</classifier>
+							<repositoryId>github</repositoryId>
+							<url>https://maven.pkg.github.com/enrik-0/vortex</url>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
+		
 		</plugins>
 	</build>
 </project>

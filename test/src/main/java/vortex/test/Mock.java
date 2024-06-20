@@ -2,7 +2,10 @@ package vortex.test;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.sql.SQLException;
 
+import kik.framework.vortex.database.mysql.storage.Manager;
+import kik.framework.vortex.databasemanager.exception.RelationTypeException;
 import vortex.annotate.exceptions.InitiateServerException;
 import vortex.annotate.exceptions.UriException;
 import vortex.annotate.manager.AnnotationManager;
@@ -15,9 +18,10 @@ public final class Mock {
 
 	private static Mock instance;
 	
-	private Mock() throws IOException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, UriException, InitiateServerException {
+	private Mock() throws IOException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, UriException, InitiateServerException, SQLException, RelationTypeException {
 	    	FileReader.readPropertyFile("application-test.properties");
 	    	AnnotationManager.getInstance();
+	    	Manager manager = new Manager();
 		ServerHttp.runServer();
 	}
 	/**
@@ -32,10 +36,12 @@ public final class Mock {
 	 * @throws InstantiationException 
 	 * @throws UriException 
 	 * @throws InitiateServerException 
+	 * @throws RelationTypeException 
+	 * @throws SQLException 
 	 */
 	public static Mock getInstance() throws IOException, InstantiationException, 
 	IllegalAccessException, IllegalArgumentException, InvocationTargetException,
-	NoSuchMethodException, SecurityException, UriException, InitiateServerException{
+	NoSuchMethodException, SecurityException, UriException, InitiateServerException, SQLException, RelationTypeException{
 		if(instance == null) {
 			instance = new Mock();
 		}

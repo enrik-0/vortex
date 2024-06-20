@@ -1,5 +1,6 @@
 package vortex.http.test.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import vortex.annotate.components.Controller;
@@ -9,9 +10,13 @@ import vortex.annotate.method.mapping.DeleteMapping;
 import vortex.annotate.method.mapping.GetMapping;
 import vortex.annotate.method.mapping.PostMapping;
 import vortex.annotate.method.mapping.PutMapping;
+import vortex.annotate.method.parameter.Header;
+import vortex.annotate.method.parameter.HttpRequest;
 import vortex.annotate.method.parameter.RequestBody;
 import vortex.annotate.method.parameter.RequestParam;
+import vortex.http.exchange.Request;
 import vortex.http.exchange.ResponseStatus;
+import vortex.http.exchange.ResponseStatusException;
 import vortex.http.status.HttpStatus;
 
 import vortex.properties.kinds.Server;
@@ -30,8 +35,9 @@ public class DevTestController {
     }
 
     @GetMapping("/PatternNonRecursive")
-    public void patternNonRecursive(@RequestParam String testId) {
+    public void patternNonRecursive(@RequestParam String testId, @Header(value = "Host") List<String> a, @HttpRequest Request request ) throws ResponseStatusException {
 
+	throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "bad");
     }
     @GetMapping("/PatternNonRecursiveFailed")
     public void PatternNonRecursiveFailed(@RequestParam String pattern) {
