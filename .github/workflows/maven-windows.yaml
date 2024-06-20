@@ -1,58 +1,31 @@
-# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
-
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
 name: Java CI on Windows
 
 on:
   push: 
     branches: [ "main", "database-mysql"]
   pull_request:  
-    branches: [ "main", "develop", "database-mysql" ]
+    branches: [ "main", "develop" ]
 
 jobs:
   build:
     runs-on: windows-latest
 
-    services:
-      mysql:
-        image: mysql:5.7  # You can change the MySQL version if needed
-        env:
-          MYSQL_ROOT_PASSWORD: 1234  # Change this password as per your requirements
-          MYSQL_DATABASE: test  # Change the database name as per your requirements
-        options: >-
-          --health-cmd="mysqladmin ping --silent"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=3
-        ports:
-          - 3306:3306
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Wait for MySQL to be ready
-      shell: bash
+    - name: Install MySQL on Windows
       run: |
-        for i in {30..0}; do
-          if docker exec ${{ job.services.mysql.id }} mysqladmin ping --silent; then
-            break
-          fi
-          echo 'MySQL is unavailable - sleeping'
-          sleep 1
-        done
-        if [ "$i" = 0 ]; then
-          echo 'MySQL did not become ready in time'
-          exit 1
-        fi
+        choco install mysql --version=5.7.21
+        net start mysql
+
+    - name: Configure MySQL
+      run: |
+        mysqladmin -u root password '1234'
+        mysql -u root -p1234 -e "CREATE DATABASE test;"
 
     - name: Checkout submodules
-      uses: actions/checkout@v3
+      uses: actions/checkout@v2
       with:
         submodules: true
 
@@ -62,6 +35,21 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
+
+    - name: Wait for MySQL to be ready
+      shell: bash
+      run: |
+        for i in {30..0}; do
+          if mysqladmin ping --host=127.0.0.1 --user=root --password=1234 --silent; then
+            break
+          fi
+          echo 'MySQL is unavailable - sleeping'
+          sleep 1
+        done
+        if [ "$i" = 0 ]; then
+          echo 'MySQL did not become ready in time'
+          exit 1
+        fi
 
     - name: Test with Maven
       run: mvn install
