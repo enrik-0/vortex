@@ -12,6 +12,7 @@ public class ReaderTest {
     @Test
     void readerTest() throws Exception {
         FileReader.readPropertyFile("application-dev.properties");
+        FileReader.readPropertyFile("default-test.properties");
     }
     
 }

@@ -16,39 +16,41 @@ import vortex.http.status.HttpStatus;
 
 import vortex.properties.kinds.Server;
 
-
 /**
  * 
  */
 @Controller
 @RequestMapping("/test")
-@CrossOrigin("http://localhost:4200")
 public class DevTestController {
 
+    @PutMapping("/execute")
+    public void executeTest(@RequestBody Map<String, Object> testData) {
+	// execute
+	Server.Data.A.value();
+    }
 
-	@PutMapping("/execute")
-	public void executeTest(@RequestBody Map<String, Object> testData) {
-		// execute
-		Server.Data.A.value();
-	}
-  @GetMapping("/PatternNonRecursive")
-  public void patternNonRecursive(@RequestParam String testId ) {
+    @GetMapping("/PatternNonRecursive")
+    public void patternNonRecursive(@RequestParam String testId) {
 
-  }
+    }
+    @GetMapping("/PatternNonRecursiveFailed")
+    public void PatternNonRecursiveFailed(@RequestParam String pattern) {
+	
+    }
 
-	@PostMapping("/analyze")
-	public Map<String, Object> analyzeTestResults(@RequestBody Map<String, Object> testData) {
-		return testData;
-	}
+    @PostMapping("/analyze")
+    public Map<String, Object> analyzeTestResults(@RequestBody Map<String, Object> testData) {
+	return testData;
+    }
 
-	@GetMapping("/status")
-	public String checkStatus(@RequestParam boolean testId, @RequestParam String output) {
-		// status
-		return "status";
-	}
+    @GetMapping("/status")
+    public String checkStatus(@RequestParam boolean testId, @RequestParam String output) {
+	// status
+	return "status";
+    }
 
-	@DeleteMapping("/cleanup")
-	public void cleanupTestEnvironment(@RequestParam boolean testToken, @RequestParam int cleanupTime) {
-		// clean
-	}
+    @DeleteMapping("/cleanup")
+    public void cleanupTestEnvironment(@RequestParam boolean testToken, @RequestParam int cleanupTime) {
+	// clean
+    }
 }

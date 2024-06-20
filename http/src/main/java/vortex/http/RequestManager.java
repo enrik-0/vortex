@@ -71,10 +71,7 @@ public final class RequestManager {
 	if(denied) {
 	var hosts = request.getRequestHeaders().get("Host");
 	for(String host : hosts) {
-	    if(host.equals(cors)) {
-		denied = false;
-		break;
-	    }
+	    denied = !host.equals(cors);
 	}
 	}
 	if(denied) {

@@ -101,17 +101,14 @@ public class Manager extends StorageManager {
 
 			    String tableStatement = TableCreator.getInstance().createStatement(table);
 			    Connector.getInstance().sendRequest(tableStatement);
-			    System.out.println(table.name() + " number of tries" + tries + "y boolean " + dependenciesCreated );
 			}
 		    } catch (SQLException | DataTypeException e) {
-			System.out.println(
-				String.format("el hilo con la tabla %s ha acabado con excepcion", table.name()));
+			
 			e.printStackTrace();
 		    } catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		    }
-		    System.out.println(String.format("el hilo con la tabla %s ha acabado", table.name()));
 		}
 	    };
 	    Thread thread = new Thread(runnable);

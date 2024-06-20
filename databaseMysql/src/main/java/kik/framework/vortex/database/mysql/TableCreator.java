@@ -9,7 +9,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.StringJoiner;
 
@@ -179,8 +178,6 @@ public class TableCreator implements TableCreatorInterface {
 		e1.printStackTrace();
 	    }
 	}
-	System.out.println("end");
-
     }
 
     private HashMap<String, Object> createHashMap(Field field, ColumnData column, DBTable table,
@@ -216,7 +213,7 @@ public class TableCreator implements TableCreatorInterface {
 			}
 		    }
 		}
-		if (relation.type().equals(OneToOne.class.getSimpleName()) || table.created()) {
+		if ( relation.type().equals("inheritance")|| relation.type().equals(OneToOne.class.getSimpleName()) || table.created()) {
 		    records.add(relation.origin());
 		    referencedRecords.add(relation.destination());
 		    cascade = relation.cascade();
@@ -244,45 +241,48 @@ public class TableCreator implements TableCreatorInterface {
 	String sql;
 	var joiner = new StringJoiner(",");
 	sql = String.format("create table %s (", table.name());
-	if (table.name().equals("users") || table.name().equals("vehicles")) {
-	    System.out.println("TableCreator.createStatement()");
-	}
-
 	for (RecordInfo recor : table.records()) {
 	    if (recor.saved() && recor.data().data() != null && !recor.data().data().equals(DataType.LIST)) {
-		if (recor.data().data().equals(DataType.OBJECT)) {
-		    System.out.println("TableCreator.createStatement()");
-		}
 		if (recor.identifier() && recor.nullable()) {
 		    throw new DataTypeException(
 			    "ID and Nullable are not allowed if you want to have nulls use unique instead");
 		}
-		var lineJoiner = new StringJoiner(" ");
-		if (recor.data().data().equals(DataType.VARCHAR)) {
-		    lineJoiner.add(String.format("%s %s(%d)", recor.name(), DataType.VARCHAR.name(),
-			    recor.data().length() == -1 ? 255 : recor.data().length()));
-		} else if (recor.data().data().equals(DataType.INT)) {
-		    lineJoiner.add(String.format("%s %s", recor.name(), DataType.INT.name()));
-		} else if (recor.data().data().equals(DataType.BIGINT)) {
-		    lineJoiner.add(String.format("%s %s", recor.name(), DataType.BIGINT.name()));
-		}
-		if (recor.unique()) {
-		    lineJoiner.add("unique");
-		}
-		if (recor.nullable()) {
-		    lineJoiner.add("null");
-		} else {
-		    lineJoiner.add("not null");
+		if (!recor.data().data().equals(DataType.OBJECT) && !recor.data().data().equals(DataType.LIST)) {
+		    var lineJoiner = new StringJoiner(" ");
+		    if (recor.data().data().equals(DataType.VARCHAR)) {
+			lineJoiner.add(String.format("%s %s(%d)", recor.name(), DataType.VARCHAR.name().toLowerCase(),
+				recor.data().length() == -1 ? 255 : recor.data().length()));
+		    } else if (recor.data().data().equals(DataType.INT)) {
+			lineJoiner.add(String.format("%s %s", recor.name(), DataType.INT.name().toLowerCase()));
+		    } else if (recor.data().data().equals(DataType.BIGINT)) {
+			lineJoiner.add(String.format("%s %s", recor.name(), DataType.BIGINT.name().toLowerCase()));
+		    } else if (recor.data().data().equals(DataType.BOOLEAN)) {
+			lineJoiner.add(String.format("%s %s", recor.name(), DataType.BOOLEAN.name().toLowerCase()));
+		    } else if (recor.data().data().equals(DataType.DOUBLE)) {
+			lineJoiner.add(String.format("%s %s", recor.name(), DataType.DOUBLE.name().toLowerCase()));
+		    } else if (recor.data().data().equals(DataType.SMALLINT)) {
+			lineJoiner.add(String.format("%s %s", recor.name(), DataType.SMALLINT.name().toLowerCase()));
+		    } else if (recor.data().data().equals(DataType.TINYINT)) {
+			lineJoiner.add(String.format("%s %s", recor.name(), DataType.TINYINT.name().toLowerCase()));
+		    }
+		    if (recor.unique()) {
+			lineJoiner.add("unique");
+		    }
+		    if (recor.nullable()) {
+			lineJoiner.add("null");
+		    } else {
+			lineJoiner.add("not null");
 
+		    }
+		    if (recor.identifier() && recor.data().autoIncrement()) {
+			lineJoiner.add("auto_increment");
+		    }
+		    joiner.add(lineJoiner.toString());
 		}
-		if (recor.identifier() && recor.data().autoIncrement()) {
-		    lineJoiner.add("auto_increment");
-		}
-		lineJoiner.add("\n");
-		joiner.add(lineJoiner.toString());
 	    }
 
 	}
+
 	StringJoiner idJoiner = new StringJoiner(",");
 	for (RecordInfo recor : table.id()) {
 	    idJoiner.add(recor.name());
@@ -400,9 +400,6 @@ public class TableCreator implements TableCreatorInterface {
     private List<Relation> createRelation(Field field, ColumnData data, DBTable table, Annotation annotation)
 	    throws DataTypeException, SQLException, RelationTypeException {
 	String annotationName = annotation.annotationType().getSimpleName();
-	if (table.name().equals("tractors")) {
-	    System.out.println("");
-	}
 	if (!isRelationshipAnnotation(annotation)) {
 
 	    throw new RelationTypeException();
@@ -429,6 +426,7 @@ public class TableCreator implements TableCreatorInterface {
 	} else {
 	    name = data.name();
 	}
+	var s = Storage.getInstance().getComponent(Entity.class);
 	Class<?> clazz = Storage.getInstance().getComponent(Entity.class).stream().filter(c -> {
 	    String fieldType = field.getType().getName();
 	    if (annotationName.equals(OneToMany.class.getSimpleName())
@@ -457,13 +455,9 @@ public class TableCreator implements TableCreatorInterface {
 	}
 	for (Relation relation : relations) {
 	    if (relation.type().equals(OneToMany.class.getSimpleName())) {
-		System.out.println();
 		table.addRelation(relation);
 	    } else
 		for (RecordInfo r : referencedTable.id()) {
-		    if (table.name().equals("tractors")) {
-			System.out.println();
-		    }
 		    if (relation.type().equals(ManyToMany.class.getSimpleName())
 			    && table.getRecord(relation.origin()).data().data().equals(DataType.LIST)) {
 			table.addRelation(relation);
@@ -479,8 +473,8 @@ public class TableCreator implements TableCreatorInterface {
 
 			    table.addRecord(new RecordInfo(origin.name(), field.getName(), actual.identifier(),
 				    actual.unique(), actual.nullable(), actual.saved(), origin.data()));
-			    table.addRelation(new Relation(origin.name(), referencedTable.name(), origin.fieldName(), true,
-				    ManyToOne.class.getSimpleName()));
+			    table.addRelation(new Relation(origin.name(), referencedTable.name(), origin.fieldName(),
+				    true, ManyToOne.class.getSimpleName()));
 			} else if (relation.type().equals(OneToOne.class.getSimpleName())) {
 			    for (RecordInfo recor : referencedTable.id()) {
 				for (RecordInfo id : referencedTable.id()) {
@@ -530,8 +524,8 @@ public class TableCreator implements TableCreatorInterface {
 	}
 	for (RecordInfo id : referencedTable.id()) {
 	    String recordName = String.format("%s_%s", referencedTable.name(), id.name());
-	    newTable.addRecord(new RecordInfo(recordName, id.name(), id.identifier(), id.unique(), id.nullable(),
-		    id.saved(), id.data()));
+	    newTable.addRecord(new RecordInfo(recordName, id.name(), id.identifier(), false, id.nullable(),
+		    id.saved(), new RecordParameters(id.data().data(), id.data().originalClass(), id.data().length(), id.data().precision(), id.data().precision(), false)));
 	    newTable.addRelation(new Relation(recordName, referencedTable.name(), id.name(), true,
 		    ManyToMany.class.getSimpleName()));
 	}

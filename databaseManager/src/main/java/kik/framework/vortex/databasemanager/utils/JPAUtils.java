@@ -2,13 +2,12 @@ package kik.framework.vortex.databasemanager.utils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import edu.emory.mathcs.backport.java.util.Collections;
 import kik.framework.vortex.databasemanager.annotation.Column;
@@ -16,51 +15,50 @@ import kik.framework.vortex.databasemanager.storage.DBTable;
 import kik.framework.vortex.databasemanager.storage.DatabaseStorage;
 import kik.framework.vortex.databasemanager.storage.RecordInfo;
 import kik.framework.vortex.databasemanager.storage.Relation;
-import vortex.utils.MappingUtils;
 
 public final class JPAUtils {
 
-    public static Map<String, Object> getValues(Object entity) throws IllegalAccessException, IllegalArgumentException {
+    public static Map<String, Object> getValues(Object entity) throws IllegalAccessException {
+        Map<String, Object> valuesMap = new HashMap<>();
+        Collection<Field> fields = getAllFields(entity.getClass());
+        DBTable table = DatabaseStorage.getInstance().getTable(entity.getClass());
 
-	Map<String, Object> map = new HashMap<>();
-	Field[] entityFields = entity.getClass().getDeclaredFields();
+        for (Field field : fields) {
+            field.setAccessible(true);
+            String fieldName = getFieldName(field);
+            valuesMap.put(fieldName, field.get(entity));
+            field.setAccessible(false);
+        }
 
-	Collection<Field> fields = getFields(entity.getClass());
-	DBTable table = DatabaseStorage.getInstance().getTable(entity.getClass());
-	for (Field field : fields) {
-	    field.setAccessible(true);
-	    String fieldName = field.getName().toLowerCase();
-	    for (Annotation annotation : field.getAnnotations()) {
-		if (annotation instanceof Column) {
-		    fieldName = ((Column) annotation).name();
-		}
-	    }
-	    map.put(fieldName, field.get(entity));
-	    field.setAccessible(false);
-	}
-	List<String> names = new ArrayList<>();
-	for (RecordInfo r : table.records()) {
-	    names.add(r.name());
-	}
-	for (String name : names) {
-	    if (!map.keySet().contains(name)) {
-		System.out.println("a");
-		Relation relation = table.getRelation(name);
+        List<String> tableNames = table.records().stream()
+                                          .map(RecordInfo::name)
+                                          .collect(Collectors.toList());
 
-	    }
-	}
+        for (String name : tableNames) {
+            if (!valuesMap.containsKey(name.toLowerCase())) {
+                Relation relation = table.getRelation(name);
+            }
+        }
 
-	return map;
+        return valuesMap;
     }
 
-    private static Collection<Field> getFields(Class<?> entity) {
-	Collection<Field> fields = new ArrayList<>();
-	Collections.addAll(fields, entity.getDeclaredFields());
-	if (!entity.getSuperclass().equals(Object.class)) {
-	    fields.addAll(getFields(entity.getSuperclass()));
-	}
-	return fields;
+    private static String getFieldName(Field field) {
+        for (Annotation annotation : field.getAnnotations()) {
+            if (annotation instanceof Column) {
+                return ((Column) annotation).name();
+            }
+        }
+        return field.getName().toLowerCase();
+    }
 
+    private static Collection<Field> getAllFields(Class<?> clazz) {
+        Collection<Field> fields = new ArrayList<>();
+        while (clazz != null && clazz != Object.class) {
+            Collections.addAll(fields, clazz.getDeclaredFields());
+            clazz = clazz.getSuperclass();
+        }
+        return fields;
     }
 
 }

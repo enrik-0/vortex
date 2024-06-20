@@ -92,12 +92,7 @@ public class VortexMojo extends AbstractMojo {
 	    PrintStream originalErr = System.err;
 	    PrintStream originalOut = System.out;
 	    var originalIn = System.in;
-	    File file =  new File("outputvortex" + System.currentTimeMillis());
-	    if(!file.exists()) {
-		file.createNewFile();
-	    }
-	    var printer = new PrintStream(file);
-	    System.setOut(printer);
+	    System.setOut(null);
 	    System.setErr(null);
 	    System.setIn(null);
 	    var reflections = new Reflections(loader, new TypeAnnotationsScanner(), new SubTypesScanner());
@@ -110,8 +105,6 @@ public class VortexMojo extends AbstractMojo {
 	    System.setOut(originalOut);
 	    System.setErr(originalErr);
 	    System.setIn(originalIn);
-	    printer.close();
-	    file.delete();
 	    m.invoke(a, new String[1]);
 	    }else {
 		FileReader.readPropertyFile("application-dev.properties");

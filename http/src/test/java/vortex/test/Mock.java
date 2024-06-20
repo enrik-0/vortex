@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import vortex.annotate.exceptions.InitiateServerException;
 import vortex.annotate.exceptions.UriException;
+import vortex.annotate.manager.AnnotationManager;
 import vortex.http.ServerHttp;
 import vortex.properties.filemanager.FileReader;
 
@@ -17,6 +18,7 @@ public final class Mock {
 	
 	private Mock() throws IOException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, UriException, InitiateServerException {
 	    	FileReader.readPropertyFile("application-test.properties");
+	    	AnnotationManager.getInstance();
 		ServerHttp.runServer();
 	}
 	/**

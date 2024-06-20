@@ -1,6 +1,5 @@
 package kik.framework.vortex.databasemanager.utils;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
@@ -34,7 +33,9 @@ public final class SQLWriter {
 		if (reco.nullable() && reco.identifier()) {
 		    throw new DataTypeException("Identiferes can not be null");
 		}
-
+		if(value == null && !reco.nullable()) {
+		    throw new DataTypeException("null value in a non nullable record");
+		}
 		if (value == null && reco.nullable() && !reco.identifier()) {
 		    valuesJoiner.add("null");
 		} else if (value instanceof String) {
@@ -92,12 +93,11 @@ public final class SQLWriter {
 		paramJoiner.add(String.format("%s as %s", r.name(), r.name()));
 	});
 
-	filter.keySet().forEach(s -> paramJoiner.add(String.format("%s as %s", s, s)));
-
 	builder.append(String.format("select %s from %s where ", paramJoiner.toString(), table.name()));
 	filter.forEach((name, value) -> {
 	    RecordInfo r = table.getRecord(name);
-	    if (r.data().data().isString()) {
+	    if(r != null)
+	    if ( r.data().data().isString()) {
 
 		whereJoiner.add(String.format("%s = \'%s\'", name, value));
 	    } else {
@@ -136,7 +136,7 @@ public final class SQLWriter {
 			    whereJoiner.add(String.format("%s = %s", key, values.get(key)));
 			    
 			}
-		    }else
+		    }
 		    if (r.saved() && r.name().toLowerCase().equals(key)) {
 			    if(r.data().data().isString()) {
 			setJoiner.add(String.format("%s = \'%s\'", key, values.get(key)));

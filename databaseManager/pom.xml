@@ -25,6 +25,11 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>8.0.29</version>
 		</dependency>
+<dependency>
+			<groupId>org.objenesis</groupId>
+			<artifactId>objenesis</artifactId>
+			<version>3.3</version>
+		</dependency>
 		<dependency>
 			<groupId>kik.framework.vortex</groupId>
 			<artifactId>properties</artifactId>
@@ -68,6 +73,12 @@
 			<groupId>org.jgrapht</groupId>
 			<artifactId>jgrapht-core</artifactId>
 			<version>1.5.1</version>
+		</dependency>
+	<dependency>
+			<groupId>com.github.javafaker</groupId>
+			<artifactId>javafaker</artifactId>
+			<version>1.0.2</version>
+			<scope>test</scope>
 		</dependency>
 
 	</dependencies>

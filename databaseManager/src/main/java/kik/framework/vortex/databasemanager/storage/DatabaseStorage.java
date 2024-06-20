@@ -11,9 +11,15 @@ import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.traverse.TopologicalOrderIterator;
+import org.objenesis.Objenesis;
+import org.objenesis.ObjenesisStd;
+import org.objenesis.instantiator.ObjectInstantiator;
+
+import edu.emory.mathcs.backport.java.util.Collections;
 import kik.framework.vortex.databasemanager.annotation.ManyToMany;
 import kik.framework.vortex.databasemanager.annotation.ManyToOne;
 import kik.framework.vortex.databasemanager.annotation.Table;
+import kik.framework.vortex.databasemanager.exception.RepositoryNotExistsException;
 import vortex.annotate.components.Repository;
 import vortex.annotate.manager.Storage;
 
@@ -76,12 +82,17 @@ public final class DatabaseStorage {
 		} else {
 		    table = getRelationTable(getTable(table1.clazz().getSuperclass()), table2);
 		}
+	    } else
+
+	    if (table2.isInheritance()) {
+		table = getRelationTable(table1, getTable(table2.clazz().getSuperclass()));
 	    } else {
 
 		table = tables.stream().filter(dbTable -> {
 		    return dbTable.name().contains(table1.name()) && dbTable.name().contains(table2.name());
 		}).findFirst().get();
 	    }
+
 	} catch (NoSuchElementException e) {
 	    table = null;
 	}
@@ -111,7 +122,9 @@ public final class DatabaseStorage {
 	List<String> order = new ArrayList<>();
 	List<DBTable> ordered = new ArrayList<>();
 	while (iterator.hasNext()) {
-	    order.add(iterator.next());
+	    String element = iterator.next();
+	    if(element != null)
+	    order.add(element);
 	}
 
 	order.stream().forEach(table -> {
@@ -137,43 +150,32 @@ public final class DatabaseStorage {
 	return this;
     }
 
-    public kik.framework.vortex.databasemanager.Repository getRepository(Class<?> clazz) {
+    public kik.framework.vortex.databasemanager.Repository getRepository(Class<?> clazz) throws RepositoryNotExistsException {
 	Object object = null;
 	var repositories = Storage.getInstance().getComponent(Repository.class);
+	    var optional = repositories.stream().filter(repo -> {
+		var tClass = ((ParameterizedType) repo.getGenericSuperclass()).getActualTypeArguments()[0];
+		return tClass.getTypeName().equals(clazz.getTypeName());
+	    }).findFirst();
+	    if(optional.isEmpty()) {
+		throw new RepositoryNotExistsException(String.format("Repository for %s class not found", clazz.getSimpleName()));
+	    }
+	    var repository = optional.get();
 
-	if(clazz.getSuperclass().equals(Object.class)) {
-	    
-	Class<?> repository = repositories.stream().filter(repo -> {
-
-	    var tClass = ((ParameterizedType) repo.getGenericSuperclass()).getActualTypeArguments()[0];
-	    return tClass.equals(clazz);
-	}).findFirst().get();
-
-	try {
-	    object = repository.getConstructor().newInstance(null);
-	} catch (InstantiationException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	} catch (IllegalAccessException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	} catch (IllegalArgumentException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	} catch (InvocationTargetException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	} catch (NoSuchMethodException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	} catch (SecurityException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	}
-	}else {
-	   object = getRepository(clazz.getSuperclass());
-	}
+	    Objenesis objenesis = new ObjenesisStd();
+	    ObjectInstantiator instantiator = objenesis.getInstantiatorOf(repository);
+	    object = instantiator.newInstance();
 	return (kik.framework.vortex.databasemanager.Repository) object;
+    }
+
+    public Collection<DBTable> getAllTables() {
+	return Collections.unmodifiableCollection(tables);
+    }
+
+    public void removeTable(DBTable table) {
+	tables.remove(table);
+	relations.removeVertex(table.name());
+
     }
 
 }

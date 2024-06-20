@@ -33,9 +33,9 @@ public final class VortexRunner {
 	    PrintStream printer = new PrintStream(file);
 	    FileReader.readPropertyFile("application-dev.properties");
 	    var storage = Storage.getInstance();
-	    System.setErr(null);
+	   // System.setErr(null);
 	    System.setIn(null);
-	    System.setOut(printer);
+	    //System.setOut(printer);
 	    AnnotationManager.getInstance();
 	    System.setOut(originalOut);
 	    System.setErr(originalErr);

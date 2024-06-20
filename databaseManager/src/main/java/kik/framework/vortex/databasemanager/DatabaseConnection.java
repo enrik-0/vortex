@@ -30,5 +30,6 @@ public abstract class DatabaseConnection {
     public void closeConnection(Connection connection) throws SQLException{
 	connection.close();
     }
+    public abstract String getSchema();
 
 }

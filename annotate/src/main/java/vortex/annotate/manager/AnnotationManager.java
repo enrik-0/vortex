@@ -224,55 +224,75 @@ public final class AnnotationManager {
 	} catch (Exception e) {
 	}
 	Set<Class<?>> annotatedClasses = reflections.getTypesAnnotatedWith(annotation);
-	if(annotation.getSimpleName().equals(CrossOrigin.class.getSimpleName())){
-	    for(Class<?> annotatedClass : annotatedClasses){
+	if (annotation.getSimpleName().equals(CrossOrigin.class.getSimpleName())) {
+	    for (Class<?> annotatedClass : annotatedClasses) {
 		String value = null;
 		var r = annotatedClass.getAnnotation(CrossOrigin.class);
-		if(r != null) {
+		if (r != null) {
 		    value = r.value();
 		}
 		Storage.getInstance().addCORS(annotatedClass, value);
 	    }
-	}else {
-	    
-	Storage.getInstance().addAnnotationType(annotation.getName());
+	} else {
 
-	for (Class<?> annotatedClass : annotatedClasses) {
-	    if (!annotatedClass.getPackage().getName().contains("vortex") || (boolean) Vortex.Test.ENABLED.value()) {
-		Storage.getInstance().addClass(annotation.getName(), annotatedClass);
-		if (LOGGER.isDebugEnabled()) {
-		    LOGGER.info(String.format("class :%s annotated with %s ", annotatedClass.getName(),
-			    annotation.getName()));
+	    Storage.getInstance().addAnnotationType(annotation.getName());
+
+	    for (Class<?> annotatedClass : annotatedClasses) {
+		if (!annotatedClass.getPackage().getName().contains("vortex")
+			|| (boolean) Vortex.Test.ENABLED.value()) {
+		    Storage.getInstance().addClass(annotation.getName(), annotatedClass);
+		    if (LOGGER.isDebugEnabled()) {
+			LOGGER.info(String.format("class :%s annotated with %s ", annotatedClass.getName(),
+				annotation.getName()));
+		    }
 		}
-	    }
 	    }
 	}
 
     }
 
     private void seekClasses() {
+	var out = System.out;
+	var err = System.err;
+	System.setOut(null);
+	System.setErr(null);
+
 	setClasses(Controller.class);
 	setClasses(CrossOrigin.class);
 	final var LOG_MESSAGE = "number of %s %d";
 	if ((boolean) Application.DEBUG.value()) {
+
+	    System.setOut(out);
 	    LOGGER.debug(String.format(LOG_MESSAGE, Controller.class.getSimpleName(),
 		    Storage.getInstance().getComponent(Controller.class.getName()).size()));
+	    System.setOut(null);
 	}
 	setClasses(Service.class);
 	if ((boolean) Application.DEBUG.value()) {
+
+	    System.setOut(out);
 	    LOGGER.debug(String.format(LOG_MESSAGE, Service.class.getSimpleName(),
 		    Storage.getInstance().getComponent(Service.class.getName()).size()));
+
+	    System.setOut(null);
 	}
 	setClasses(Entity.class);
 	if ((boolean) Application.DEBUG.value()) {
+
+	    System.setOut(out);
 	    LOGGER.debug(String.format(LOG_MESSAGE, Entity.class.getSimpleName(),
 		    Storage.getInstance().getComponent(Entity.class.getName()).size()));
+	    System.setOut(null);
 	}
 	setClasses(Repository.class);
 	if ((boolean) Application.DEBUG.value()) {
+
+	    System.setOut(out);
 	    LOGGER.debug(String.format(LOG_MESSAGE, Entity.class.getSimpleName(),
 		    Storage.getInstance().getComponent(Entity.class.getName()).size()));
 	}
+	System.setOut(out);
+	System.setErr(err);
     }
 
     public static Storage get() {

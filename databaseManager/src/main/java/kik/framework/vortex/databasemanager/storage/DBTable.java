@@ -55,7 +55,6 @@ public record DBTable(String name, Class<?> clazz, boolean created, Collection<R
 	}
 	return this;
     }
-
     // Method to remove records from the internal mutable collection
     public DBTable removeRecord(RecordInfo record) {
 	((ArrayList<RecordInfo>) records).remove(record);
@@ -80,6 +79,12 @@ public record DBTable(String name, Class<?> clazz, boolean created, Collection<R
 	return this;
     }
 
+    public DBTable addAllRecords(List<RecordInfo> records) {
+	for(var record : records) {
+	    addRecord(record);
+	}
+	return this;
+    }
     public Relation getRelation(String origin) {
 	Relation relation;
 	try {

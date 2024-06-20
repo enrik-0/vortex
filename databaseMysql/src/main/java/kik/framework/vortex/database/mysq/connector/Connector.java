@@ -11,10 +11,12 @@ public class Connector extends DatabaseConnection {
 
     private static Connector connector;
 
-    private Connector() {
+    private Connector() throws SQLException {
+
+	sendRequest("SET GLOBAL max_connections = 5000");
     }
 
-    public static Connector getInstance() {
+    public static Connector getInstance() throws SQLException {
 	synchronized (Connector.class) {
 	    if (connector == null) {
 		connector = new Connector();
