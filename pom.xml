@@ -183,9 +183,6 @@
 		<module>http</module>
 
 		<module>annotate</module>
-
-		<module>test</module>
-
 		<module>properties</module>
 
 		<module>databaseManager</module>
