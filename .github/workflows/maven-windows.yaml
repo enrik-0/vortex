@@ -23,12 +23,17 @@ jobs:
     - name: Install MySQL on Windows
       run: |
         choco install mysql
-        net start mysql
+
+    - name: Start MySQL service
+      run: |
+        if ((Get-Service mysql).Status -ne 'Running') {
+          Start-Service mysql
+        }
 
     - name: Configure MySQL
       run: |
-        "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysqladmin.exe" -u root password '1234'
-        "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p1234 -e "CREATE DATABASE test;"
+        "C:\tools\mysql\current\bin\mysqladmin.exe" -u root password '1234'
+        "C:\tools\mysql\current\bin\mysql.exe" -u root -p1234 -e "CREATE DATABASE test;"
 
     - name: Checkout submodules
       uses: actions/checkout@v2
@@ -46,7 +51,7 @@ jobs:
       shell: bash
       run: |
         for i in {30..0}; do
-          if "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysqladmin.exe" ping --host=127.0.0.1 --user=root --password=1234 --silent; then
+          if "C:\tools\mysql\current\bin\mysqladmin.exe" ping --host=127.0.0.1 --user=root --password=1234 --silent; then
             break
           fi
           echo 'MySQL is unavailable - sleeping'
