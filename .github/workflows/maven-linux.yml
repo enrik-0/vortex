@@ -9,9 +9,9 @@ name: Java CI on Ubuntu
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "database-mysql" ]
   pull_request:
-    branches: [ "main", "develop", "database-mysql" ]
+    branches: [ "main", "develop"]
 
 jobs:
   build:
