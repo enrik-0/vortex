@@ -28,7 +28,7 @@ public @interface HeadMapping {
 	 * Uri to handle with <b>{@linkplain HEAD} <br>
 	 * <h1>example:</h1> <code> @HeadMapping("/uri")</code>
 	 */
-	String value();
+	String value() default "";
 
 	String[] uris() default {};
 }

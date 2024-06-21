@@ -25,6 +25,7 @@ import vortex.http.status.HttpStatus;
 
 import vortex.test.exception.AmbiguousMethodException;
 import vortex.utils.Asserttions;
+import vortex.utils.HttpUtils;
 import vortex.utils.MappingUtils;
 
 public class RequestBuilder {
@@ -172,7 +173,7 @@ public class RequestBuilder {
 		try {
 			connection.setRequestMethod(this.method.name());
 			List<String> contentHeaders = new ArrayList<>();
-			Asserttions.setContentHeader(contentHeaders, body,
+			HttpUtils.setContentHeader(contentHeaders, body,
 					headers.get("Content-type")).forEach(value -> {
 						this.addHeader("Content-type", value);
 					});

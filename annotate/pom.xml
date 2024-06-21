@@ -7,7 +7,7 @@
 
 	<groupId>kik.framework.vortex</groupId>
 	<artifactId>annotate</artifactId>
-	<version>0.5.0</version>
+	<version>0.8.1</version>
 	<name>annotate</name>
 	<url>http://maven.apache.org</url>
 	<properties>
@@ -15,6 +15,13 @@
 		<maven.compiler.target>17</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
+		<distributionManagement>
+		<repository>
+			<id>github</id>
+			<name>vortex</name>
+            <url>https://maven.pkg.github.com/enrik-0/vortex</url>
+		</repository>
+	</distributionManagement>
 	<dependencies>
 		<!-- Detect annotations-->
 		<dependency>
@@ -31,7 +38,7 @@
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
-			<version>31.1-jre</version>
+			<version>32.0.1-jre</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jacoco</groupId>
@@ -41,7 +48,7 @@
 		<dependency>
 			<groupId>kik.framework.vortex</groupId>
 			<artifactId>properties</artifactId>
-			<version>0.4.0</version>
+			<version>0.8.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>

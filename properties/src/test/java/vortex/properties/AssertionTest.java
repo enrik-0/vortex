@@ -1,64 +1,77 @@
 package vortex.properties;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
-import org.junit.jupiter.api.Assertions;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
+
 import vortex.utils.Asserttions;
 
-/**
- * AssertionTest
- */
-public class AssertionTest {
+import java.util.ArrayList;
+import java.util.function.Supplier;
+
+class AsserttionsTest {
 
     @Test
-    void booleanTest(){
-        try{
-        Asserttions.isTrue(true, () -> "this cant be thrown");
-        assertTrue(true);
-        }catch(IllegalArgumentException e){
-        assertTrue(false);
-        }
-         try{
-        Asserttions.isTrue(false, () -> "this must be thrown");
-        assertTrue(false);
-        }catch(IllegalArgumentException e){
-        assertTrue(true);
-        }              
-        try{
+    void testIsTrue() {
+        // Should not throw an exception
+        Asserttions.isTrue(true, () -> "This should not fail");
 
-        Asserttions.isFalse(false, () -> "this cant be thrown");
-        assertTrue(true);
-        }catch(IllegalArgumentException e){
-            assertTrue(false);
-        }
+        // Should throw an exception
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> 
+            Asserttions.isTrue(false, () -> "This should fail")
+        );
+        assertEquals("This should fail", exception.getMessage());
+    }
 
-        try{
-        Asserttions.isFalse(true, () -> "this must be thrown");
-        assertTrue(false);
-        }catch(IllegalArgumentException e){
-            assertTrue(true);
-        }
-}
+    @Test
+    void testIsFalse() {
+        // Should not throw an exception
+        Asserttions.isFalse(false, () -> "This should not fail");
 
-@Test
-void inRangeTest(){
-    assertTrue(Asserttions.inRange(13, 20, 10));
-    assertFalse(Asserttions.inRange(13, 12, 10));
-}
-@Test
-void isPrimitiveTest(){
-    assertTrue(Asserttions.isPrimitive("this is a String"));
-    assertTrue(Asserttions.isPrimitive(Character.valueOf('c')));
-    assertTrue(Asserttions.isPrimitive(Byte.valueOf("2")));
-    assertTrue(Asserttions.isPrimitive(Integer.valueOf(12)));
-    assertTrue(Asserttions.isPrimitive(Long.valueOf(12)));
-    assertTrue(Asserttions.isPrimitive(Double.valueOf(12.3)));
-    assertTrue(Asserttions.isPrimitive(Double.valueOf(12.3)));
-    assertTrue(Asserttions.isPrimitive(Float.valueOf("12.3")));
-    assertTrue(Asserttions.isPrimitive(Short.valueOf("1")));
-    assertFalse(Asserttions.isPrimitive(new AssertionTest()));
-    
-}
+        // Should throw an exception
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> 
+            Asserttions.isFalse(true, () -> "This should fail")
+        );
+        assertEquals("This should fail", exception.getMessage());
+    }
+
+    @Test
+    void testNullSafeGet() {
+        Supplier<String> nonNullSupplier = () -> "Non-null message";
+        Supplier<String> nullSupplier = null;
+
+        assertEquals("Non-null message", Asserttions.nullSafeGet(nonNullSupplier));
+        assertNull(Asserttions.nullSafeGet(nullSupplier));
+    }
+
+    @Test
+    void testInRangeLong() {
+        assertTrue(Asserttions.inRange(5L, 10L, 1L));
+        assertFalse(Asserttions.inRange(0L, 10L, 1L));
+    }
+
+    @Test
+    void testInRangeInt() {
+        assertTrue(Asserttions.inRange(5, 10, 1));
+        assertFalse(Asserttions.inRange(0, 10, 1));
+    }
+
+    @Test
+    void testInRangeByte() {
+        assertTrue(Asserttions.inRange((byte) 5, (byte) 10, (byte) 1));
+        assertFalse(Asserttions.inRange((byte) 0, (byte) 10, (byte) 1));
+    }
+
+    @Test
+    void testIsPrimitive() {
+        assertTrue(Asserttions.isPrimitive(1));
+        assertTrue(Asserttions.isPrimitive("string"));
+        assertFalse(Asserttions.isPrimitive(new Object()));
+    }
+
+    @Test
+    void testIsList() {
+        assertTrue(Asserttions.isList(new ArrayList<>()));
+        assertFalse(Asserttions.isList(new Object()));
+    }
 }

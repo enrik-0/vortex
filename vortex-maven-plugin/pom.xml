@@ -3,12 +3,6 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<artifactId>vortex</artifactId>
-		<groupId>kik.framework</groupId>
-		<version>0.1.0-SNAPSHOT</version>
-	</parent>
-
 	<groupId>kik.framework.vortex</groupId>
 	<artifactId>vortex-maven-plugin</artifactId>
 	<version>1.0.0</version>
@@ -16,6 +10,13 @@
 
 	<name>vortex-maven-plugin Maven Plugin</name>
 
+	<distributionManagement>
+		<repository>
+			<id>github</id>
+			<name>GitHub enrik-0 Apache Maven Packages</name>
+			<url>https://github.com/enrik-0/vortex</url>
+		</repository>
+	</distributionManagement>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>17</maven.compiler.source>
@@ -56,13 +57,78 @@
 		<dependency>
 			<groupId>kik.framework.vortex</groupId>
 			<artifactId>http</artifactId>
-			<version>0.6.0</version>
+			<version>0.8.0</version>
 		</dependency>
 		<dependency>
 			<groupId>kik.framework.vortex</groupId>
 			<artifactId>properties</artifactId>
-			<version>0.4.0</version>
+			<version>0.8.0</version>
 		</dependency>
+		<dependency>
+			<groupId>kik.framework.vortex</groupId>
+			<artifactId>databaseManager</artifactId>
+			<version>0.8.0</version>
+		</dependency>
+		<dependency>
+			<groupId>kik.framework.vortex</groupId>
+			<artifactId>databaseMysql</artifactId>
+			<version>0.8.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.maven</groupId>
+			<artifactId>maven-model</artifactId>
+			<version>3.9.6</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.maven</groupId>
+			<artifactId>maven-settings</artifactId>
+			<version>3.9.6</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.maven</groupId>
+			<artifactId>maven-repository-metadata</artifactId>
+			<version>3.9.6</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.maven</groupId>
+			<artifactId>maven-artifact</artifactId>
+			<version>3.9.6</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.maven</groupId>
+			<artifactId>maven-project</artifactId>
+			<version>2.2.1</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.maven</groupId>
+			<artifactId>maven-profile</artifactId>
+			<version>2.2.1</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.maven</groupId>
+			<artifactId>maven-artifact-manager</artifactId>
+			<version>2.2.1</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.maven</groupId>
+			<artifactId>maven-plugin-registry</artifactId>
+			<version>2.2.1</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jgrapht</groupId>
+			<artifactId>jgrapht-core</artifactId>
+			<version>1.5.1</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

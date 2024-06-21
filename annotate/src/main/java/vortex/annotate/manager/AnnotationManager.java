@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -11,16 +12,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import org.reflections.Reflections;
+import org.reflections.scanners.FieldAnnotationsScanner;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.scanners.TypeAnnotationsScanner;
+import org.reflections.scanners.TypeElementsScanner;
+import org.reflections.scanners.TypesScanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.emory.mathcs.backport.java.util.Collections;
 import vortex.annotate.components.Controller;
 import vortex.annotate.components.Entity;
+import vortex.annotate.components.Repository;
 import vortex.annotate.components.Service;
 import vortex.annotate.constants.HttpMethod;
+import vortex.annotate.controller.CrossOrigin;
 import vortex.annotate.controller.RequestMapping;
 import vortex.annotate.exceptions.InitiateServerException;
 import vortex.annotate.exceptions.UriException;
@@ -39,7 +45,6 @@ public final class AnnotationManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(AnnotationManager.class);
     private static AnnotationManager manager;
     private static Reflections reflections;
-    private Storage data = Storage.getInstance();
 
     private AnnotationManager() throws UriException, InitiateServerException {
 
@@ -50,6 +55,7 @@ public final class AnnotationManager {
 
 	synchronized (AnnotationManager.class) {
 	    if (manager == null) {
+
 		manager = new AnnotationManager();
 	    }
 
@@ -61,7 +67,8 @@ public final class AnnotationManager {
     private void initialize() throws UriException, InitiateServerException {
 	seekClasses();
 	Annotation mapping = null;
-	ArrayList<Class<?>> annotatedClasses = (ArrayList<Class<?>>) data.getComponent(Controller.class.getName());
+	ArrayList<Class<?>> annotatedClasses = (ArrayList<Class<?>>) Storage.getInstance()
+		.getComponent(Controller.class.getName());
 	for (Class<?> annotatedClass : annotatedClasses) {
 	    for (Annotation annotation : annotatedClass.getAnnotations()) {
 		if (annotation.annotationType().getSimpleName().equals(RequestMapping.class.getSimpleName())) {
@@ -108,23 +115,23 @@ public final class AnnotationManager {
 		}
 	    }
 	}
-	if(mapping.annotationType().getSimpleName().equals(RequestMapping.class.getSimpleName())) {
+	if (mapping.annotationType().getSimpleName().equals(RequestMapping.class.getSimpleName())) {
 	    Method[] methods = mapping.annotationType().getMethods();
-		try {
-		    for (Method method : methods) {
-			if(method.getName().equals("uris")) {
-			    auris =(String[]) MappingUtils.map(method.invoke(mapping), String[].class);
-			}
-			if(method.getName().equals("value")) {
-		    uri = (String) MappingUtils.map(method.invoke(mapping), String.class);
-			}
+	    try {
+		for (Method method : methods) {
+		    if (method.getName().equals("uris")) {
+			auris = (String[]) MappingUtils.map(method.invoke(mapping), String[].class);
 		    }
-		    //uri = (String) methods[0].invoke(mapping);
-		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-		    // TODO Auto-generated catch block
-		    e.printStackTrace();
+		    if (method.getName().equals("value")) {
+			uri = (String) MappingUtils.map(method.invoke(mapping), String.class);
+		    }
 		}
-	    
+		// uri = (String) methods[0].invoke(mapping);
+	    } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	    }
+
 	}
 
 	String contextPath = "/".equals(Server.CONTEXT_PATH.value()) ? "" : (String) Server.CONTEXT_PATH.value();
@@ -197,7 +204,7 @@ public final class AnnotationManager {
 
     private void assignMethod(HttpMethod method, HashMap<String, Object> map) throws InitiateServerException {
 	final var LOG_MESSAGE = "Found %s with uri %s and method %s";
-	data.addUrl(method, map);
+	Storage.getInstance().addUrl(method, map);
 	if ((boolean) Application.DEBUG.value()) {
 	    LOGGER.debug(
 		    String.format(LOG_MESSAGE, method.name(), map.get("uri"), ((Method) map.get("call")).getName()));
@@ -205,22 +212,39 @@ public final class AnnotationManager {
     }
 
     private void setClasses(Class<? extends Annotation> annotation) {
-	var loader = PackageLoader.getInstance().getLoader();
-	if(loader == null) {
-	    reflections = new Reflections("", new SubTypesScanner(false), new TypeAnnotationsScanner());
-	}else {
-	    reflections = new Reflections(loader, new SubTypesScanner(false),
-		    new TypeAnnotationsScanner());
+	try {
+
+	    var loader = PackageLoader.getInstance().getLoader();
+	    if (loader == null) {
+		reflections = new Reflections("", new SubTypesScanner(true), new TypeAnnotationsScanner());
+	    } else {
+		reflections = new Reflections(loader, new SubTypesScanner(false), new TypeAnnotationsScanner(),
+			new TypeElementsScanner(), new FieldAnnotationsScanner());
+	    }
+	} catch (Exception e) {
 	}
 	Set<Class<?>> annotatedClasses = reflections.getTypesAnnotatedWith(annotation);
-	data.addAnnotationType(annotation.getName());
+	if (annotation.getSimpleName().equals(CrossOrigin.class.getSimpleName())) {
+	    for (Class<?> annotatedClass : annotatedClasses) {
+		String value = null;
+		var r = annotatedClass.getAnnotation(CrossOrigin.class);
+		if (r != null) {
+		    value = r.value();
+		}
+		Storage.getInstance().addCORS(annotatedClass, value);
+	    }
+	} else {
 
-	for (Class<?> annotatedClass : annotatedClasses) {
-	    if (!annotatedClass.getPackage().getName().contains("vortex")  || (boolean) Vortex.Test.ENABLED.value()) {
-		data.addClass(annotation.getName(), annotatedClass);
-		if (LOGGER.isDebugEnabled()) {
-		    LOGGER.info(String.format("class :%s annotated with %s ", annotatedClass.getName(),
-			    annotation.getName()));
+	    Storage.getInstance().addAnnotationType(annotation.getName());
+
+	    for (Class<?> annotatedClass : annotatedClasses) {
+		if (!annotatedClass.getPackage().getName().contains("vortex")
+			|| (boolean) Vortex.Test.ENABLED.value()) {
+		    Storage.getInstance().addClass(annotation.getName(), annotatedClass);
+		    if (LOGGER.isDebugEnabled()) {
+			LOGGER.info(String.format("class :%s annotated with %s ", annotatedClass.getName(),
+				annotation.getName()));
+		    }
 		}
 	    }
 	}
@@ -228,25 +252,56 @@ public final class AnnotationManager {
     }
 
     private void seekClasses() {
+	var out = System.out;
+	var err = System.err;
+	System.setOut(null);
+	System.setErr(null);
+
 	setClasses(Controller.class);
+	setClasses(CrossOrigin.class);
 	final var LOG_MESSAGE = "number of %s %d";
 	if ((boolean) Application.DEBUG.value()) {
+
+	    System.setOut(out);
 	    LOGGER.debug(String.format(LOG_MESSAGE, Controller.class.getSimpleName(),
-		    data.getComponent(Controller.class.getName()).size()));
+		    Storage.getInstance().getComponent(Controller.class.getName()).size()));
+	    System.setOut(null);
 	}
 	setClasses(Service.class);
 	if ((boolean) Application.DEBUG.value()) {
+
+	    System.setOut(out);
 	    LOGGER.debug(String.format(LOG_MESSAGE, Service.class.getSimpleName(),
-		    data.getComponent(Service.class.getName()).size()));
+		    Storage.getInstance().getComponent(Service.class.getName()).size()));
+
+	    System.setOut(null);
 	}
 	setClasses(Entity.class);
 	if ((boolean) Application.DEBUG.value()) {
+
+	    System.setOut(out);
 	    LOGGER.debug(String.format(LOG_MESSAGE, Entity.class.getSimpleName(),
-		    data.getComponent(Entity.class.getName()).size()));
+		    Storage.getInstance().getComponent(Entity.class.getName()).size()));
+	    System.setOut(null);
 	}
+	setClasses(Repository.class);
+	if ((boolean) Application.DEBUG.value()) {
+
+	    System.setOut(out);
+	    LOGGER.debug(String.format(LOG_MESSAGE, Entity.class.getSimpleName(),
+		    Storage.getInstance().getComponent(Entity.class.getName()).size()));
+	}
+	System.setOut(out);
+	System.setErr(err);
+    }
+
+    public static Storage get() {
+
+	return Storage.getInstance();
     }
 
     public static Set<Class<?>> getClassesAnnotated(String search, Class<? extends Annotation> annotation) {
+
 	var reflections = new Reflections(search);
 	return reflections.getTypesAnnotatedWith(annotation);
 

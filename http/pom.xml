@@ -6,9 +6,16 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>kik.framework.vortex</groupId>
 	<artifactId>http</artifactId>
-	<version>0.6.0</version>
+	<version>0.8.0</version>
 	<name>http</name>
 	<url>http://maven.apache.org</url>
+		<distributionManagement>
+		<repository>
+			<id>github</id>
+			<name>GitHub enrik-0 Apache Maven Packages</name>
+			<url>https://maven.pkg.github.com/enrik-0/vortex</url>
+		</repository>
+	</distributionManagement>
 	<properties>
 		<maven.compiler.source>17</maven.compiler.source>
 		<maven.compiler.target>17</maven.compiler.target>
@@ -29,7 +36,7 @@
 	<dependency>
 		<groupId>kik.framework.vortex</groupId>
 		<artifactId>properties</artifactId>
-		<version>0.4.0</version>
+		<version>0.8.0</version>
 	</dependency>
 	
 		<dependency>
@@ -71,7 +78,7 @@
 		<dependency>
 			<groupId>kik.framework.vortex</groupId>
 			<artifactId>annotate</artifactId>
-			<version>0.5.0</version>
+			<version>0.8.1</version>
 		</dependency>
 
 

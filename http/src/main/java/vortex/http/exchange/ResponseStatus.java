@@ -8,6 +8,7 @@ import java.util.Map;
 import javassist.bytecode.stackmap.TypeData.UninitThis;
 import vortex.http.status.HttpStatus;
 import vortex.utils.Asserttions;
+import vortex.utils.HttpUtils;
 
 
 /**
@@ -79,7 +80,7 @@ public class ResponseStatus<T> implements Response {
 		var contentType = "Content-type";
 		List<String> contentHeader = new ArrayList<>();
 		this.body = body;
-		Asserttions.setContentHeader(contentHeader, body,
+		HttpUtils.setContentHeader(contentHeader, body,
 				headers.get(contentType));
 		if(!contentHeader.isEmpty()) {
 			setHeader(contentType, contentHeader);

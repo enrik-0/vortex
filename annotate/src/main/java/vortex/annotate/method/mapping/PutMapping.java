@@ -29,7 +29,7 @@ public @interface PutMapping {
 	 * Uri to handle with <b>{@linkplain PUT}
 	 * <h1>example:</h1> <code> @PutMapping("/uri")</code>
 	 */
-	String value();
+	String value() default "";
 
 	String[] uris() default {};
 

@@ -11,7 +11,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import vortex.http.exchange.Response;
 
 import vortex.properties.kinds.Server;
-
 import vortex.test.RequestBuilder;
 import vortex.test.exception.AmbiguousMethodException;
 

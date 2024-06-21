@@ -21,6 +21,8 @@ import vortex.http.exceptions.ParameterSintaxException;
 import vortex.http.exceptions.RequestFormatException;
 import vortex.http.exchange.ExchangeHttp;
 import vortex.http.exchange.Request;
+import vortex.http.exchange.ResponseStatusException;
+import vortex.http.status.HttpStatus;
 import vortex.properties.exception.FormatPatternException;
 import vortex.properties.kinds.Application;
 import vortex.utils.MappingUtils;
@@ -47,7 +49,7 @@ public final class RequestManager {
 
     public Object handle(ExchangeHttp request) throws InstantiationException, IllegalAccessException,
 	    IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, IOException,
-	    BodyException, ParameterSintaxException, RequestFormatException, UriException, FormatPatternException {
+	    BodyException, ParameterSintaxException, RequestFormatException, UriException, FormatPatternException, ResponseStatusException {
 	if ((boolean) Application.DEBUG.value()) {
 	    LOGGER.debug(request.getRequestURI().getPath());
 	}
@@ -59,8 +61,22 @@ public final class RequestManager {
     private static Object executeMethod(Method method, ExchangeHttp request, HttpMethod http)
 	    throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 	    NoSuchMethodException, SecurityException, IOException, BodyException, ParameterSintaxException,
-	    RequestFormatException, FormatPatternException{
+	    RequestFormatException, FormatPatternException, ResponseStatusException{
 	var launcher = Storage.getInstance().getObjectController(method);
+	var cors = Storage.getInstance().getCors(launcher.getClass());
+	boolean denied = true;
+	if(cors.equals("*")) {
+	    denied = false;
+	}
+	if(denied) {
+	var hosts = request.getRequestHeaders().get("Host");
+	for(String host : hosts) {
+	    denied = !host.equals(cors);
+	}
+	}
+	if(denied) {
+	    throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+	}
 	Object[] parameters = getParameters(method, request, http);
 	return method.invoke(launcher, parameters);
 

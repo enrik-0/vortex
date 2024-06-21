@@ -5,7 +5,7 @@ import java.net.URLClassLoader;
 public class PackageLoader {
     
     private static PackageLoader packageLoader;
-    private URLClassLoader loader;
+    private ClassLoader loader;
     public static PackageLoader getInstance() {
 	synchronized (PackageLoader.class) {
 	    if (packageLoader == null) {
@@ -19,10 +19,10 @@ public class PackageLoader {
     }
     private PackageLoader() {
     }
-    public URLClassLoader getLoader() {
+    public ClassLoader getLoader() {
 	return loader;
     }
-    public void setLoader(URLClassLoader loader) {
+    public void setLoader(ClassLoader loader) {
 	packageLoader.loader = loader;
     }
 
