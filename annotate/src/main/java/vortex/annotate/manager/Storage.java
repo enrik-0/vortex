@@ -15,6 +15,7 @@ import java.util.Set;
 
 import vortex.annotate.annotations.Autowired;
 import vortex.annotate.components.Controller;
+import vortex.annotate.components.Service;
 import vortex.annotate.constants.HttpMethod;
 import vortex.annotate.exceptions.InitiateServerException;
 import vortex.annotate.exceptions.UriException;
@@ -49,7 +50,8 @@ public final class Storage {
 	    urls.put(method, new ArrayList<>());
 	}
 	try {
-	    fillControllers();
+	    fillComponent(Controller.class);
+	    fillComponent(Service.class);
 	} catch (Exception e) {
 	}
     }
@@ -145,9 +147,9 @@ public final class Storage {
 	return runnable;
     }
 
-    private void fillControllers() throws InstantiationException, IllegalAccessException, IllegalArgumentException,
+    private void fillComponent(Class<?> component) throws InstantiationException, IllegalAccessException, IllegalArgumentException,
 	    InvocationTargetException, NoSuchMethodException, SecurityException {
-	for (Class<?> clazz : getComponent(Controller.class.getName())) {
+	for (Class<?> clazz : getComponent(component.getName())) {
 	    Object object = clazz.getConstructor().newInstance();
 	    for (Field field : object.getClass().getDeclaredFields()) {
 		for (Annotation annotation : field.getAnnotations()) {
@@ -156,7 +158,11 @@ public final class Storage {
 			Object fieldObject = checkField(fieldClass);
 			field.setAccessible(true);
 			if (fieldObject == null) {
+			    try {
+				fieldObject = fieldClass.getConstructor().newInstance(null);
+			    }catch(NoSuchMethodException e) {
 			    fieldObject = fieldClass.getConstructor().newInstance();
+			    }
 			    objects.add(fieldObject);
 			}
 			field.set(object, fieldObject);
@@ -186,7 +192,7 @@ public final class Storage {
 	    IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 	if (controllers == null) {
 	    this.controllers = new HashMap<>();
-	    fillControllers();
+	    fillComponent(Controller.class);
 	}
 	return controllers.get(method.getDeclaringClass());
     }

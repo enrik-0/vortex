@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import com.mysql.cj.jdbc.exceptions.CommunicationsException;
+
 import static vortex.properties.kinds.Database.Credentials.URL;
 import static vortex.properties.kinds.Database.Credentials.PWD;
 import static vortex.properties.kinds.Database.Credentials.USERNAME;
@@ -20,7 +22,11 @@ public abstract class DatabaseConnection {
 	Connection connection = null;
 	try {
 	    connection = DriverManager.getConnection(url, username, pwd);
-	} catch (SQLException e) {
+
+	}catch(CommunicationsException e) {
+	    connection = DriverManager.getConnection(url, username, pwd);
+	}
+    catch (SQLException e) {
 	    e.printStackTrace();
 	}
 	return connection;

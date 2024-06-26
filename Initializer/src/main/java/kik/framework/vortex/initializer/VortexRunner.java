@@ -1,19 +1,10 @@
 package kik.framework.vortex.initializer;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.reflections.Reflections;
-
 import kik.framework.vortex.database.mysql.storage.Manager;
-import kik.framework.vortex.databasemanager.storage.DatabaseStorage;
 import vortex.annotate.manager.AnnotationManager;
-import vortex.annotate.manager.PackageLoader;
 import vortex.annotate.manager.Storage;
 import vortex.http.ServerHttp;
 import vortex.properties.filemanager.FileReader;
@@ -24,13 +15,17 @@ public final class VortexRunner {
 	PrintStream originalErr = System.err;
 	PrintStream originalOut = System.out;
 	var originalIn = System.in;
+	File file = new File("outputvortex" + System.currentTimeMillis());
+	PrintStream  printer = null;
+	    try {
+		file.createNewFile();
+		printer = new PrintStream(file);
+	    } catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	    }
 	try {
 
-	    File file = new File("outputvortex" + System.currentTimeMillis());
-	    if (!file.exists()) {
-		file.createNewFile();
-	    }
-	    PrintStream printer = new PrintStream(file);
 	    FileReader.readPropertyFile("application-dev.properties");
 	    var storage = Storage.getInstance();
 	   // System.setErr(null);
@@ -48,6 +43,8 @@ public final class VortexRunner {
 	    System.setOut(originalOut);
 	    System.setErr(originalErr);
 	    System.setIn(originalIn);
+	    printer.close();
+	    file.delete();
 	    e.printStackTrace();
 	}
 

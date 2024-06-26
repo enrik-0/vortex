@@ -15,7 +15,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
-import kik.framework.vortex.database.mysq.connector.Connector;
 import kik.framework.vortex.database.mysql.assets.Book;
 import kik.framework.vortex.database.mysql.assets.BookRepository;
 import kik.framework.vortex.database.mysql.assets.Library;
@@ -28,6 +27,7 @@ import kik.framework.vortex.database.mysql.assets.User;
 import kik.framework.vortex.database.mysql.assets.UserRepository;
 import kik.framework.vortex.database.mysql.assets.Vehicle;
 import kik.framework.vortex.database.mysql.assets.VehicleRepository;
+import kik.framework.vortex.database.mysql.connector.Connector;
 import kik.framework.vortex.database.mysql.storage.Manager;
 import kik.framework.vortex.databasemanager.exception.DataTypeException;
 import kik.framework.vortex.databasemanager.exception.RelationShipNotExistsException;

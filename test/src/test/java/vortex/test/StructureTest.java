@@ -39,7 +39,7 @@ class StructureTest {
     @BeforeAll
     static void init() throws IOException, InstantiationException, IllegalAccessException, IllegalArgumentException,
 	    InvocationTargetException, NoSuchMethodException, SecurityException, UriException, InitiateServerException, SQLException, RelationTypeException {
-	Mock.getInstance();
+	Mock.start();
     }
 
     @AfterAll

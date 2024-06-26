@@ -157,6 +157,7 @@
 				</configuration>
 				<executions>
 					<execution>
+						<phase>install</phase>
 						<goals>
 							<goal>descriptor</goal>
 						</goals>

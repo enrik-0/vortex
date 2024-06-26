@@ -238,13 +238,11 @@ public final class AnnotationManager {
 	    Storage.getInstance().addAnnotationType(annotation.getName());
 
 	    for (Class<?> annotatedClass : annotatedClasses) {
-		if (!annotatedClass.getPackage().getName().contains("vortex")
-			|| (boolean) Vortex.Test.ENABLED.value()) {
+		
 		    Storage.getInstance().addClass(annotation.getName(), annotatedClass);
 		    if (LOGGER.isDebugEnabled()) {
 			LOGGER.info(String.format("class :%s annotated with %s ", annotatedClass.getName(),
 				annotation.getName()));
-		    }
 		}
 	    }
 	}

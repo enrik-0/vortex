@@ -1,7 +1,11 @@
 package vortex.utils;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 public final class Asserttions {
@@ -55,8 +59,17 @@ public final class Asserttions {
     }
 
     public static boolean isList(Object object) {
-	return !object.getClass().equals(Object.class) && (object.getClass().equals(ArrayList.class)
-		|| object.getClass().getSuperclass().equals(List.class) || object.getClass().equals(List.class));
+	try {
+	    List list  = (List) object;
+	    return true;
+	}catch(ClassCastException e) {
+	    return false;
+	}
+    }
+
+    public static boolean isMap(Object value) {
+	Class<?> clazz = value.getClass();
+	return clazz.equals(Map.class) || clazz.equals(HashMap.class) ||clazz.equals(LinkedHashMap.class) ||clazz.getSuperclass().equals(Map.class);
     }
 
 }

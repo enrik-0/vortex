@@ -16,7 +16,7 @@ import vortex.annotate.exceptions.UriException;
 import vortex.annotate.manager.AnnotationManager;
 import vortex.annotate.manager.Storage;
 import vortex.properties.filemanager.FileReader;
-import kik.framework.vortex.database.mysq.connector.Connector;
+import kik.framework.vortex.database.mysql.connector.Connector;
 import kik.framework.vortex.databasemanager.annotation.Column;
 import kik.framework.vortex.databasemanager.annotation.ID;
 import kik.framework.vortex.databasemanager.annotation.ManyToMany;
@@ -217,7 +217,7 @@ public class TableCreatorTest {
 	assertNotNull(relatedTable);
 	assertEquals("relatedclasss", relatedTable.name());
 	assertNotNull(relatedTable.getRecord("relatedClass_id"));
-	assertNotNull(relatedTable.getRecord("test"));
+	assertNotNull(relatedTable.getRecord("id"));
 
 	assertEquals(1, table.relations().size());
 	for (Relation relation : table.relations()) {
@@ -228,7 +228,7 @@ public class TableCreatorTest {
 	}
 	for (Relation relation : relatedTable.relations()) {
 	    assertEquals(ManyToOne.class.getSimpleName(), relation.type());
-	    assertEquals("test", relation.origin());
+	    assertEquals("id", relation.origin());
 	    assertEquals("testclasss", relation.destinationTable());
 	    assertEquals("id", relation.destination());
 	}

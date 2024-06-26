@@ -11,6 +11,9 @@ import java.util.stream.Collectors;
 
 import edu.emory.mathcs.backport.java.util.Collections;
 import kik.framework.vortex.databasemanager.annotation.Column;
+import kik.framework.vortex.databasemanager.annotation.ManyToOne;
+import kik.framework.vortex.databasemanager.annotation.OneToMany;
+import kik.framework.vortex.databasemanager.exception.RepositoryNotExistsException;
 import kik.framework.vortex.databasemanager.storage.DBTable;
 import kik.framework.vortex.databasemanager.storage.DatabaseStorage;
 import kik.framework.vortex.databasemanager.storage.RecordInfo;
@@ -37,6 +40,22 @@ public final class JPAUtils {
         for (String name : tableNames) {
             if (!valuesMap.containsKey(name.toLowerCase())) {
                 Relation relation = table.getRelation(name);
+                if(relation != null && relation.type().equals(ManyToOne.class.getSimpleName()))
+                for(RecordInfo r : table.getAllRecords()) {
+                    if(r.name().equals(name)) {
+                	Map<String, Object> temp = null;
+                	Object value = valuesMap.get(r.fieldName());
+                	valuesMap.remove(r.fieldName());
+                	try {
+			    temp = DatabaseStorage.getInstance().getRepository(value.getClass()).generateId(value);
+			} catch (NoSuchFieldException | RepositoryNotExistsException e) {
+			    // TODO Auto-generated catch block
+			    e.printStackTrace();
+			}
+                	temp.forEach(valuesMap::put);
+                    }
+                }
+                System.err.println();
             }
         }
 

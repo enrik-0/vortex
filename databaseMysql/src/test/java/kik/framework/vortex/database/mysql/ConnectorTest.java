@@ -10,7 +10,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import kik.framework.vortex.database.mysq.connector.Connector;
+import kik.framework.vortex.database.mysql.connector.Connector;
 import vortex.properties.filemanager.FileReader;
 
 import static org.junit.jupiter.api.Assertions.*;

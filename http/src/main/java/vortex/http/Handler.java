@@ -3,7 +3,10 @@ package vortex.http;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 import org.slf4j.Logger;
@@ -94,7 +97,28 @@ public class Handler implements HttpHandler {
 
 	request.sendResponseHeaders(response.getStatus().value(), response.getBody() == null ? -1 : 0);
 	if (response.getBody() != null) {
-	    request.getResponseBody().write(MappingUtils.writeValueAsBytes(response.getBody()));
+	    Object body = response.getBody();
+	
+	    List<Map> list = new ArrayList<>();
+	    if(!Asserttions.isPrimitive(body) && !Asserttions.isMap(body)) {
+		if(Asserttions.isList(body)) {
+			
+		    if(((List) body).isEmpty()) {
+			body = new ArrayList<>(); 
+		    }else {
+			if(!Asserttions.isPrimitive(((List) body).get(0))){
+			    body = MappingUtils.mapListObjects((List<Object>) body, new HashMap<Object, Map<String, Object>>());
+			}
+		    }
+		    
+		}else {
+		    body = MappingUtils.mapObject(body, new HashMap<Object, Map<String, Object>>());
+		}
+	    }
+	    
+	    System.out.println(body);
+	    
+	    request.getResponseBody().write(MappingUtils.writeValueAsBytes(body));
 	}
     }
 

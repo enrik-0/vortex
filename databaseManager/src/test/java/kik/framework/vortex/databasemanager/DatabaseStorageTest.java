@@ -13,6 +13,7 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import edu.emory.mathcs.backport.java.util.Collections;
 import kik.framework.vortex.databasemanager.annotation.ManyToMany;
 import kik.framework.vortex.databasemanager.annotation.ManyToOne;
 import kik.framework.vortex.databasemanager.annotation.OneToOne;
@@ -443,9 +444,9 @@ class DatabaseStorageTest {
 	databaseStorage.addTable(table2);
 	databaseStorage.addTable(table3);
 	List<DBTable> expected = new ArrayList<>();
-	expected.add(table1);
-	expected.add(table2);
 	expected.add(table3);
+	expected.add(table2);
+	expected.add(table1);
 
 	databaseStorage.fillRelationGraph();
 	var result = databaseStorage.orderRelations();
@@ -469,9 +470,9 @@ class DatabaseStorageTest {
 	databaseStorage.addTable(table2);
 	databaseStorage.addTable(table3);
 	List<DBTable> expected = new ArrayList<>();
-	expected.add(table1);
-	expected.add(table2);
 	expected.add(table3);
+	expected.add(table2);
+	expected.add(table1);
 
 	databaseStorage.fillRelationGraph();
 	var result = databaseStorage.orderRelations();
@@ -506,9 +507,9 @@ class DatabaseStorageTest {
 	databaseStorage.addTable(table1);
 	databaseStorage.addTable(table3);
 	List<DBTable> expected = new ArrayList<>();
-	expected.add(table2);
-	expected.add(table1);
 	expected.add(table3);
+	expected.add(table1);
+	expected.add(table2);
 
 	databaseStorage.fillRelationGraph();
 	var result = databaseStorage.orderRelations();
@@ -543,9 +544,9 @@ class DatabaseStorageTest {
 	databaseStorage.addTable(table2);
 	databaseStorage.addTable(table3);
 	List<DBTable> expected = new ArrayList<>();
-	expected.add(table1);
-	expected.add(table2);
 	expected.add(table3);
+	expected.add(table2);
+	expected.add(table1);
 
 	databaseStorage.fillRelationGraph();
 	var result = databaseStorage.orderRelations();
@@ -593,9 +594,9 @@ class DatabaseStorageTest {
 	databaseStorage.addTable(table2);
 	databaseStorage.addTable(table3);
 	List<DBTable> expected = new ArrayList<>();
-	expected.add(table2);
-	expected.add(table3);
 	expected.add(table1);
+	expected.add(table3);
+	expected.add(table2);
 
 	databaseStorage.fillRelationGraph();
 	var result = databaseStorage.orderRelations();
@@ -630,9 +631,9 @@ class DatabaseStorageTest {
 	databaseStorage.addTable(table2);
 	databaseStorage.addTable(table3);
 	List<DBTable> expected = new ArrayList<>();
-	expected.add(table2);
-	expected.add(table3);
 	expected.add(table1);
+	expected.add(table3);
+	expected.add(table2);
 
 	databaseStorage.fillRelationGraph();
 	var result = databaseStorage.orderRelations();

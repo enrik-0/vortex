@@ -437,6 +437,9 @@ public class TableCreator implements TableCreatorInterface {
 	if (referencedTable == null) {
 	    referencedTable = createTable(clazz);
 	}
+	if(table.name().equals("tickets")) {
+	    System.out.println();
+	}
 	if (annotationName.equals(ManyToMany.class.getSimpleName())) {
 	    DBTable newTable = createRelationTable(table, referencedTable);
 	    DatabaseStorage.getInstance().addTable(newTable);
@@ -451,24 +454,25 @@ public class TableCreator implements TableCreatorInterface {
 	for (Relation relation : relations) {
 	    if (relation.type().equals(OneToMany.class.getSimpleName())) {
 		table.addRelation(relation);
-	    } else
+	    } else {
+
+		RecordInfo actual = table.getRecord(relation.origin());
 		for (RecordInfo r : referencedTable.id()) {
 		    if (relation.type().equals(ManyToMany.class.getSimpleName())
 			    && table.getRecord(relation.origin()).data().data().equals(DataType.LIST)) {
 			table.addRelation(relation);
 		    } else {
-			RecordInfo actual = table.getRecord(relation.origin());
 			if (actual == null) {
 			    actual = createRecord(field, data, cascade, cascade, cascade, cascade);
 			    table.addRecord(actual);
 			}
-			RecordInfo origin = r.merge(actual);
+			RecordInfo origin = r.merge(actual, relation);
 			table.removeRecord(table.getRecord(relation.origin()));
 			if (relation.type().equals(ManyToOne.class.getSimpleName())) {
 
 			    table.addRecord(new RecordInfo(origin.name(), field.getName(), actual.identifier(),
 				    actual.unique(), actual.nullable(), actual.saved(), origin.data()));
-			    table.addRelation(new Relation(origin.name(), referencedTable.name(), origin.fieldName(),
+			    table.addRelation(new Relation(origin.name(), referencedTable.name(), r.name(),
 				    true, ManyToOne.class.getSimpleName()));
 			} else if (relation.type().equals(OneToOne.class.getSimpleName())) {
 			    for (RecordInfo recor : referencedTable.id()) {
@@ -489,7 +493,7 @@ public class TableCreator implements TableCreatorInterface {
 			}
 		    }
 
-		}
+		}}
 
 	    // table.addRecord(createRecord(relation.origin(), info.data(), id, unique,
 	    // nullable, true));
@@ -529,7 +533,7 @@ public class TableCreator implements TableCreatorInterface {
 	    String recordName = String.format("%s_%s", table.name(), id.name());
 
 	    newTable.addRecord(new RecordInfo(recordName, id.name(), id.identifier(), id.unique(), id.nullable(),
-		    id.saved(), id.data()));
+		    id.saved(),new RecordParameters(id.data().data(), id.data().originalClass(), id.data().length(), id.data().precision(), id.data().precision(), false) ));
 	    newTable.addRelation(
 		    new Relation(recordName, table.name(), id.name(), true, ManyToMany.class.getSimpleName()));
 	}
