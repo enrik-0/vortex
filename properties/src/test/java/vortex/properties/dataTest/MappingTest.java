@@ -9,6 +9,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.params.provider.CsvSource;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.List;
 public class MappingTest {
 
 
@@ -165,6 +167,32 @@ void mapToBoolean(String used) throws Exception {
     assertEquals(value,  boolFromPrimitive.booleanValue());
 }
 
+@Test
+void mapObject(){
+  class User{
+    private String name;
+    public User(String name){
+      this.name = name;
+    }
+  }
+var result = MappingUtils.mapObject(new User("Paco"), new HashMap<>());
+assertEquals("Paco",result.get("name"));
+
+}
+
+@Test
+void mapList(){
+class User{
+    private String name;
+    public User(String name){
+      this.name = name;
+    }
+  }
+List<Object> users = List.of(new User("Paco"), new User("Maria"));
+var mapped = MappingUtils.mapListObjects(users, new HashMap<>());
+assertEquals("Paco", mapped.get(0).get("name") );
+assertEquals("Maria", mapped.get(1).get("name") );
+}
 
 @Test
 void mapToString() throws Exception {

@@ -1,7 +1,4 @@
 package vortex.utils;
-
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -60,7 +57,8 @@ public final class Asserttions {
 
     public static boolean isList(Object object) {
 	try {
-	    List list  = (List) object;
+	    List list = (List) object;
+      list.add(null);
 	    return true;
 	}catch(ClassCastException e) {
 	    return false;

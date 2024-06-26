@@ -55,14 +55,9 @@ public class Handler implements HttpHandler {
 		| RequestFormatException | UriException | URISyntaxException e) {
 	    ResponseStatus<String> response = new ResponseStatus<>(HttpStatus.NOT_FOUND, null);
 	    exchange.setResponse(response);
-	} catch (BodyException e) {
+	} catch (BodyException | RuntimeException e) {
 	    ResponseStatus<String> response = new ResponseStatus<>(HttpStatus.BAD_REQUEST, null);
 	    exchange.setResponse(response);
-
-	} catch (RuntimeException e) {
-	    ResponseStatus<String> response = new ResponseStatus<>(HttpStatus.BAD_REQUEST, null);
-	    exchange.setResponse(response);
-
 	} catch (
 
 	FormatPatternException e) {
@@ -99,7 +94,6 @@ public class Handler implements HttpHandler {
 	if (response.getBody() != null) {
 	    Object body = response.getBody();
 	
-	    List<Map> list = new ArrayList<>();
 	    if(!Asserttions.isPrimitive(body) && !Asserttions.isMap(body)) {
 		if(Asserttions.isList(body)) {
 			
@@ -115,9 +109,6 @@ public class Handler implements HttpHandler {
 		    body = MappingUtils.mapObject(body, new HashMap<Object, Map<String, Object>>());
 		}
 	    }
-	    
-	    System.out.println(body);
-	    
 	    request.getResponseBody().write(MappingUtils.writeValueAsBytes(body));
 	}
     }

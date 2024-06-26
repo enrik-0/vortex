@@ -125,7 +125,7 @@ public final class MappingUtils {
 	return body;
     }
 
-    public static Object mapToPrimitive(Object content, String buffer) throws IOException {
+    public static Object mapToPrimitive(Object content, String buffer){
 	Long temp;
 	Object body;
 	if (Regex.isBoolean(buffer)) {
@@ -150,7 +150,7 @@ public final class MappingUtils {
 	return body;
     }
 
-    public static Map<String, Object> mapObject(Object object, HashMap<Object, Map<String, Object>> processed) {
+    public static Map<String, Object> mapObject(Object object, Map<Object, Map<String, Object>> processed) {
 	Map<String, Object> map = new HashMap<>();
 	if (!processed.containsKey(object)) {
 	    processed.put(object, map);
@@ -160,8 +160,6 @@ public final class MappingUtils {
 		try {
 		    value = field.get(object);
 		} catch (IllegalArgumentException | IllegalAccessException e) {
-		    // TODO Auto-generated catch block
-		    e.printStackTrace();
 		}
 
 		if (value != null) {
@@ -170,7 +168,6 @@ public final class MappingUtils {
 			if (Asserttions.isList(value)) {
 			    String name = field.getName();
 			    processed.get(object).put(name, mapListObjects((List) value, processed));
-			    // map.put(field.getName(), mapListObjects((List)value, processed));
 			} else {
 			    map.put(field.getName(), mapObject(value, processed));
 			}
@@ -183,9 +180,7 @@ public final class MappingUtils {
 		}
 
 	    }
-	} else {
-	    //map = processed.get(object);
-	}
+	} 
 	return map;
     }
 
@@ -201,20 +196,15 @@ public final class MappingUtils {
     }
 
     public static List<Map<String, Object>> mapListObjects(List<Object> list,
-	    HashMap<Object, Map<String, Object>> processed) {
+	    Map<Object, Map<String, Object>> processed) {
 	List<Map<String, Object>> mapped = new ArrayList<>();
 	Map<String, Object> map;
 	for (Object object : list) {
-		map = new HashMap<String, Object>();
+		map = new HashMap<>();
 		if (!processed.containsKey(object)) {
 		    map = mapObject(object, processed);
-		} else {
-		    //map = processed.get(object);
-		}
-		// map.put("hola", 1);
+		} 
 		mapped.add(map);
-		map = new HashMap<String, Object>();
-		System.err.println();
 	}
 
 	return mapped;

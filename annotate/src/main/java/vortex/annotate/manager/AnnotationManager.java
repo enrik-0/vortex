@@ -1,10 +1,6 @@
 package vortex.annotate.manager;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -16,7 +12,6 @@ import org.reflections.scanners.FieldAnnotationsScanner;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.scanners.TypeAnnotationsScanner;
 import org.reflections.scanners.TypeElementsScanner;
-import org.reflections.scanners.TypesScanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +27,6 @@ import vortex.annotate.exceptions.InitiateServerException;
 import vortex.annotate.exceptions.UriException;
 import vortex.properties.kinds.Application;
 import vortex.properties.kinds.Server;
-import vortex.properties.kinds.Vortex;
 import vortex.utils.MappingUtils;
 
 /**
@@ -126,10 +120,7 @@ public final class AnnotationManager {
 			uri = (String) MappingUtils.map(method.invoke(mapping), String.class);
 		    }
 		}
-		// uri = (String) methods[0].invoke(mapping);
 	    } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
 	    }
 
 	}
@@ -211,7 +202,7 @@ public final class AnnotationManager {
 	}
     }
 
-    private void setClasses(Class<? extends Annotation> annotation) {
+    private static void setClasses(Class<? extends Annotation> annotation) {
 	try {
 
 	    var loader = PackageLoader.getInstance().getLoader();

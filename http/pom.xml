@@ -82,11 +82,6 @@
 		</dependency>
 
 
-		<dependency>
-			<groupId>kik.framework.vortex</groupId>
-			<artifactId>databaseManager</artifactId>
-			<version>0.8.0</version>
-		</dependency>
 	</dependencies>
 
 	<build>

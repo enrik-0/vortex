@@ -10,8 +10,6 @@ import java.util.StringJoiner;
 import java.util.regex.Pattern;
 import vortex.properties.kinds.Element;
 import vortex.properties.kinds.Patterns;
-import vortex.properties.kinds.Server;
-import vortex.properties.kinds.Vortex;
 import vortex.utils.MappingUtils;
 public final class FileReader {
 
