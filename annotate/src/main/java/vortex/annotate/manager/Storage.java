@@ -53,6 +53,11 @@ public final class Storage {
 	    fillComponent(Controller.class);
 	    fillComponent(Service.class);
 	} catch (Exception e) {
+
+	    for (HttpMethod method : HttpMethod.values()) {
+		urls.put(method, new ArrayList<>());
+	    }
+
 	}
     }
 
@@ -91,7 +96,7 @@ public final class Storage {
     }
 
     public void addClass(String annotationName, Class<?> classToSave) {
-	if(annotationName.equals(Controller.class.getName())) {
+	if (annotationName.equals(Controller.class.getName())) {
 	    addCORS(classToSave, "*");
 	}
 	classes.get(annotationName).add(classToSave);
@@ -101,6 +106,7 @@ public final class Storage {
 	return classes.get(component);
 
     }
+
     public List<Class<?>> getComponent(Class<?> component) {
 	return classes.get(component.getName());
 
@@ -147,8 +153,8 @@ public final class Storage {
 	return runnable;
     }
 
-    private void fillComponent(Class<?> component) throws InstantiationException, IllegalAccessException, IllegalArgumentException,
-	    InvocationTargetException, NoSuchMethodException, SecurityException {
+    private void fillComponent(Class<?> component) throws InstantiationException, IllegalAccessException,
+	    IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 	for (Class<?> clazz : getComponent(component.getName())) {
 	    Object object = clazz.getConstructor().newInstance();
 	    for (Field field : object.getClass().getDeclaredFields()) {
@@ -160,8 +166,8 @@ public final class Storage {
 			if (fieldObject == null) {
 			    try {
 				fieldObject = fieldClass.getConstructor().newInstance(null);
-			    }catch(NoSuchMethodException e) {
-			    fieldObject = fieldClass.getConstructor().newInstance();
+			    } catch (NoSuchMethodException e) {
+				fieldObject = fieldClass.getConstructor().newInstance();
 			    }
 			    objects.add(fieldObject);
 			}
@@ -204,6 +210,7 @@ public final class Storage {
     public void addCORS(Class<?> annotatedClass, String value) {
 	cors.put(annotatedClass, value);
     }
+
     public String getCors(Class<?> clazz) {
 	return cors.get(clazz);
     }

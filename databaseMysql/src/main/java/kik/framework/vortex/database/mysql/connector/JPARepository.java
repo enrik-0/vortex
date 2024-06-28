@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -101,7 +102,17 @@ public class JPARepository<T, Id> implements Repository<T, Id> {
 			    }
 			} else if (relation.origin().equals(key)) {
 			    if (Asserttions.isList(value)) {
-				for (Object object : (List) value) {
+				/*
+				try {
+				    value = removeDuplicates((List) value);
+				} catch (IllegalAccessException | RepositoryNotExistsException e) {
+				    // TODO Auto-generated catch block
+				    e.printStackTrace();
+				}
+				value = List.copyOf((List)value);
+				*/
+				for (Object object :  (List) value) {
+				    if(object != null) {
 				    var repo = DatabaseStorage.getInstance().getRepository(object.getClass());
 				    try {
 					repo.save(object, storage);
@@ -113,6 +124,7 @@ public class JPARepository<T, Id> implements Repository<T, Id> {
 
 				    }
 				    map = temp(relation, object, id);
+				    }
 				}
 			    } else {
 				map = temp(relation, value, id);
@@ -167,6 +179,7 @@ public class JPARepository<T, Id> implements Repository<T, Id> {
 			} else if (relation.origin().equals(key)) {
 			    if (Asserttions.isList(value)) {
 				for (Object object : (List) value) {
+				    if(object != null)
 				    map = temp(relation, object, id);
 				}
 			    } else {
@@ -263,20 +276,17 @@ public class JPARepository<T, Id> implements Repository<T, Id> {
 
     @Override
     public List<T> saveAll(List<T> entities) throws SQLException {
+	List<T> unchanged = new ArrayList<>();
+	entities.forEach(unchanged::add);
 	QueryStorage storage = new QueryStorage();
-	if (entities != null && !entities.isEmpty()) {
+	if (unchanged != null && !unchanged.isEmpty()) {
 	    List<Map<String, Object>> values = new ArrayList<>();
-	    entities.stream().forEach(e -> {
+	    unchanged.stream().forEach(e -> {
 		try {
 		    save(e, storage);
-		} catch (SQLException | DataTypeException | RepositoryNotExistsException e1) {
-		    // TODO Auto-generated catch block
+		} catch (SQLException | DataTypeException | RepositoryNotExistsException | RelationShipNotExistsException e1) {
 		    e1.printStackTrace();
-		} catch (RelationShipNotExistsException e1) {
-		    // TODO Auto-generated catch block
-		    e1.printStackTrace();
-		}
-	    });
+	    }});
 	}
 	return entities;
 
@@ -284,10 +294,11 @@ public class JPARepository<T, Id> implements Repository<T, Id> {
 
     @Override
     public T findById(Id id) throws SQLException, RelationShipNotExistsException, RepositoryNotExistsException {
-	T entity;
+	T entity = null;
 	var clazz = ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
 	DBTable table = DatabaseStorage.getInstance().getTable((Class<?>) clazz);
 	if (id.getClass().getSimpleName().contains("Map")) {
+	    if(!((Map<String, Object>)id).isEmpty())
 	    entity = findById((Map<String, Object>) id, table);
 	} else {
 	    Map<String, Object> ids = new HashMap<>();
@@ -525,8 +536,15 @@ public class JPARepository<T, Id> implements Repository<T, Id> {
 		if (relation.type().equals(OneToMany.class.getSimpleName()) && relation.origin().equals(key)) {
 		    Object v = values.get(key);
 		    if (!((List) v).isEmpty()) {
+			try {
+			    v = removeDuplicates((List) v);
+			} catch (IllegalAccessException | RepositoryNotExistsException e) {
+			}
+			if(!((List)v).isEmpty() && ((List) v).get(0) != null) {
+			    
 			var repository = DatabaseStorage.getInstance().getRepository(((List) v).get(0).getClass());
 			repository.saveAll((List) v);
+			}
 
 		    }
 		}
@@ -640,6 +658,8 @@ public class JPARepository<T, Id> implements Repository<T, Id> {
 
     @Override
     public void delete(T entity) throws SQLException, RepositoryNotExistsException, RelationShipNotExistsException {
+	if(entity != null) {
+	    
 	List<String> statements = deleteSQL(entity);
 
 	try {
@@ -656,10 +676,14 @@ public class JPARepository<T, Id> implements Repository<T, Id> {
 		update(entity);
 	    }
 	}
+	}
     }
 
     public Map<String, Object> generateId(T entity) throws RepositoryNotExistsException {
 	Map<String, Object> map = new HashMap<String, Object>();
+	if(entity == null) {
+	    return map;
+	}
 	DBTable table = DatabaseStorage.getInstance().getTable(entity.getClass());
 	Collection<Field> fields = new ArrayList<>();
 	Collections.addAll(fields, entity.getClass().getDeclaredFields());
@@ -1126,7 +1150,6 @@ public class JPARepository<T, Id> implements Repository<T, Id> {
 	    try {
 		if (seen.add(repository.generateId(item).toString())) {
 		    result.add(item);
-		    iterator.remove();
 		}
 	    } catch (NoSuchFieldException e) {
 		// TODO Auto-generated catch block
@@ -1136,9 +1159,8 @@ public class JPARepository<T, Id> implements Repository<T, Id> {
 		e.printStackTrace();
 	    }
 
-	}else {
-	    iterator.remove();
-	}}
+	}
+	}
 	return result;
     }
 

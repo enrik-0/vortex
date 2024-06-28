@@ -121,6 +121,7 @@ public final class AnnotationManager {
 		    }
 		}
 	    } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+		LOGGER.error(e.getMessage());
 	    }
 
 	}
@@ -213,6 +214,7 @@ public final class AnnotationManager {
 			new TypeElementsScanner(), new FieldAnnotationsScanner());
 	    }
 	} catch (Exception e) {
+	    LOGGER.error(e.getMessage());
 	}
 	Set<Class<?>> annotatedClasses = reflections.getTypesAnnotatedWith(annotation);
 	if (annotation.getSimpleName().equals(CrossOrigin.class.getSimpleName())) {

@@ -57,8 +57,7 @@ public final class Asserttions {
 
     public static boolean isList(Object object) {
 	try {
-	    List list = (List) object;
-      list.add(null);
+	    ((List) object).isEmpty();
 	    return true;
 	}catch(ClassCastException e) {
 	    return false;
