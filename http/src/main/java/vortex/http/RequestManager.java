@@ -101,20 +101,18 @@ public final class RequestManager {
 	Parameter methodParameter;
 	List<Object> parametersValues = new ArrayList<>();
 	Parameter[] methodParameters = method.getParameters();
-	Annotation[][] parameterAnnotations = method.getParameterAnnotations();
 	for (int i = 0; i < method.getParameterCount() ; i++) {
 	    methodParameter = methodParameters[i];
-	    proccessParameters(parameters, methodParameter, parametersValues, methodParameters, parameterAnnotations,
+	    proccessParameters(parameters, methodParameter, parametersValues, methodParameters, 
 		    i, request);
 	}
 
 	return parametersValues.toArray();
     }
     private static void proccessParameters(List<Param> parameters, Parameter methodParameter,
-	    List<Object> parametersValues, Parameter[] methodParameters, Annotation[][] parameterAnnotations, int i, Request request)
+	    List<Object> parametersValues, Parameter[] methodParameters, int i, Request request)
 	    throws ParameterSintaxException{
 	Param queryParam;
-	Object buffer;
 	for (Annotation annotation : methodParameter.getAnnotations()) {
 	    if (annotation.annotationType().getSimpleName().equals(RequestBody.class.getSimpleName())) {
 		queryParam = parameters.remove(parameters.size() - 1);
@@ -165,6 +163,7 @@ public final class RequestManager {
 		}
 		}catch(ParameterSintaxException paramException) {
 		    throw new RuntimeException(paramException);
+
 
 		    
 		}

@@ -47,7 +47,7 @@ public enum DataType implements Type {
 
     @Override
     public boolean isPrimitive() {
-	return LIST.equals(this) || OBJECT.equals(this);
+	return !(LIST.equals(this) || OBJECT.equals(this));
     }
 
     @Override

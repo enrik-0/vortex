@@ -1,6 +1,9 @@
 package kik.framework.vortex.databasemanager.assests;
 
+import java.util.List;
+
 import kik.framework.vortex.databasemanager.annotation.Column;
+import kik.framework.vortex.databasemanager.annotation.ManyToOne;
 
 public class Employee {
 
@@ -11,10 +14,11 @@ public class Employee {
     private String position;
 
     private int salary;
+    
+    @ManyToOne
+    private List<Person> persons;
 
-    public Employee() {
-        // Constructor vacío
+public Employee() {
     }
 
-    // Getters y setters pueden ser añadidos si es necesario
 }

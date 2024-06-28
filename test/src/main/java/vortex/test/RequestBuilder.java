@@ -126,7 +126,52 @@ public class RequestBuilder {
 		setUp(uri, HttpMethod.DELETE);
 		return this;
 	}
-
+	/**
+	 * Sets request method to {@link HttpMethod.TRACE}
+	 * 
+	 * @param uri
+	 */
+	public RequestBuilder trace(String uri) throws AmbiguousMethodException {
+		setUp(uri, HttpMethod.TRACE);
+		return this;
+	}
+	
+	/**
+	 * Sets request method to {@link HttpMethod.OPTIONS}
+	 * 
+	 * @param uri
+	 */
+	public RequestBuilder options(String uri) throws AmbiguousMethodException {
+		setUp(uri, HttpMethod.OPTIONS);
+		return this;
+	}
+	/**
+	 * Sets request method to {@link HttpMethod.PATCH}
+	 * 
+	 * @param uri
+	 */
+	public RequestBuilder patch(String uri) throws AmbiguousMethodException {
+		setUp(uri, HttpMethod.PATCH);
+		return this;
+	}
+	/**
+	 * Sets request method to {@link HttpMethod.HEAD}
+	 * 
+	 * @param uri
+	 */
+	public RequestBuilder head(String uri) throws AmbiguousMethodException {
+		setUp(uri, HttpMethod.HEAD);
+		return this;
+	}
+/**
+	 * Sets request method to {@link HttpMethod.CONNECT}
+	 * 
+	 * @param uri
+	 */
+	public RequestBuilder connect(String uri) throws AmbiguousMethodException {
+		setUp(uri, HttpMethod.CONNECT);
+		return this;
+	}
 	/**
 	 * Sets a specified timeout value, in milliseconds, to be used when opening
 	 * a communications link to the resource referenced by this uri. If the

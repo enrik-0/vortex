@@ -31,7 +31,6 @@ public class DevTestController {
     @PutMapping("/execute")
     public void executeTest(@RequestBody Map<String, Object> testData) {
 	// execute
-	Server.Data.A.value();
     }
 
     @GetMapping("/PatternNonRecursive")

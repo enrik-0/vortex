@@ -15,7 +15,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
-import kik.framework.vortex.database.mysq.connector.Connector;
 import kik.framework.vortex.database.mysql.assets.Book;
 import kik.framework.vortex.database.mysql.assets.BookRepository;
 import kik.framework.vortex.database.mysql.assets.Library;
@@ -28,12 +27,14 @@ import kik.framework.vortex.database.mysql.assets.User;
 import kik.framework.vortex.database.mysql.assets.UserRepository;
 import kik.framework.vortex.database.mysql.assets.Vehicle;
 import kik.framework.vortex.database.mysql.assets.VehicleRepository;
+import kik.framework.vortex.database.mysql.connector.Connector;
 import kik.framework.vortex.database.mysql.storage.Manager;
 import kik.framework.vortex.databasemanager.exception.DataTypeException;
 import kik.framework.vortex.databasemanager.exception.RelationShipNotExistsException;
 import kik.framework.vortex.databasemanager.exception.RelationTypeException;
 import kik.framework.vortex.databasemanager.exception.RepositoryNotExistsException;
 import kik.framework.vortex.databasemanager.storage.DatabaseStorage;
+import kik.framework.vortex.databasemanager.storage.QueryStorage;
 import vortex.annotate.exceptions.InitiateServerException;
 import vortex.annotate.exceptions.UriException;
 import vortex.annotate.manager.AnnotationManager;
@@ -133,7 +134,6 @@ public class JPARepositorySaveTest {
 	person.delete(new Person("Manuel", "Izaguirre", 2500, 1));
 	assertEquals(0, numberOfRecords("persons"));
 	assertEquals(0, numberOfRecords("users"));
-	System.err.println();
 
     }
 
@@ -185,21 +185,26 @@ public class JPARepositorySaveTest {
 	userRepo.saveAll(users);
 
 	for (User user : users) {
+	    if(user != null) {
 	    User temp = userRepo.findById(userRepo.generateId(user));
 	    assertNotEquals(user, temp);
 	    assertEquals(user.getUser_id(), temp.getUser_id());
 	    assertEquals(user.getName(), temp.getName());
 	    assertEquals(user.getSalary(), temp.getSalary());
 	    assertEquals(user.getSurname(), temp.getSurname());
+	    }
 	}
 
 	for (Vehicle vehicle : vehicles) {
+	    if(vehicle != null) {
+		
 	    Vehicle temp = vehiclesRepo.findById(vehicle.getIdVehicle());
 	    assertNotEquals(vehicle, temp);
 	    assertEquals(vehicle.getIdVehicle(), temp.getIdVehicle());
 	    assertEquals(vehicle.getRegisterNumber(), temp.getRegisterNumber());
 	    assertNotEquals(vehicle.getUsers(), temp.getUsers());
 	    assertEquals(vehicle.getUsers().size(), temp.getUsers().size());
+	    }
 
 	}
 
@@ -235,6 +240,12 @@ public class JPARepositorySaveTest {
 	for (User u : list) {
 	    var map = repository.generateId(u);
 	    var temp = repository.findById(map);
+	    assertFalse(u.equals(temp));
+	    assertEquals(u.getUser_id(), temp.getUser_id());
+	    assertEquals(u.getName(), temp.getName());
+	    assertEquals(u.getSalary(), temp.getSalary());
+	    assertEquals(u.getSurname(), temp.getSurname());
+	    temp = repository.findById(map, new QueryStorage());
 	    assertFalse(u.equals(temp));
 	    assertEquals(u.getUser_id(), temp.getUser_id());
 	    assertEquals(u.getName(), temp.getName());

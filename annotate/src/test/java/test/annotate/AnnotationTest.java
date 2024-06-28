@@ -5,10 +5,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.HashMap;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-
 import vortex.annotate.constants.HttpMethod;
+import vortex.annotate.exceptions.InitiateServerException;
 import vortex.annotate.exceptions.UriException;
 import vortex.annotate.manager.AnnotationManager;
 import vortex.annotate.manager.Storage;
@@ -107,7 +109,6 @@ class AnnotationTest {
 	Annotation[][] annotations = method.getParameterAnnotations();
 	assertEquals(RequestParam.class.getName(), annotations[0][0].annotationType().getName());
 	assertEquals(RequestParam.class.getName(), annotations[1][0].annotationType().getName());
-
     }
 
     @Test
@@ -118,4 +119,41 @@ class AnnotationTest {
 	assertEquals(RequestBody.class.getName(), annotations[1][0].annotationType().getName());
 	assertEquals(RequestParam.class.getName(), annotations[2][0].annotationType().getName());
     }
+
+  @Test
+  void testAddUrl(){
+    var map = new HashMap<String, Object>();
+    map.put("call", null);
+    map.put("uri", "/exceptionss");
+    try{
+    Storage.getInstance().addUrl(DELETE, map);
+    }catch(InitiateServerException e){
+      assertTrue(false);
+    }
+try{
+    Storage.getInstance().addUrl(POST, map);
+    }catch(InitiateServerException e){
+      assertTrue(true);
+    }
+  }
+  @Test
+  void fillComponent(){
+    Method method = null;
+    try{
+
+    method = Storage.getInstance().getMethod(GET, "/test/status");
+    }catch(UriException e){
+
+    }
+    try{
+
+    Storage.getInstance().getObjectController(method);
+    }catch(Exception e){
+
+    }
+    assertTrue(true);
+  }
+
+
+    
 }

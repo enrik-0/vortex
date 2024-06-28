@@ -21,7 +21,7 @@ public final class SQLWriter {
 
 	    RecordInfo reco = null;
 	    var optionalReco = table.records().stream().filter(r -> {
-		return r.name().toLowerCase().equals(key);
+		return r.name().toLowerCase().equals(key.toLowerCase());
 	    }).findFirst();
 	    if (optionalReco.isPresent()) {
 		reco = optionalReco.get();
@@ -33,7 +33,7 @@ public final class SQLWriter {
 		if (reco.nullable() && reco.identifier()) {
 		    throw new DataTypeException("Identiferes can not be null");
 		}
-		if(value == null && !reco.nullable()) {
+		if(value == null && !reco.nullable() && !reco.data().autoIncrement()) {
 		    throw new DataTypeException("null value in a non nullable record");
 		}
 		if (value == null && reco.nullable() && !reco.identifier()) {

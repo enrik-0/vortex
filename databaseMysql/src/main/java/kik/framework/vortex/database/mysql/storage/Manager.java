@@ -8,9 +8,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import kik.framework.vortex.database.mysq.connector.Connector;
+
 import kik.framework.vortex.database.mysql.TableCreator;
+import kik.framework.vortex.database.mysql.connector.Connector;
 import kik.framework.vortex.databasemanager.annotation.ManyToMany;
+import kik.framework.vortex.databasemanager.annotation.OneToMany;
 import kik.framework.vortex.databasemanager.exception.DataTypeException;
 import kik.framework.vortex.databasemanager.exception.RelationTypeException;
 import kik.framework.vortex.databasemanager.storage.DBTable;
@@ -24,15 +26,13 @@ import vortex.properties.kinds.Database;
 public class Manager extends StorageManager {
 
     public Manager() throws SQLException, RelationTypeException {
-	if(Database.Credentials.URL.value() != null) {
-	    
 	initialize(Storage.getInstance());
-	}
     }
 
     public Manager(Storage storage) throws SQLException, RelationTypeException {
-
+	if(Database.Credentials.URL.value() != null) {
 	initialize(storage);
+	}
     }
 
     @Override
@@ -77,7 +77,7 @@ public class Manager extends StorageManager {
 				    Collection<Relation> relations = table 
 					    .relations();
 				    long nrelations = relations.stream().filter(r -> {
-					return !r.type().equals(ManyToMany.class.getSimpleName());
+					return !r.type().equals(ManyToMany.class.getSimpleName()) &&!r.type().equals(OneToMany.class.getSimpleName());
 				    }).count();
 				    if (table.created() || nrelations > 0) {
 
@@ -100,7 +100,7 @@ public class Manager extends StorageManager {
 				if (!dependenciesCreated) {
 				    Thread.sleep(1000);
 				}
-			    } while (!dependenciesCreated && tries <= 3);
+			    } while (!dependenciesCreated && tries <= DatabaseStorage.getInstance().getAllTables().size() * 2);
 
 			    String tableStatement = TableCreator.getInstance().createStatement(table);
 			    Connector.getInstance().sendRequest(tableStatement);
@@ -142,6 +142,16 @@ public class Manager extends StorageManager {
 
 		// Comparar los números de campos
 		return Integer.compare(fieldsCount1, fieldsCount2);
+	    }
+	});
+    }
+  private void sortTables(List<DBTable> entities) {
+	Collections.sort(entities, new Comparator<DBTable>() {
+
+	    @Override
+	    public int compare(DBTable table1, DBTable table2) {
+		// TODO Auto-generated method stub
+		return Integer.compare(table1.relations().size(), table2.relations().size());
 	    }
 	});
     }

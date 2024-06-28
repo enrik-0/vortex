@@ -7,6 +7,9 @@ public final class StringUtils {
 	
 	private static Locale locale = Locale.getDefault();
 
+	private StringUtils() {
+	    
+	}
 	
 	public static String proccessProperty(String separator, Class<?> clazz, String propertyName) {
 		var joiner = new StringJoiner(separator);

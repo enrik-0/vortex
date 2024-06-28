@@ -7,6 +7,6 @@ import vortex.annotate.manager.Storage;
 
 public abstract class StorageManager {
 
+    public abstract void initialize(Storage storage) throws SQLException, RelationTypeException;
 
-public abstract void initialize(Storage storage) throws SQLException, RelationTypeException;
 }

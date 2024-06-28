@@ -1,4 +1,4 @@
-package kik.framework.vortex.database.mysq.connector;
+package kik.framework.vortex.database.mysql.connector;
 
 import java.sql.Connection;
 import java.sql.ResultSet;

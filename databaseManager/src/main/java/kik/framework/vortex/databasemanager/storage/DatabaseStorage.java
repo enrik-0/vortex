@@ -130,6 +130,7 @@ public final class DatabaseStorage {
 	order.stream().forEach(table -> {
 	    ordered.add(getTable(table));
 	});
+	Collections.reverse(ordered);
 	return ordered;
     }
 
@@ -143,6 +144,10 @@ public final class DatabaseStorage {
 		if (relation.type().equals(ManyToMany.class.getSimpleName()) && !table.created()) {
 		    break;
 		}
+		if(relation.type().equals("inheritance")) {
+		    
+		addRelation( table.name(),relation.destinationTable());
+		}else
 		addRelation(relation.destinationTable(), table.name());
 	    }
 	}

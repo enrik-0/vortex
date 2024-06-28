@@ -26,11 +26,8 @@ import org.apache.maven.project.MavenProject;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.scanners.TypeAnnotationsScanner;
-import org.reflections.scanners.TypesScanner;
-
 import kik.framework.vortex.database.mysql.storage.Manager;
 import kik.framework.vortex.databasemanager.exception.RelationTypeException;
-import kik.framework.vortex.databasemanager.storage.StorageManager;
 import vortex.annotate.annotations.VortexApplication;
 import vortex.annotate.exceptions.InitiateServerException;
 import vortex.annotate.exceptions.UriException;
@@ -88,7 +85,7 @@ public class VortexMojo extends AbstractMojo {
 	     * FileReader.readPropertyFile("application-dev.properties");
 	     * PackageLoader.getInstance().setLoader(loader);
 	     * AnnotationManager.getInstance(); new Manager();
-	     */ 
+	     */
 	    PrintStream originalErr = System.err;
 	    PrintStream originalOut = System.out;
 	    var originalIn = System.in;
@@ -97,40 +94,46 @@ public class VortexMojo extends AbstractMojo {
 	    System.setIn(null);
 	    var reflections = new Reflections(loader, new TypeAnnotationsScanner(), new SubTypesScanner());
 	    var s = reflections.getTypesAnnotatedWith(VortexApplication.class);
-	    if(!s.isEmpty()) {
-		
-	    var r = (Class<?>) s.toArray()[0];
-	    Method m = r.getMethod("main", String[].class);
-	    Object a = r.getConstructor().newInstance();
-	    System.setOut(originalOut);
-	    System.setErr(originalErr);
-	    System.setIn(originalIn);
-	    m.invoke(a, new String[1]);
-	    }else {
+	    if (!s.isEmpty()) {
+
+		var r = (Class<?>) s.toArray()[0];
+		Method m = r.getMethod("main", String[].class);
+		Object a = r.getConstructor().newInstance();
+		System.setOut(originalOut);
+		System.setErr(originalErr);
+		System.setIn(originalIn);
+		m.invoke(a, new String[1]);
+	    } else {
 		FileReader.readPropertyFile("application-dev.properties");
 		PackageLoader.getInstance().setLoader(loader);
 		AnnotationManager.getInstance();
 		new Manager();
 		ServerHttp.runServer();
-
 	    }
-	    // ServerHttp.runServer(loader);
+	    CountDownLatch latch = new CountDownLatch(1);
+	    Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+		System.out.println("Shutdown hook triggered, stopping server...");
+		ServerHttp.stopServer(10);
+		latch.countDown();
+	    }));
+	    try {
+		latch.await();
+	    } catch (InterruptedException e) {
+		e.printStackTrace();
+	    }
+
 	} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
 		| NoSuchMethodException | SecurityException | IOException e) {
 	    e.printStackTrace();
 	} catch (DependencyResolutionRequiredException e1) {
 	    e1.printStackTrace();
 	} catch (UriException e) {
-	    // TODO Auto-generated catch block
 	    e.printStackTrace();
 	} catch (InitiateServerException e) {
-	    // TODO Auto-generated catch block
 	    e.printStackTrace();
 	} catch (SQLException e) {
-	    // TODO Auto-generated catch block
 	    e.printStackTrace();
 	} catch (RelationTypeException e) {
-	    // TODO Auto-generated catch block
 	    e.printStackTrace();
 	}
 	System.out.println();

@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.sun.net.httpserver.HttpServer;
 
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 
 import vortex.annotate.exceptions.InitiateServerException;
@@ -75,7 +76,6 @@ public final class ServerHttp {
 	server.setExecutor(executor);
 	server.createContext((String) Server.CONTEXT_PATH.value(), handler.getConstructor().newInstance());
 	server.start();
-
     }
 
     public static void runServer(URLClassLoader loader) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, IOException, UriException, InitiateServerException {
@@ -95,7 +95,6 @@ public final class ServerHttp {
      */
     public static void stopServer(int delay) {
 	server.stop(delay);
-
     }
 
     private static int mapToPort() {

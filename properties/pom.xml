@@ -6,7 +6,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>kik.framework.vortex</groupId>
 	<artifactId>properties</artifactId>
-	<version>0.8.0</version>
+	<version>1.0.0</version>
 	<name>properties</name>
 	<url>http://maven.apache.org</url>
 	<distributionManagement>

@@ -1,12 +1,14 @@
-package kik.framework.vortex.database.mysq.connector;
+package kik.framework.vortex.database.mysql.connector;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -52,11 +54,13 @@ public class JPARepository<T, Id> implements Repository<T, Id> {
     }
 
     @Override
-    public T save(T entity) throws SQLException, DataTypeException, RepositoryNotExistsException, RelationShipNotExistsException {
+    public T save(T entity)
+	    throws SQLException, DataTypeException, RepositoryNotExistsException, RelationShipNotExistsException {
 	return save(entity, new QueryStorage());
     }
 
-    public T save(T entity, QueryStorage storage) throws RepositoryNotExistsException, SQLException, DataTypeException,  RelationShipNotExistsException {
+    public T save(T entity, QueryStorage storage)
+	    throws RepositoryNotExistsException, SQLException, DataTypeException, RelationShipNotExistsException {
 	var clazz = ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
 	var tempEntity = storage.getEntity((Class<?>) clazz, generateId(entity), entity);
 	if (tempEntity != null) {
@@ -98,10 +102,20 @@ public class JPARepository<T, Id> implements Repository<T, Id> {
 			    }
 			} else if (relation.origin().equals(key)) {
 			    if (Asserttions.isList(value)) {
-				for (Object object : (List) value) {
+				/*
+				try {
+				    value = removeDuplicates((List) value);
+				} catch (IllegalAccessException | RepositoryNotExistsException e) {
+				    // TODO Auto-generated catch block
+				    e.printStackTrace();
+				}
+				value = List.copyOf((List)value);
+				*/
+				for (Object object :  (List) value) {
+				    if(object != null) {
 				    var repo = DatabaseStorage.getInstance().getRepository(object.getClass());
 				    try {
-					repo.save(object,storage);
+					repo.save(object, storage);
 				    } catch (SQLException e) {
 					try {
 					    repo.findById(repo.generateId(object));
@@ -110,6 +124,7 @@ public class JPARepository<T, Id> implements Repository<T, Id> {
 
 				    }
 				    map = temp(relation, object, id);
+				    }
 				}
 			    } else {
 				map = temp(relation, value, id);
@@ -164,6 +179,7 @@ public class JPARepository<T, Id> implements Repository<T, Id> {
 			} else if (relation.origin().equals(key)) {
 			    if (Asserttions.isList(value)) {
 				for (Object object : (List) value) {
+				    if(object != null)
 				    map = temp(relation, object, id);
 				}
 			    } else {
@@ -183,7 +199,8 @@ public class JPARepository<T, Id> implements Repository<T, Id> {
 	return entity;
     }
 
-    public T saveInheriance(Object object) throws SQLException, DataTypeException, RepositoryNotExistsException, RelationShipNotExistsException {
+    public T saveInheriance(Object object)
+	    throws SQLException, DataTypeException, RepositoryNotExistsException, RelationShipNotExistsException {
 
 	DatabaseStorage.getInstance().getRepository(object.getClass()).save(object);
 	return null;
@@ -197,8 +214,8 @@ public class JPARepository<T, Id> implements Repository<T, Id> {
 	Map<String, Object> objectIds = null;
 	Repository repository = null;
 	if (relation.type().equals(ManyToMany.class.getSimpleName())) {
-	    objectIds = ((JPARepository) DatabaseStorage.getInstance().getRepository(relatedTable.clazz()))
-		    .generateId(object);
+	    var rep = ((JPARepository) DatabaseStorage.getInstance().getRepository(relatedTable.clazz()));
+	    objectIds = rep.generateId(object);
 	    DBTable relationTable = DatabaseStorage.getInstance().getRelationTable(getTable(), relatedTable);
 
 	    for (Relation rel : relationTable.relations()) {
@@ -259,20 +276,17 @@ public class JPARepository<T, Id> implements Repository<T, Id> {
 
     @Override
     public List<T> saveAll(List<T> entities) throws SQLException {
+	List<T> unchanged = new ArrayList<>();
+	entities.forEach(unchanged::add);
 	QueryStorage storage = new QueryStorage();
-	if (entities != null && !entities.isEmpty()) {
+	if (unchanged != null && !unchanged.isEmpty()) {
 	    List<Map<String, Object>> values = new ArrayList<>();
-	    entities.stream().forEach(e -> {
+	    unchanged.stream().forEach(e -> {
 		try {
 		    save(e, storage);
-		} catch (SQLException | DataTypeException | RepositoryNotExistsException e1) {
-		    // TODO Auto-generated catch block
+		} catch (SQLException | DataTypeException | RepositoryNotExistsException | RelationShipNotExistsException e1) {
 		    e1.printStackTrace();
-		} catch (RelationShipNotExistsException e1) {
-		    // TODO Auto-generated catch block
-		    e1.printStackTrace();
-		}
-	    });
+	    }});
 	}
 	return entities;
 
@@ -280,10 +294,11 @@ public class JPARepository<T, Id> implements Repository<T, Id> {
 
     @Override
     public T findById(Id id) throws SQLException, RelationShipNotExistsException, RepositoryNotExistsException {
-	T entity;
+	T entity = null;
 	var clazz = ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
 	DBTable table = DatabaseStorage.getInstance().getTable((Class<?>) clazz);
 	if (id.getClass().getSimpleName().contains("Map")) {
+	    if(!((Map<String, Object>)id).isEmpty())
 	    entity = findById((Map<String, Object>) id, table);
 	} else {
 	    Map<String, Object> ids = new HashMap<>();
@@ -440,12 +455,16 @@ public class JPARepository<T, Id> implements Repository<T, Id> {
     public T find(Map<String, Object> map, QueryStorage storage)
 	    throws SQLException, RelationShipNotExistsException, RepositoryNotExistsException {
 	var clazz = ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+	T entity = null;
+	if (storage.isVisited((Class<?>) clazz, map)) {
+	    return storage.getEntity((Class<?>) clazz, map, entity);
+	}
 	String sql = SQLWriter.find((Map<String, Object>) map,
 		DatabaseStorage.getInstance().getTable((Class<?>) clazz));
 	var statement = Connector.getInstance().getInstance().sendResultRequest(sql);
 	statement.executeQuery(sql);
 	var r = statement.getResultSet();
-	T entity = populateEntity(r, statement, sql, map, storage);
+	entity = populateEntity(r, statement, sql, map, storage);
 	statement.close();
 	return entity;
     }
@@ -517,8 +536,15 @@ public class JPARepository<T, Id> implements Repository<T, Id> {
 		if (relation.type().equals(OneToMany.class.getSimpleName()) && relation.origin().equals(key)) {
 		    Object v = values.get(key);
 		    if (!((List) v).isEmpty()) {
+			try {
+			    v = removeDuplicates((List) v);
+			} catch (IllegalAccessException | RepositoryNotExistsException e) {
+			}
+			if(!((List)v).isEmpty() && ((List) v).get(0) != null) {
+			    
 			var repository = DatabaseStorage.getInstance().getRepository(((List) v).get(0).getClass());
 			repository.saveAll((List) v);
+			}
 
 		    }
 		}
@@ -557,7 +583,7 @@ public class JPARepository<T, Id> implements Repository<T, Id> {
 		    }
 		}
 	    }
-	    if(map.isEmpty()) {
+	    if (map.isEmpty()) {
 		map = ids;
 	    }
 	    String sql = SQLWriter.find(map, table);
@@ -632,6 +658,8 @@ public class JPARepository<T, Id> implements Repository<T, Id> {
 
     @Override
     public void delete(T entity) throws SQLException, RepositoryNotExistsException, RelationShipNotExistsException {
+	if(entity != null) {
+	    
 	List<String> statements = deleteSQL(entity);
 
 	try {
@@ -648,10 +676,14 @@ public class JPARepository<T, Id> implements Repository<T, Id> {
 		update(entity);
 	    }
 	}
+	}
     }
 
     public Map<String, Object> generateId(T entity) throws RepositoryNotExistsException {
 	Map<String, Object> map = new HashMap<String, Object>();
+	if(entity == null) {
+	    return map;
+	}
 	DBTable table = DatabaseStorage.getInstance().getTable(entity.getClass());
 	Collection<Field> fields = new ArrayList<>();
 	Collections.addAll(fields, entity.getClass().getDeclaredFields());
@@ -738,11 +770,18 @@ public class JPARepository<T, Id> implements Repository<T, Id> {
 	    QueryStorage storage) throws SQLException, RelationShipNotExistsException, RepositoryNotExistsException {
 	T entity = instantiateEntity();
 	DBTable table = getTable();
-	storage.addEntity(table.clazz(), ids, entity);
+	var realIds = generateId(entity);
+	boolean saved = false;
+	/*
+	if (realIds.keySet().equals(ids.keySet())) {
+	    storage.addEntity(table.clazz(), ids, entity);
+	    saved = true;
+
+	}*/
 	// ResultSet result = executeQuery(originalStatement, originalSQL);
 	List<Object> fatherIds = processResultSet(result, entity, table, storage);
-	// originalStatement.getConnection().close();
 	storage.addVisited(table.clazz(), ids);
+	// originalStatement.getConnection().close();
 
 	handleUnsavedRecords(entity, table, ids, storage);
 
@@ -778,11 +817,27 @@ public class JPARepository<T, Id> implements Repository<T, Id> {
 		Object value = result.getObject(record.name(), record.data().data().parseToJava());
 		handleInheritance(table, fatherIds, record, value);
 		setFieldValue(entity, record, value, storage);
+		var ts = generateId(entity);
+		List<Boolean> validity = new ArrayList<>();
+		ts.forEach((k, v) -> {
+		    RecordInfo r = table.getRecord(k);
+		    if (k.equals(r.name()) && v != null) {
+			validity.add(true);
+		    } else {
+			validity.add(false);
+		    }
+		});
+		if(!validity.contains(false)) {
+		    storage.addVisited(entity.getClass(), ts);
+		    storage.addEntity(entity.getClass(), ts, entity);
+		}
+		
 	    } catch (SQLException e) {
 		result.next();
 		fatherIds = processResultSet(result, entity, table, storage);
 	    }
 	}
+
 	return fatherIds;
     }
 
@@ -873,24 +928,20 @@ public class JPARepository<T, Id> implements Repository<T, Id> {
 		}));
 		List relatedEntities = (List) DatabaseStorage.getInstance().getRepository(relatedTable.clazz())
 			.findBy(temp, storage);
-		if (!relatedEntities.isEmpty())
-		    /*
-		     * for (Field field : getAllFields(relatedEntities.get(0).getClass())) {
-		     * RecordInfo recor = relatedTable.getRecord(r.origin()); if
-		     * (field.getName().equals(recor.name())) { for (var relatedEntity :
-		     * relatedEntities) {
-		     * 
-		     * field.setAccessible(true); try { field.set(relatedEntity, entity);
-		     * 
-		     * } catch (IllegalArgumentException | IllegalAccessException e) { }
-		     * 
-		     * field.setAccessible(false); } } }
-		     */
-		    for (Field field : getAllFields(entity.getClass())) {
-			for (Relation rel : table.getAllRelations()) {
-			    RecordInfo recor = table.getRecord(rel.origin());
-			    if (recor.fieldName().equals(field.getName())) {
-				field.setAccessible(true);
+		boolean valid = false;
+		for (Field field : getAllFields(entity.getClass())) {
+		    for (Relation rel : table.getAllRelations()) {
+			RecordInfo recor = table.getRecord(rel.origin());
+			if (recor.fieldName().equals(field.getName())) {
+			    if (field.getGenericType() instanceof ParameterizedType) {
+				ParameterizedType parameterizedType = (ParameterizedType) field.getGenericType();
+				Type[] fieldArgTypes = parameterizedType.getActualTypeArguments();
+				if (!relatedEntities.isEmpty())
+				    valid = fieldArgTypes[0].equals(relatedEntities.get(0).getClass());
+			    }
+
+			    field.setAccessible(true);
+			    if (valid) {
 				try {
 				    var list = field.get(entity);
 				    if (list == null) {
@@ -902,10 +953,23 @@ public class JPARepository<T, Id> implements Repository<T, Id> {
 				} catch (IllegalArgumentException | IllegalAccessException e) {
 				}
 
-				field.setAccessible(false);
+			    } else {
+				Object list = null;
+				try {
+				    list = field.get(entity);
+				    if (list == null) {
+					list = new ArrayList<>();
+				    }
+				    field.set(entity, list);
+				} catch (IllegalArgumentException | IllegalAccessException e) {
+				    // TODO Auto-generated catch block
+				    e.printStackTrace();
+				}
 			    }
+			    field.setAccessible(false);
 			}
 		    }
+		}
 	    }
 	    if (r.type().equals(OneToMany.class.getSimpleName())) {
 		Map<String, Object> temp = new HashMap<String, Object>();
@@ -1012,16 +1076,17 @@ public class JPARepository<T, Id> implements Repository<T, Id> {
 	    DBTable relatedTable) throws SQLException {
 	List<Map<String, Object>> relationTableIds = new ArrayList<>();
 	while (results.next()) {
+	    Map<String, Object> relatedIds = new HashMap<>();
+	    for(RecordInfo record : relatedTable.id())
 	    for (String name : getRecordNames(relationTable)) {
 		Relation rel = relationTable.getRelation(name);
-		if (rel.destinationTable().equals(relatedTable.name())) {
-		    RecordInfo record = relationTable.getRecord(name);
-		    Object value = results.getObject(record.name(), record.data().data().parseToJava());
-		    Map<String, Object> relatedIds = new HashMap<>();
+		if (rel.destinationTable().equals(relatedTable.name()) && rel.destination().equals(record.name())) {
+		    RecordInfo recor = relationTable.getRecord(name);
+		    Object value = results.getObject(recor.name(), recor.data().data().parseToJava());
 		    relatedIds.put(rel.destination(), value);
-		    relationTableIds.add(relatedIds);
 		}
 	    }
+	    relationTableIds.add(relatedIds);
 	}
 	return relationTableIds;
     }
@@ -1060,19 +1125,31 @@ public class JPARepository<T, Id> implements Repository<T, Id> {
 	    }
 	}
     }
-    private List<Object> removeDuplicates(List<Object> list) throws IllegalAccessException, RepositoryNotExistsException {
-        HashSet<String> seen = new HashSet<>();
-        Iterator<Object> iterator = list.iterator();
-        Repository repository = null;
-        if(!list.isEmpty()) {
-            repository = DatabaseStorage.getInstance().getRepository(list.get(0).getClass());
-        }
-        Map<String,Object> map = null;
-        while (iterator.hasNext()) {
-            Object item = iterator.next();
-            try {
-		if(seen.add(repository.generateId(item).toString())){
-		iterator.remove();
+
+    private List<Object> removeDuplicates(List<Object> list)
+	    throws IllegalAccessException, RepositoryNotExistsException {
+	HashSet<String> seen = new HashSet<>();
+	Iterator<Object> iterator = list.iterator();
+	Repository repository = null;
+	if (!list.isEmpty()) {
+	    int index = -1;
+	    for(int i = 0; i < list.size(); i ++) {
+		if(list.get(i) != null) {
+		    index = i;
+		    break;
+		}
+	    }
+	    if(index != -1)
+	    repository = DatabaseStorage.getInstance().getRepository(list.get(index).getClass());
+	}
+	List<Object> result = new ArrayList<>();
+	Map<String, Object> map = null;
+	while (iterator.hasNext()) {
+	    Object item = iterator.next();
+	    if(item != null) {
+	    try {
+		if (seen.add(repository.generateId(item).toString())) {
+		    result.add(item);
 		}
 	    } catch (NoSuchFieldException e) {
 		// TODO Auto-generated catch block
@@ -1082,22 +1159,24 @@ public class JPARepository<T, Id> implements Repository<T, Id> {
 		e.printStackTrace();
 	    }
 
-        }
-        return list;
+	}
+	}
+	return result;
     }
 
     private String getObjectFieldsString(Object obj) throws IllegalAccessException {
-        StringBuilder sb = new StringBuilder();
-        Class<?> objClass = obj.getClass();
+	StringBuilder sb = new StringBuilder();
+	Class<?> objClass = obj.getClass();
 
-        for (Field field : getAllFields(objClass)) {
-            field.setAccessible(true);
-            Object value = field.get(obj);
-            sb.append(value != null ? value.toString() : "null").append(",");
-        }
+	for (Field field : getAllFields(objClass)) {
+	    field.setAccessible(true);
+	    Object value = field.get(obj);
+	    sb.append(value != null ? value.toString() : "null").append(",");
+	}
 
-        return sb.toString();
+	return sb.toString();
     }
+
     private List<Field> getAllFields(Class<?> clazz) {
 	List<Field> fields = new ArrayList<>();
 	if (!clazz.getSuperclass().equals(Object.class)) {

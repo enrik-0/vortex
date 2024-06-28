@@ -15,6 +15,7 @@ import java.util.Set;
 
 import vortex.annotate.annotations.Autowired;
 import vortex.annotate.components.Controller;
+import vortex.annotate.components.Service;
 import vortex.annotate.constants.HttpMethod;
 import vortex.annotate.exceptions.InitiateServerException;
 import vortex.annotate.exceptions.UriException;
@@ -49,8 +50,14 @@ public final class Storage {
 	    urls.put(method, new ArrayList<>());
 	}
 	try {
-	    fillControllers();
+	    fillComponent(Controller.class);
+	    fillComponent(Service.class);
 	} catch (Exception e) {
+
+	    for (HttpMethod method : HttpMethod.values()) {
+		urls.put(method, new ArrayList<>());
+	    }
+
 	}
     }
 
@@ -89,7 +96,7 @@ public final class Storage {
     }
 
     public void addClass(String annotationName, Class<?> classToSave) {
-	if(annotationName.equals(Controller.class.getName())) {
+	if (annotationName.equals(Controller.class.getName())) {
 	    addCORS(classToSave, "*");
 	}
 	classes.get(annotationName).add(classToSave);
@@ -99,6 +106,7 @@ public final class Storage {
 	return classes.get(component);
 
     }
+
     public List<Class<?>> getComponent(Class<?> component) {
 	return classes.get(component.getName());
 
@@ -145,9 +153,9 @@ public final class Storage {
 	return runnable;
     }
 
-    private void fillControllers() throws InstantiationException, IllegalAccessException, IllegalArgumentException,
-	    InvocationTargetException, NoSuchMethodException, SecurityException {
-	for (Class<?> clazz : getComponent(Controller.class.getName())) {
+    private void fillComponent(Class<?> component) throws InstantiationException, IllegalAccessException,
+	    IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+	for (Class<?> clazz : getComponent(component.getName())) {
 	    Object object = clazz.getConstructor().newInstance();
 	    for (Field field : object.getClass().getDeclaredFields()) {
 		for (Annotation annotation : field.getAnnotations()) {
@@ -156,7 +164,11 @@ public final class Storage {
 			Object fieldObject = checkField(fieldClass);
 			field.setAccessible(true);
 			if (fieldObject == null) {
-			    fieldObject = fieldClass.getConstructor().newInstance();
+			    try {
+				fieldObject = fieldClass.getConstructor().newInstance(null);
+			    } catch (NoSuchMethodException e) {
+				fieldObject = fieldClass.getConstructor().newInstance();
+			    }
 			    objects.add(fieldObject);
 			}
 			field.set(object, fieldObject);
@@ -186,7 +198,7 @@ public final class Storage {
 	    IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 	if (controllers == null) {
 	    this.controllers = new HashMap<>();
-	    fillControllers();
+	    fillComponent(Controller.class);
 	}
 	return controllers.get(method.getDeclaringClass());
     }
@@ -198,6 +210,7 @@ public final class Storage {
     public void addCORS(Class<?> annotatedClass, String value) {
 	cors.put(annotatedClass, value);
     }
+
     public String getCors(Class<?> clazz) {
 	return cors.get(clazz);
     }
