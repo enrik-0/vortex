@@ -10,7 +10,6 @@ import java.util.StringJoiner;
 import java.util.regex.Pattern;
 import vortex.properties.kinds.Element;
 import vortex.properties.kinds.Patterns;
-import vortex.properties.kinds.Server;
 import vortex.utils.MappingUtils;
 public final class FileReader {
 
@@ -32,8 +31,6 @@ public final class FileReader {
 			processStream(resource, lines);
 		}
 		PropertyParser.getInstance().setProperties(lines);
-		System.out.println(Server.Data.A.value());
-		System.out.println(Server.PORT.value());
 	}
 	private static HashMap<String, Object> processLine(String line,
 			HashMap<String, Object> map) throws IOException {

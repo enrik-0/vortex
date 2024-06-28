@@ -24,11 +24,12 @@ import vortex.http.exchange.ResponseStatus;
 import vortex.http.status.HttpStatus;
 import vortex.test.exception.AmbiguousMethodException;
 import vortex.utils.Asserttions;
+import vortex.utils.HttpUtils;
 import vortex.utils.MappingUtils;
 
 public class RequestBuilder {
 
-	private static final int AMMOUNT_TO_READ = 1024;
+	private static final int AMMOUNT_TO_READ = 255;
 	private static final int SECOND_10 = 10000;
 	private String uri;
 	private HttpMethod method;
@@ -173,14 +174,16 @@ public class RequestBuilder {
 		try {
 			connection.setRequestMethod(this.method.name());
 			List<String> contentHeaders = new ArrayList<>();
-			Asserttions.setContentHeader(contentHeaders, body,
+			HttpUtils.setContentHeader(contentHeaders, body,
 					headers.get("Content-type")).forEach(value -> {
 						this.addHeader("Content-type", value);
 					});
 			setHeaders(connection);
 			createBody(connection);
 			// connection.setConnectTimeout(this.timeout);
-			Response e = createResponse(connection, connection.getInputStream());
+			InputStream stream = connection.getInputStream();
+			
+			Response e = createResponse(connection, stream);
 			return e;
 		} catch (FileNotFoundException e) {
 			return createResponse(connection, connection.getErrorStream());
@@ -278,7 +281,8 @@ public class RequestBuilder {
 		var buffer = new byte[AMMOUNT_TO_READ];
 		var byteArrayOutputStream = new ByteArrayOutputStream();
 
-		while ((longitud = inputStream.read(buffer)) != -1) {
+		var r = inputStream.available();
+		while ( (longitud = inputStream.read(buffer)) != -1) {
 			byteArrayOutputStream.write(buffer, 0, longitud);
 		}
 

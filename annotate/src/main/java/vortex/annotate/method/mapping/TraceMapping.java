@@ -28,7 +28,7 @@ public @interface TraceMapping {
 	 * Uri to handle with <b>DELETE</b> <br>
 	 * <h1>example:</h1> <code> @TraceMapping("/uri")</code>
 	 */
-	String value();
+	String value() default "";
 
 	String[] uris() default {};
 }

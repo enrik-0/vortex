@@ -28,7 +28,7 @@ public @interface PatchMapping {
 	 * Uri to handle with <b>{@linkplain PATCH} <br>
 	 * <h1>example:</h1> <code> @PatchMapping("/uri")</code>
 	 */
-	String value();
+	String value() default "";
 
 	String[] uris() default {};
 }

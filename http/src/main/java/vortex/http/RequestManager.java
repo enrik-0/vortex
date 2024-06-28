@@ -21,6 +21,8 @@ import vortex.http.exceptions.ParameterSintaxException;
 import vortex.http.exceptions.RequestFormatException;
 import vortex.http.exchange.ExchangeHttp;
 import vortex.http.exchange.Request;
+import vortex.http.exchange.ResponseStatusException;
+import vortex.http.status.HttpStatus;
 import vortex.properties.exception.FormatPatternException;
 import vortex.properties.kinds.Application;
 import vortex.utils.MappingUtils;
@@ -47,7 +49,7 @@ public final class RequestManager {
 
     public Object handle(ExchangeHttp request) throws InstantiationException, IllegalAccessException,
 	    IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, IOException,
-	    BodyException, ParameterSintaxException, RequestFormatException, UriException, FormatPatternException {
+	    BodyException, ParameterSintaxException, RequestFormatException, UriException, FormatPatternException, ResponseStatusException {
 	if ((boolean) Application.DEBUG.value()) {
 	    LOGGER.debug(request.getRequestURI().getPath());
 	}
@@ -59,8 +61,22 @@ public final class RequestManager {
     private static Object executeMethod(Method method, ExchangeHttp request, HttpMethod http)
 	    throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 	    NoSuchMethodException, SecurityException, IOException, BodyException, ParameterSintaxException,
-	    RequestFormatException, FormatPatternException{
+	    RequestFormatException, FormatPatternException, ResponseStatusException{
 	var launcher = Storage.getInstance().getObjectController(method);
+	var cors = Storage.getInstance().getCors(launcher.getClass());
+	boolean denied = true;
+	if(cors.equals("*")) {
+	    denied = false;
+	}
+	if(denied) {
+	var hosts = request.getRequestHeaders().get("Host");
+	for(String host : hosts) {
+	    denied = !host.equals(cors);
+	}
+	}
+	if(denied) {
+	    throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+	}
 	Object[] parameters = getParameters(method, request, http);
 	return method.invoke(launcher, parameters);
 
@@ -85,28 +101,25 @@ public final class RequestManager {
 	Parameter methodParameter;
 	List<Object> parametersValues = new ArrayList<>();
 	Parameter[] methodParameters = method.getParameters();
-	Annotation[][] parameterAnnotations = method.getParameterAnnotations();
 	for (int i = 0; i < method.getParameterCount() ; i++) {
 	    methodParameter = methodParameters[i];
-	    proccessParameters(parameters, methodParameter, parametersValues, methodParameters, parameterAnnotations,
+	    proccessParameters(parameters, methodParameter, parametersValues, methodParameters, 
 		    i, request);
 	}
 
 	return parametersValues.toArray();
     }
     private static void proccessParameters(List<Param> parameters, Parameter methodParameter,
-	    List<Object> parametersValues, Parameter[] methodParameters, Annotation[][] parameterAnnotations, int i, Request request)
+	    List<Object> parametersValues, Parameter[] methodParameters, int i, Request request)
 	    throws ParameterSintaxException{
 	Param queryParam;
-	Object buffer;
 	for (Annotation annotation : methodParameter.getAnnotations()) {
-	    if (annotation.annotationType().isAssignableFrom(RequestBody.class)) {
+	    if (annotation.annotationType().getSimpleName().equals(RequestBody.class.getSimpleName())) {
 		queryParam = parameters.remove(parameters.size() - 1);
-	    } else if(annotation.annotationType().isAssignableFrom(Header.class) || 
-		    annotation.annotationType().isAssignableFrom(HttpRequest.class)) {
+	    } else if(annotation.annotationType().getSimpleName().equals(Header.class.getSimpleName()) || 
+		    annotation.annotationType().getSimpleName().equals(HttpRequest.class.getSimpleName())) {
 		queryParam = null;
-	    }
-	    else {
+	    } else {
 		queryParam = parameters.remove(0);
 	    }
 	    mappParameter(methodParameter, queryParam, methodParameters, parametersValues, i, request);
@@ -129,13 +142,13 @@ public final class RequestManager {
 	Object buffer;
 	for (Annotation e : methodParameter.getAnnotations()) {
 
-	    if (e.annotationType().isAssignableFrom(RequestBody.class)) {
+	    if (e.annotationType().getSimpleName().equals(RequestBody.class.getSimpleName())) {
 
 		buffer = MappingUtils.map(queryParam.getValue(), methodParameters[i].getType());
 		parametersValues.add(buffer);
 	    } 
 		
-	    if(e.annotationType().isAssignableFrom(RequestParam.class)) {
+	    if(e.annotationType().getSimpleName().equals(RequestParam.class.getSimpleName())) {
 		
 		try {
 		    
@@ -151,10 +164,11 @@ public final class RequestManager {
 		}catch(ParameterSintaxException paramException) {
 		    throw new RuntimeException(paramException);
 
+
 		    
 		}
 	    }
-	    if(e.annotationType().isAssignableFrom(Header.class)) {
+	    if(e.annotationType().getSimpleName().equals(Header.class.getSimpleName())) {
 		System.out.println(e.toString());
 		String requestedHeader = e.toString().split("\\(")[1].substring(1).substring(0,
 			e.toString().split("\\(")[1].substring(1).length() -2 );
@@ -170,7 +184,7 @@ public final class RequestManager {
 		    parametersValues.add(list);
 		}
 	    }
-	    if(e.annotationType().isAssignableFrom(HttpRequest.class)) {
+	    if(e.annotationType().getSimpleName().equals(HttpRequest.class.getSimpleName())) {
 
 		parametersValues.add(request);
 	    }
@@ -213,7 +227,7 @@ public final class RequestManager {
 
 	for (int i = 0; i < parameterAnnotations.length; i++) {
 	    for (Annotation annotation : parameterAnnotations[i]) {
-		if (annotation.annotationType().equals(RequestBody.class)) {
+		if (annotation.annotationType().getSimpleName().equals(RequestBody.class.getSimpleName())) {
 		    count++;
 		    clazz = method.getParameters()[i].getType();
 		}

@@ -6,16 +6,27 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>kik.framework.vortex</groupId>
 	<artifactId>http</artifactId>
-	<version>0.5.2</version>
+	<version>1.0.0</version>
 	<name>http</name>
 	<url>http://maven.apache.org</url>
+		<distributionManagement>
+		<repository>
+			<id>github</id>
+			<name>GitHub enrik-0 Apache Maven Packages</name>
+			<url>https://maven.pkg.github.com/enrik-0/vortex</url>
+		</repository>
+	</distributionManagement>
 	<properties>
 		<maven.compiler.source>17</maven.compiler.source>
 		<maven.compiler.target>17</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<dependencies>
-
+<dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>31.1-jre</version>
+        </dependency>
 		<!-- https://mvnrepository.com/artifact/com.sun/tools -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
@@ -25,7 +36,7 @@
 	<dependency>
 		<groupId>kik.framework.vortex</groupId>
 		<artifactId>properties</artifactId>
-		<version>0.3.5</version>
+		<version>1.0.0</version>
 	</dependency>
 	
 		<dependency>
@@ -67,7 +78,7 @@
 		<dependency>
 			<groupId>kik.framework.vortex</groupId>
 			<artifactId>annotate</artifactId>
-			<version>0.4.4</version>
+			<version>1.0.0</version>
 		</dependency>
 
 

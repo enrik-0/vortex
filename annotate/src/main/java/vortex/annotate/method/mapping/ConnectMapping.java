@@ -28,7 +28,7 @@ public @interface ConnectMapping {
 	 * Uri to handle with <b>{@linkplain CONNECT} <br>
 	 * <h1>example:</h1> <code> @ConnectMapping("/uri")</code>
 	 */
-	String value();
+	String value() default "";
 
 	String[] uris() default {};
 }
