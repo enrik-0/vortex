@@ -32,10 +32,13 @@ public class ManagerTest {
 	    Connector.getInstance().sendRequest("DROP TABLE `test`.`books`, `test`.`compositekeyclasss`, `test`.`librarys`, `test`.`manytomanyclass1`, `test`.`manytomanyclass1_manytomanyclass2`, `test`.`manytomanyclass2`, `test`.`persons`, `test`.`relatedclasss`, `test`.`table1`, `test`.`table2`, `test`.`testclasss`, `test`.`trucks`, `test`.`users`, `test`.`vehicles`, `test`.`vehicles_users`;");
 	    
 	}catch(SQLException e) {
+	    try {
 	    
-	    Connector.getInstance().sendRequest("DROP TABLE `test`.`books`, `test`.`compositekeyclasss`, `test`.`librarys`, `test`.`manytomanyclass1`, `test`.`manytomanyclass2_manytomanyclass1`, `test`.`manytomanyclass2`, `test`.`persons`, `test`.`relatedclasss`, `test`.`table1`, `test`.`table2`, `test`.`testclasss`, `test`.`trucks`, `test`.`users`, `test`.`vehicles`, `test`.`vehicles_users`;");
+	   Connector.getInstance().sendRequest("DROP TABLE `test`.`books`, `test`.`compositekeyclasss`, `test`.`librarys`, `test`.`manytomanyclass1`, `test`.`manytomanyclass2_manytomanyclass1`, `test`.`manytomanyclass2`, `test`.`persons`, `test`.`relatedclasss`, `test`.`table1`, `test`.`table2`, `test`.`testclasss`, `test`.`trucks`, `test`.`users`, `test`.`vehicles`, `test`.`vehicles_users`;");
+    }catch(SQLException e1) {
+	
+    }
 	}
-	System.err.println();
     }
     @Test
     void test() {
