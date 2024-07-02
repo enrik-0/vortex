@@ -165,6 +165,15 @@ public final class Storage {
 			field.setAccessible(true);
 			if (fieldObject == null) {
 			    try {
+				System.err.println();
+				for (Annotation a : fieldClass.getDeclaredAnnotations()) {
+				    if (annotation.annotationType().getSimpleName()
+					    .equals(Service.class.getSimpleName())) {
+					fillComponent(fieldClass);
+					fieldObject = checkField(fieldClass);
+				    }
+				}
+				if(fieldObject == null)
 				fieldObject = fieldClass.getConstructor().newInstance(null);
 			    } catch (NoSuchMethodException e) {
 				fieldObject = fieldClass.getConstructor().newInstance();
@@ -177,6 +186,8 @@ public final class Storage {
 		}
 
 	    }
+	    objects.add(object);
+	    if(component.equals(Controller.class))
 	    controllers.put(clazz, object);
 
 	}
@@ -198,6 +209,7 @@ public final class Storage {
 	    IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 	if (controllers == null) {
 	    this.controllers = new HashMap<>();
+	    fillComponent(Service.class);
 	    fillComponent(Controller.class);
 	}
 	return controllers.get(method.getDeclaringClass());
