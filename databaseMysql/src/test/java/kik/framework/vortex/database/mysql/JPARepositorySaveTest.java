@@ -133,6 +133,9 @@ public class JPARepositorySaveTest {
 
 	person.delete(new Person("Manuel", "Izaguirre", 2500, 1));
 	assertEquals(0, numberOfRecords("persons"));
+	UserRepository u = new UserRepository();
+	u.delete(new Person("Manuel", "Izaguirre", 2500, 1));
+	
 	assertEquals(0, numberOfRecords("users"));
 
     }

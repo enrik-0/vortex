@@ -279,8 +279,8 @@ public final class AnnotationManager {
 	if ((boolean) Application.DEBUG.value()) {
 
 	    System.setOut(out);
-	    LOGGER.debug(String.format(LOG_MESSAGE, Entity.class.getSimpleName(),
-		    Storage.getInstance().getComponent(Entity.class.getName()).size()));
+	    LOGGER.debug(String.format(LOG_MESSAGE, Repository.class.getSimpleName(),
+		    Storage.getInstance().getComponent(Repository.class.getName()).size()));
 	}
 	System.setOut(out);
 	System.setErr(err);

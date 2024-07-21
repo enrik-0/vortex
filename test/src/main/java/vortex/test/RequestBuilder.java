@@ -14,23 +14,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import vortex.annotate.constants.HttpMethod;
 import vortex.http.exchange.Response;
 import vortex.http.exchange.ResponseStatus;
 import vortex.http.status.HttpStatus;
-
 import vortex.test.exception.AmbiguousMethodException;
-import vortex.utils.Asserttions;
 import vortex.utils.HttpUtils;
 import vortex.utils.MappingUtils;
 
 public class RequestBuilder {
 
-	private static final int AMMOUNT_TO_READ = 1024;
+
+	private static final int AMMOUNT_TO_READ = 255;
 	private static final int SECOND_10 = 10000;
 	private String uri;
 	private HttpMethod method;
@@ -61,7 +58,9 @@ public class RequestBuilder {
 
 	public RequestBuilder setBody(Object set) {
 
+		if(method != HttpMethod.GET){
 		body = set;
+		}
 		return this;
 	}
 	/**
@@ -126,52 +125,7 @@ public class RequestBuilder {
 		setUp(uri, HttpMethod.DELETE);
 		return this;
 	}
-	/**
-	 * Sets request method to {@link HttpMethod.TRACE}
-	 * 
-	 * @param uri
-	 */
-	public RequestBuilder trace(String uri) throws AmbiguousMethodException {
-		setUp(uri, HttpMethod.TRACE);
-		return this;
-	}
-	
-	/**
-	 * Sets request method to {@link HttpMethod.OPTIONS}
-	 * 
-	 * @param uri
-	 */
-	public RequestBuilder options(String uri) throws AmbiguousMethodException {
-		setUp(uri, HttpMethod.OPTIONS);
-		return this;
-	}
-	/**
-	 * Sets request method to {@link HttpMethod.PATCH}
-	 * 
-	 * @param uri
-	 */
-	public RequestBuilder patch(String uri) throws AmbiguousMethodException {
-		setUp(uri, HttpMethod.PATCH);
-		return this;
-	}
-	/**
-	 * Sets request method to {@link HttpMethod.HEAD}
-	 * 
-	 * @param uri
-	 */
-	public RequestBuilder head(String uri) throws AmbiguousMethodException {
-		setUp(uri, HttpMethod.HEAD);
-		return this;
-	}
-/**
-	 * Sets request method to {@link HttpMethod.CONNECT}
-	 * 
-	 * @param uri
-	 */
-	public RequestBuilder connect(String uri) throws AmbiguousMethodException {
-		setUp(uri, HttpMethod.CONNECT);
-		return this;
-	}
+
 	/**
 	 * Sets a specified timeout value, in milliseconds, to be used when opening
 	 * a communications link to the resource referenced by this uri. If the
@@ -224,8 +178,9 @@ public class RequestBuilder {
 					});
 			setHeaders(connection);
 			createBody(connection);
-			// connection.setConnectTimeout(this.timeout);
-			Response e = createResponse(connection, connection.getInputStream());
+			connection.setConnectTimeout(this.timeout);
+			InputStream stream = connection.getInputStream();
+			Response e = createResponse(connection, stream);
 			return e;
 		} catch (FileNotFoundException e) {
 			return createResponse(connection, connection.getErrorStream());
@@ -249,7 +204,6 @@ public class RequestBuilder {
 
 	private void createBody(HttpURLConnection connection)
 			throws JsonProcessingException {
-
 		if (body != null) {
 			var bytes = MappingUtils.writeValueAsBytes(body);
 			ObjectMapper mapper = new ObjectMapper();
@@ -261,8 +215,8 @@ public class RequestBuilder {
 				os.write(bytes, 0, bytes.length);
 
 			} catch (IOException e) {
-            connection.getURL();
-			}     
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -270,8 +224,7 @@ public class RequestBuilder {
 			InputStream inputStream) throws IOException {
 		try {
 			Object mapped = null;
-      if(inputStream != null){
-
+        if(inputStream != null){
 			var byteArrayOutputStream = copyInputStream(inputStream);
 			String contentHeader = connection.getHeaderField("Content-type");
 			if ("application/json".equals(contentHeader)) {
@@ -286,11 +239,13 @@ public class RequestBuilder {
 				}
 			} else {
 				mapped = getResponseBody(byteArrayOutputStream.toByteArray());
+
+        }
 			}
-      }
 
 			return mapped;
 		} catch (Exception e) {
+			e.printStackTrace();
 			return null;
 		}
 
@@ -310,7 +265,6 @@ public class RequestBuilder {
 			}
 			buffer = builder.toString();
 		}
-		body = buffer;
 		body = MappingUtils.mapToPrimitive(content, buffer);
 
 		return body;
@@ -324,10 +278,12 @@ public class RequestBuilder {
 		var buffer = new byte[AMMOUNT_TO_READ];
 		var byteArrayOutputStream = new ByteArrayOutputStream();
 
-		while ((longitud = inputStream.read(buffer)) != -1) {
+		var r = inputStream.available();
+		while ( (longitud = inputStream.read(buffer)) != -1) {
 			byteArrayOutputStream.write(buffer, 0, longitud);
 		}
 
 		return byteArrayOutputStream;
 	}
 }
+

@@ -16,6 +16,11 @@ public class testController {
 		return number;
 	}
 	
+
+	@GetMapping("/exception")
+	public void exception() throws Exception {
+	    throw new Exception();
+	}
 	@GetMapping("/ResponseNumber")
 	public ResponseStatus<Long> responseStatusNumber(@RequestParam long number){
 		return new ResponseStatus<Long>(HttpStatus.CREATED, number);

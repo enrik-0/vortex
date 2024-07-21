@@ -48,9 +48,11 @@ public class Handler implements HttpHandler {
 	    System.out.println(e.getMessage());
 	    exchange.setResponse(new ResponseStatusException(HttpStatus.BAD_REQUEST));
 	} catch (InvocationTargetException e) {
-	    System.out.println(e.getMessage());
-	    System.out.println(e.getTargetException());
-	    exchange.setResponse((ResponseStatusException) e.getTargetException());
+	    if(e.getTargetException() instanceof ResponseStatusException) {
+		exchange.setResponse((ResponseStatusException) e.getTargetException());
+	    }else {
+		exchange.setResponse(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR));
+	    }
 	} catch (NoSuchMethodException | SecurityException | IOException | ParameterSintaxException
 		| RequestFormatException | UriException | URISyntaxException e) {
 	    ResponseStatus<String> response = new ResponseStatus<>(HttpStatus.NOT_FOUND, null);

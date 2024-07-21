@@ -1,16 +1,14 @@
-package vortex.http;
+package vortex.test;
+
 
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
-
-import vortex.test.test.Mock;
-
-public class MockInitialize implements BeforeAllCallback, AfterAllCallback {
+public class MockInitializer implements BeforeAllCallback, AfterAllCallback {
 
     @Override
     public void beforeAll(ExtensionContext context) throws Exception {
-    	Mock.getInstance();
+    	Mock.start();
     }
 
     @Override

@@ -121,7 +121,7 @@ public final class SQLWriter {
 	for (RecordInfo record : table.id()) {
 	    namesJoiner.add(record.name());
 	}
-	return String.format("select (%s) from %s;", namesJoiner.toString(), table.name());
+	return String.format("select %s from %s;", namesJoiner.toString(), table.name());
     }
 
     public static String update(DBTable table, Map<String, Object> values) {

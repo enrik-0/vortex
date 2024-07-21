@@ -1,4 +1,4 @@
-package vortex.test;
+package vortex.test.test;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;

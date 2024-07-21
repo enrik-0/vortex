@@ -14,7 +14,7 @@
 *.zip
 
 *.tar.gz
-
+logs/*
 *.class
 *.rar
 pom.xml.tag

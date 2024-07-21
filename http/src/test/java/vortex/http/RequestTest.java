@@ -15,8 +15,8 @@ import vortex.http.status.HttpStatus;
 import vortex.properties.kinds.Element;
 import vortex.properties.kinds.Patterns;
 import vortex.properties.kinds.Server;
-import vortex.test.RequestBuilder;
 import vortex.test.exception.AmbiguousMethodException;
+import vortex.test.test.RequestBuilder;
 
 /**
  * Unit test for simple App.

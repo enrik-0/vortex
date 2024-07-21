@@ -1,4 +1,4 @@
-package vortex.test;
+package vortex.test.test;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;

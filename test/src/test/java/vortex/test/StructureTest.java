@@ -29,8 +29,6 @@ import vortex.properties.kinds.Server;
 import vortex.test.exception.AmbiguousMethodException;
 import vortex.utils.Asserttions;
 import vortex.utils.MappingUtils;
-import vortex.utils.Regex;
-import vortex.utils.StringUtils;
 
 class StructureTest {
 
@@ -102,6 +100,12 @@ class StructureTest {
     void badRequest() throws IOException, AmbiguousMethodException {
 	Response response = new RequestBuilder().get(LOCALHOST + "/dontwork").perform();
 	assertEquals(HttpStatus.NOT_FOUND, response.getStatus());
+    }
+
+    @Test
+    void exception() throws IOException, AmbiguousMethodException {
+	Response response = new RequestBuilder().get(LOCALHOST + "/test/exception").perform();
+	assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatus());
     }
 
     @ParameterizedTest

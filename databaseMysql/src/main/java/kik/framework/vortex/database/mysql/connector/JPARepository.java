@@ -249,7 +249,14 @@ public class JPARepository<T, Id> implements Repository<T, Id> {
 	    }
 
 	} else {
+	    if(!object.getClass().getSuperclass().equals(Object.class) && !Asserttions.isList(object)) {
+		
+	    repository = (JPARepository) DatabaseStorage.getInstance().getRepository(object.getClass());
+	    }else {
+		
 	    repository = (JPARepository) DatabaseStorage.getInstance().getRepository(relatedTable.clazz());
+	    }
+
 	}
 
 	if (repository != null && !Asserttions.isList(object)) {
@@ -561,13 +568,18 @@ public class JPARepository<T, Id> implements Repository<T, Id> {
 	Map<String, Object> ids = null;
 	Map<String, Object> values = null;
 	try {
-	    ids = generateId(entity);
+	    if(DatabaseStorage.getInstance().getTable(entity.getClass()).equals(getTable())){
+		ids = generateId(entity);
+	    }else {
+		ids = DatabaseStorage.getInstance().getRepository(entity.getClass()).generateId(entity);
+	    }
 	    values = JPAUtils.getValues(entity);
 	    Map<String, Object> map = new HashMap<>();
 	    for (String key : values.keySet()) {
 		for (RecordInfo r : table.getAllRecords()) {
-		    if (key.equals(r.fieldName())) {
+		    if (key.equals(r.fieldName()) || key.equals(r.name())) {
 			Object value = values.get(key);
+			if(value != null)
 			if (Asserttions.isPrimitive(value)) {
 			    map.put(r.name(), value);
 			} else if (!Asserttions.isList(value)) {
@@ -595,7 +607,7 @@ public class JPARepository<T, Id> implements Repository<T, Id> {
 		    var optional = table.getAllRecords().stream().filter(r -> {
 			return r.name().equals(key);
 		    }).findFirst();
-		    if (optional.isPresent()) {
+		    if (optional.isPresent()){
 			Object value = result.getObject(key, optional.get().data().data().parseToJava());
 			ids.put(key, value);
 		    }
@@ -640,11 +652,13 @@ public class JPARepository<T, Id> implements Repository<T, Id> {
 					    statements.add(sql);
 				    }
 				}
-			    } else if (relation.type().equals("inheritance")) {
+				
+			    } /*else if (relation.type().equals("inheritance")) {
 				fatherStatements = DatabaseStorage.getInstance()
 					.getRepository(DatabaseStorage.getInstance().getTable(tableName).clazz())
 					.deleteSQL(entity);
 			    }
+			    */
 			}
 
 		    }
@@ -658,15 +672,17 @@ public class JPARepository<T, Id> implements Repository<T, Id> {
 
     @Override
     public void delete(T entity) throws SQLException, RepositoryNotExistsException, RelationShipNotExistsException {
+	Map<String, Object> temp = new HashMap<>();
+	Map<String, Object> map = new HashMap<>();
 	if(entity != null) {
 	    
 	List<String> statements = deleteSQL(entity);
-
 	try {
 
 	    for (String statement : statements) {
 		Connector.getInstance().sendRequest(statement);
 	    }
+
 	} catch (SQLException e) {
 	    e.printStackTrace();
 	    try {
@@ -675,16 +691,16 @@ public class JPARepository<T, Id> implements Repository<T, Id> {
 	    } catch (SQLException e1) {
 		update(entity);
 	    }
-	}
-	}
+	}}
     }
 
     public Map<String, Object> generateId(T entity) throws RepositoryNotExistsException {
 	Map<String, Object> map = new HashMap<String, Object>();
+
 	if(entity == null) {
 	    return map;
 	}
-	DBTable table = DatabaseStorage.getInstance().getTable(entity.getClass());
+	DBTable table = getTable();
 	Collection<Field> fields = new ArrayList<>();
 	Collections.addAll(fields, entity.getClass().getDeclaredFields());
 	for (RecordInfo recor : table.id()) {

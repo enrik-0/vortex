@@ -23,7 +23,7 @@
 			class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<!-- Se trunca el archivo de log cada día o al superar los 10MB. -->
 			<fileNamePattern>
-				${LOGS}/archived/vortex-logger-%d{yyyy-MM-dd}.%i.log
+				${LOGS}/archived/vortex-logger-%d{yyyy-MM-dd}.log
             </fileNamePattern>
 		</rollingPolicy>
 	</appender>

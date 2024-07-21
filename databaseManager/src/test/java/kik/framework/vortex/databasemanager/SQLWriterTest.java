@@ -113,7 +113,7 @@ class SQLWriterTest {
     @Test
     public void testFindAll() {
 	String sql = SQLWriter.findAll(table);
-	assertEquals("select (id,value) from TestTable;", sql);
+	assertEquals("select id,value from TestTable;", sql);
     }
 
     @Test
