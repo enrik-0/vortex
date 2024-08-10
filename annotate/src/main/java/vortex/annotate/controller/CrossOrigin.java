@@ -9,14 +9,15 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**  
- * @Author: Enrique Javier Villar Cea
+ * {@link vortex.annotate.components.Controller} must deny connections if is not the origin
  */
 @Target(TYPE)
 @Retention(RUNTIME)
 @Documented
 public @interface CrossOrigin {
 	/**
-	 *	 <big><bold>'*' </bold></big>means let all origin make request 
+	 *	 <b>*</b> means let all origin make request 
+	 *@return the origin 
 	 */
 	String value() default "*";
 

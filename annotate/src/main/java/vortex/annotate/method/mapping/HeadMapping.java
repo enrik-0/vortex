@@ -17,7 +17,6 @@ import java.lang.annotation.Target;
  * @see OptionsMapping
  * @see PatchMapping
  * @see TraceMapping
- * @Author: Enrique Javier Villar Cea
  */
 @Target(METHOD)
 @Retention(RUNTIME)
@@ -25,10 +24,15 @@ import java.lang.annotation.Target;
 public @interface HeadMapping {
 
 	/**
-	 * Uri to handle with <b>{@linkplain HEAD} <br>
-	 * <h1>example:</h1> <code> @HeadMapping("/uri")</code>
+	 * Uri to handle with <b>HEAD</b> method
+	 * <h4>example</h4> <code> @HeadMapping("/uri")</code>
+	 * @return uri to handle
 	 */
 	String value() default "";
-
+/**
+	 * Uris to handle with <b>HEAD</b> method
+	 * <h4>example</h4> <code> @HeadMapping(uris = {"/uri1", "/uri2"})</code>
+	 * @return uris to handle
+	 */
 	String[] uris() default {};
 }

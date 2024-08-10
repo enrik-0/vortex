@@ -17,7 +17,6 @@ import java.lang.annotation.Target;
  * @see HeadMapping
  * @see OptionsMapping
  * @see PatchMapping
- * @Author: Enrique Javier Villar Cea
  */
 @Target(METHOD)
 @Retention(RUNTIME)
@@ -25,10 +24,15 @@ import java.lang.annotation.Target;
 public @interface TraceMapping {
 
 	/**
-	 * Uri to handle with <b>DELETE</b> <br>
-	 * <h1>example:</h1> <code> @TraceMapping("/uri")</code>
+	 * Uris to handle with <b>TRACE</b> method
+	 * <h4>example</h4> <code> @TraceMapping("/uri1")</code>
+	 * @return uris to handle
 	 */
 	String value() default "";
-
+	/**
+	 * Uris to handle with <b>TRACE</b> method
+	 * <h4>example</h4> <code> @TraceMapping(uris = {"/uri1", "/uri2"})</code>
+	 * @return uris to handle
+	 */
 	String[] uris() default {};
 }

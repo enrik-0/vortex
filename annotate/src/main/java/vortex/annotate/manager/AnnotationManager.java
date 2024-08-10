@@ -14,7 +14,6 @@ import org.reflections.scanners.TypeAnnotationsScanner;
 import org.reflections.scanners.TypeElementsScanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import edu.emory.mathcs.backport.java.util.Collections;
 import vortex.annotate.components.Controller;
 import vortex.annotate.components.Entity;
@@ -30,9 +29,7 @@ import vortex.properties.kinds.Server;
 import vortex.utils.MappingUtils;
 
 /**
- * @Author: Enrique Javier Villar Cea
- * @Date: 04/01/2024
- * @Purpose: handle the annotations
+ * handle the annotations
  */
 public final class AnnotationManager {
 
@@ -45,6 +42,12 @@ public final class AnnotationManager {
 	initialize();
     }
 
+    /**
+     * begin scanning the project looking for annotations
+     * @return {@link AnnotationManager}
+     * @throws UriException if an error with URIs ocurre
+     * @throws InitiateServerException error in API method definition
+     */
     public static AnnotationManager getInstance() throws UriException, InitiateServerException {
 
 	synchronized (AnnotationManager.class) {
@@ -285,12 +288,12 @@ public final class AnnotationManager {
 	System.setOut(out);
 	System.setErr(err);
     }
-
-    public static Storage get() {
-
-	return Storage.getInstance();
-    }
-
+    /**
+     *  search using reflections
+     * @param search package to look
+     * @param annotation annotation to look
+     * @return {@link java.util.Set} of classes found
+     */
     public static Set<Class<?>> getClassesAnnotated(String search, Class<? extends Annotation> annotation) {
 
 	var reflections = new Reflections(search);

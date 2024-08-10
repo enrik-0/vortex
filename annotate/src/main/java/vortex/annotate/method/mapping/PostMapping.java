@@ -18,7 +18,6 @@ import java.lang.annotation.Target;
  * @see PatchMapping
  * @see TraceMapping
  * @see ConnectMapping
- * @author Enrique Javier Villar Cea
  */
 @Target(METHOD)
 @Retention(RUNTIME)
@@ -26,10 +25,15 @@ import java.lang.annotation.Target;
 public @interface PostMapping {
 
 	/**
-	 * Uri to handle with <b>{@linkplain POST} 
-	 * <h1>example:</h1> <code> @PostMapping("/uri")</code>
+	 * Uris to handle with <b>POST</b> method
+	 * <h4>example</h4> <code> @PostMapping("/uri")</code>
+	 * @return uris to handle
 	 */
 	String value();
-
+	/**
+	 * Uris to handle with <b>POST</b> method
+	 * <h4>example</h4> <code> @PostMapping(uris = {"/uri1", "/uri2"})</code>
+	 * @return uris to handle
+	 */
 	String[] uris() default {};
 }

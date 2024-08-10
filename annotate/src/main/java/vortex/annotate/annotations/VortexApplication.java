@@ -7,6 +7,9 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+/**
+ * Identifies the main class
+ */
 @Documented
 @Retention(RUNTIME)
 @Target(TYPE)

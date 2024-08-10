@@ -1,4 +1,3 @@
-
 package vortex.annotate.components;
 
 import static java.lang.annotation.ElementType.TYPE;
@@ -11,12 +10,12 @@ import java.lang.annotation.Target;
 
 /**  
  * Identifier of a class that have endpoints
- * @see RequestMapping
- * @see GetMapping
- * @see PostMapping
- * @see PutMapping
- * @see DeleteMapping
- * @Author: Enrique Javier Villar Cea
+ * @see vortex.annotate.controller.RequestMapping 
+ * @see vortex.annotate.controller.CrossOrigin
+ * @see vortex.annotate.method.mapping.GetMapping
+ * @see vortex.annotate.method.mapping.PostMapping
+ * @see vortex.annotate.method.mapping.PutMapping
+ * @see vortex.annotate.method.mapping.DeleteMapping
  */
 @Target(TYPE)
 @Retention(RUNTIME)
@@ -24,3 +23,5 @@ import java.lang.annotation.Target;
 public @interface Controller{
 
 }
+
+

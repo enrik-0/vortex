@@ -6,6 +6,10 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+/**
+ * Identifies a ORM usage
+ * needs the existance of {@link Entity} to be used
+ */
 @Retention(RUNTIME)
 @Target(TYPE)
 public @interface Repository {

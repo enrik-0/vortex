@@ -18,7 +18,6 @@ import java.lang.annotation.Target;
  * @see OptionsMapping
  * @see PatchMapping
  * @see TraceMapping
- * @Author: Enrique Javier Villar Cea
  */
 @Target(METHOD)
 @Retention(RUNTIME)
@@ -26,10 +25,15 @@ import java.lang.annotation.Target;
 public @interface DeleteMapping {
 
 	/**
-	 * Uri to handle with <b>{@linkplain DELETE} <br>
-	 * <h1>example:</h1> <code> @DeleteMapping("/uri")</code>
+	 * Uri to handle with <b> DELETE</b> method
+	 * <h4>example</h4> <code> @DeleteMapping("/uri")</code>
+	 * @return uri to handle
 	 */
 	String value() default "";
-
+	/**
+	 * Uris to handle with <b> DELETE</b> method
+	 * <h4>example</h4> <code> @DeleteMapping(uris = {"/uri1", "/uri2"})</code>
+	 * @return uris to handle
+	 */
 	String[] uris() default {};
 }

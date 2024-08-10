@@ -17,7 +17,6 @@ import java.lang.annotation.Target;
  * @see OptionsMapping
  * @see PatchMapping
  * @see TraceMapping
- * @Author: Enrique Javier Villar Cea
  */
 @Target(METHOD)
 @Retention(RUNTIME)
@@ -25,10 +24,17 @@ import java.lang.annotation.Target;
 public @interface ConnectMapping {
 
 	/**
-	 * Uri to handle with <b>{@linkplain CONNECT} <br>
-	 * <h1>example:</h1> <code> @ConnectMapping("/uri")</code>
+	 * Uri to handle with <b>CONNECT </b> method 
+	 * <h4> Example </h4>
+	 *  <code> @ConnectMapping("/uri")</code>
+	 *  @return the uri
 	 */
 	String value() default "";
 
+/**
+	 * Uris to handle with <b>CONNECT </b> method
+	 * <h4>Example</h4> <code> @ConnectMapping(uris = {"/uri1", "/uri2"})</code>
+	 * @return uris defined
+	 */
 	String[] uris() default {};
 }

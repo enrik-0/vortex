@@ -11,15 +11,19 @@ import java.lang.annotation.Target;
 /**
  * Handles params in the request, 
  * params in a request have this format:
- * <h1>1 parameter</h1> <br>
- * <code>{rest of uri}?{param}={value} </code>
- * <h1> 2 or more parameters</h1> 
- * <code>{rest of uri}?{parameter1}={value1}&{parameter2}={value2}&{parameterN}={valueN} </code><br> <br>
- * The name of the parameter and the variable <b>MUST</b> be the same. <br>
+ * 
+ * <h2> 1 parameter</h2>
+ * 
+ * <code>&lt;rest of uri&gt;?&lt;param&gt;=&lt;value&gt; </code>
+ * 
+ *  <h2>2 or more parameters </h2>
+ *  
+ * <code>&lt;rest of uri&gt;?&lt;parameter1&gt;=&lt;value1&gt;&amp;&lt;parameter2&gt;=&lt;value2&gt;&amp;&lt;parameterN&gt;=&lt;valueN&gt;</code> <br>
+ * The name of the parameter and the variable <b>MUST</b> be the same.
+ * <h3>Example</h3>
  * if used in a int parameter called days<br>
- * <b>/example?days=2</b>
+ * <code><b>/example?days=2</b></code>
  * @see RequestBody
- * @author Enrique Javier Villar Cea
  */
 @Target(PARAMETER)
 @Retention(RUNTIME)

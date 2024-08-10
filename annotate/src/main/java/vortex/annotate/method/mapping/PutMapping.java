@@ -18,7 +18,6 @@ import java.lang.annotation.Target;
  * @see PatchMapping
  * @see TraceMapping
  * @see ConnectMapping
- * @author Enrique Javier Villar Cea
  */
 @Target(METHOD)
 @Retention(RUNTIME)
@@ -26,11 +25,16 @@ import java.lang.annotation.Target;
 public @interface PutMapping {
 
 	/**
-	 * Uri to handle with <b>{@linkplain PUT}
-	 * <h1>example:</h1> <code> @PutMapping("/uri")</code>
+	 * Uris to handle with <b>PUT</b> method
+	 * <h4>example</h4> <code> @PutMapping("/uri1")</code>
+	 * @return uris to handle
 	 */
 	String value() default "";
-
+	/**
+	 * Uris to handle with <b>PUT</b> method
+	 * <h4>example</h4> <code> @PutMapping(uris = {"/uri1", "/uri2"})</code>
+	 * @return uris to handle
+	 */
 	String[] uris() default {};
 
 }

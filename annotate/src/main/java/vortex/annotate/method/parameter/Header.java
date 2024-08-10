@@ -7,6 +7,8 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+import vortex.annotate.constants.HttpMethod;
+
 /**
  * This get the requested header, this is always a string with the name of the header,
  * from the request, 
@@ -18,5 +20,9 @@ import java.lang.annotation.Target;
 @Documented
 public @interface Header {
 
+    /**
+     * name of the wanted header
+     * @return  name of the wanted header
+     */
     String value();
 }

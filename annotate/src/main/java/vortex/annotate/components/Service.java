@@ -9,7 +9,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * @author Enrique Javier Villar Cea
+ * Identifies classes used to implement bussiness logic
  */
 @Target(TYPE)
 @Retention(RUNTIME)

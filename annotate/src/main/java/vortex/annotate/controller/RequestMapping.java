@@ -22,7 +22,6 @@ import vortex.annotate.method.mapping.PutMapping;
  * @see GetMapping
  * @see PostMapping
  * @see PutMapping
- * @author Enrique Javier Villar Cea
  */
 @Target(TYPE)
 @Retention(RUNTIME)
@@ -31,12 +30,14 @@ public @interface RequestMapping{
 
 	/**
 	 * Uri to handle by a {@link Controller}
-	 * <h1>example:</h1> <code> @RequestMapping("/uri")</code>
+	 * <h4>example</h4> <code> @RequestMapping("/uri")</code>
+	 * @return the setted base uri
 	 */
 	String value() default "";
 	/**
 	 * Multiple Uris to handle by a {@link Controller}
-	 * <h1>example:</h1> <code> @RequestMapping(uris = {"/uri", "/uri2", "uri3"})</code>
+	 * <h4>example</h4> <code> @RequestMapping(uris = {"/uri", "/uri2", "uri3"})</code>
+	 * @return the setted uris
 	 */
 	String[] uris() default {};
 }

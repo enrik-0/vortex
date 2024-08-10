@@ -8,7 +8,7 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 /**
- * @author Enrique Javier Villar Cea
+ * identifies a database entity
  */
 @Target(TYPE)
 @Retention(RUNTIME)

@@ -20,7 +20,6 @@ import java.lang.annotation.Target;
  * @see PatchMapping
  * @see TraceMapping
  * @see ConnectMapping
- * @author Enrique Javier Villar Cea
  * 
  */
 @Target(METHOD)
@@ -29,10 +28,15 @@ import java.lang.annotation.Target;
 public @interface GetMapping {
 
 	/**
-	 * Uri to handle with <b>{@linkplain GET}  <br>
-	 * Default value <core>"/"</core>
-	 * <h1>example:</h1> <code> @GetMapping("/uri")</code>
+	 * Uri to handle with <b>GET </b> method
+	 * <h4>example</h4> <code> @GetMapping("/uri")</code>
+	 *  @return the uri to handle
 	 */
 	String value() default "/";
+	/**
+	 * Uri to handle with <b>GET</b> method
+	 * <h4>example</h4> <code> @GetMapping(uris = {"/uri1", "/uri2"})</code>
+	 * @return uris to handle
+	 */
 	String[] uris() default {};
 }

@@ -17,18 +17,22 @@ import java.lang.annotation.Target;
  * @see HeadMapping
  * @see OptionsMapping
  * @see TraceMapping
- * @Author: Enrique Javier Villar Cea
  */
 @Target(METHOD)
 @Retention(RUNTIME)
 @Documented
 public @interface PatchMapping {
 
-	/**
-	 * Uri to handle with <b>{@linkplain PATCH} <br>
-	 * <h1>example:</h1> <code> @PatchMapping("/uri")</code>
+    /**
+	 * Uris to handle with <b>PATCH</b> method
+	 * <h4>example</h4> <code> @PatchMapping("/uri")</code>
+	 * @return uris to handle
 	 */
 	String value() default "";
-
+	/**
+	 * Uris to handle with <b>PATCH</b> method
+	 * <h4>example</h4> <code> @PatchMapping(uris = {"/uri1", "/uri2"})</code>
+	 * @return uris to handle
+	 */
 	String[] uris() default {};
 }

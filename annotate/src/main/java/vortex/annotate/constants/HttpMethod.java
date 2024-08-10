@@ -1,7 +1,46 @@
 package vortex.annotate.constants;
 
+/**
+ * enumeration of the possible HttpMethods
+ */
 public enum HttpMethod {
 
-	GET, POST, PUT, DELETE, PATCH, OPTIONS, HEAD, TRACE, CONNECT;
+
+    /**
+     * Get method
+     */
+	GET,
+	/**
+	 * Post method
+	 */
+	POST, 
+	/**
+	 * Put method
+	 */
+	PUT, 
+	/**
+	 * Delete method
+	 */
+	DELETE, 
+	/**
+	 * Patch method
+	 */
+	PATCH, 
+	/**
+	 * Options method
+	 */
+	OPTIONS, 
+	/**
+	 * Head method
+	 */
+	HEAD, 
+	/**
+	 * Trace method
+	 */
+	TRACE,
+	/**
+	 * Connect method
+	 */
+	CONNECT;
 
 }
