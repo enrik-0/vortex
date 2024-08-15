@@ -84,9 +84,8 @@ class QueryStorage{
     }
 
     /**
-     * @param clazz      what entity are we seeking
-     * @param id         ID of the entity we want
-     * @param deprecated entity
+     * @param clazz what entity are we seeking
+     * @param id    ID of the entity we want
      * @param <T>
      * @return the entity saved
      */

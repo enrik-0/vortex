@@ -6,8 +6,6 @@ package kik.framework.vortex.databasemanager.storage;
  * @param data          {@link Type} of the data
  * @param originalClass the java type
  * @param length        max length of the registry
- * @param deprecated    precision
- * @param deprecated    scale
  * @param autoIncrement tells if the registry must autoincrement
  * @see RecordInfo
  */
