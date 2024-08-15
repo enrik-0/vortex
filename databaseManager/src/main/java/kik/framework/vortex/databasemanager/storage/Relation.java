@@ -6,9 +6,9 @@ import java.lang.annotation.Annotation;
 /**
  * Data Structure that represents a relationship between tables
  *
- * @param origin           {@link recordinfo#name} of the origin registry
+ * @param origin           {@link RecordInfo#name} of the origin registry
  * @param destinationTable {@link DBTable#name} of the destination table
- * @param destination      {@link recordinfo#name} of the destination registry
+ * @param destination      {@link RecordInfo#name} of the destination registry
  * @param cascade          delete query's must be cascade or not
  * @param type             relation type it can be ManyToMany, ManyToOne, OneToMany, OneToOne and inheritance
  */
