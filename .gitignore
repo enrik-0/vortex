@@ -8,14 +8,16 @@
 .idea
 *.log
 *.war
-
+*.iml
+target
 *.nar
-
+target/*
 *.ear
 .scannerwork
 .settings
 *.zip
 
+*.iml
 *.tar.gz
 logs/*
 *.class
