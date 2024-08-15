@@ -10,13 +10,13 @@ public
 enum Server implements Family{
 
     /**
-     * <h1>Defines the listening port of the application
-     * default port is <bold > 80</bold></h1>
+     * Defines the listening port of the application <br>
+     * default port is <b> 80</b>
      */
     PORT,
     /**
-     * <h1> Defines the base URL for the application
-     * default path is <bold> / </bold> </h1>
+     * Defines the base URL for the application <br>
+     * default path is <b> / </b>
      */
     CONTEXT_PATH,
 
