@@ -1,219 +1,216 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-	<modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
-	<groupId>kik.framework</groupId>
+    <groupId>io.github.enrik-0</groupId>
+    <artifactId>vortex</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
+    <name>vortex</name>
+    <url>http://maven.apache.org</url>
+    <description>Vortex the usability focused framework</description>
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
 
-	<artifactId>vortex</artifactId>
-	<version>1.0.0</version>
-	<packaging>pom</packaging>
-	<name>vortex</name>
+    <developers>
+        <developer>
+            <name>Enrique Javier Villar Cea</name>
+            <email>villarcea.enriquejavier@gmail.com</email>
+            <organizationUrl>https://github.com/enrik-0</organizationUrl>
+        </developer>
+    </developers>
+    <scm>
+        <connection>scm:git:git://github.com/enrik-0/vortex.git</connection>
+        <developerConnection>scm:git:ssh://github.com:enrik-0/vortex.git</developerConnection>
+        <url>http://github.com/enrik-0/vortex/tree/main</url>
+    </scm>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-	<url>http://maven.apache.org</url>
-<!-- 
-	<licenses>
-		<license>
-			<name>The Apache License, Version 2.0</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-		</license>
-	</licenses>
+    </properties>
 
-	<developers>
-		<developer>
-			<name>Enrique Javier Villar Cea</name>
-			<email>villarcea.enriquejavier@gmail.com</email>
-			<organizationUrl>https://github.com/enrik-0</organizationUrl>
-		</developer>
-	</developers>
-	<scm>
-		<connection>scm:git:git://github.com/enrik-0/vortex.git</connection>
-		<developerConnection>scm:git:ssh://github.com:enrik-0/vortex.git</developerConnection>
-		<url>http://github.com/enrik-0/vortex/tree/main</url>
-	</scm>
--->
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		  
-	</properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-plugin-api</artifactId>
+            <version>3.6.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven.plugin-tools</groupId>
+            <artifactId>maven-plugin-annotations</artifactId>
+            <version>3.6.0</version>
+            <scope>provided</scope>
+        </dependency>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.apache.maven</groupId>
-			<artifactId>maven-plugin-api</artifactId>
-			<version>3.6.3</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.maven.plugin-tools</groupId>
-			<artifactId>maven-plugin-annotations</artifactId>
-			<version>3.6.0</version>
-			<scope>provided</scope>
-		</dependency>
+        <dependency>
 
-		<dependency>
+            <groupId>org.codehaus.plexus</groupId>
 
-			<groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-utils</artifactId>
 
-			<artifactId>plexus-utils</artifactId>
+            <version>3.3.0</version>
 
-			<version>3.3.0</version>
+        </dependency>
 
-		</dependency>
+        <dependency>
 
-		<dependency>
+            <groupId>org.junit.jupiter</groupId>
 
-			<groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
 
-			<artifactId>junit-jupiter-api</artifactId>
+            <version>5.9.1</version>
 
-			<version>5.9.1</version>
+            <scope>test</scope>
 
-			<scope>test</scope>
+        </dependency>
 
-		</dependency>
+        <dependency>
 
-		<dependency>
+            <groupId>org.junit.jupiter</groupId>
 
-			<groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
 
-			<artifactId>junit-jupiter</artifactId>
+            <version>5.9.1</version>
 
-			<version>5.9.1</version>
+            <scope>test</scope>
 
-			<scope>test</scope>
+        </dependency>
 
-		</dependency>
+        <dependency>
 
-		<dependency>
+            <groupId>org.junit.jupiter</groupId>
 
-			<groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
 
-			<artifactId>junit-jupiter-engine</artifactId>
+            <version>5.9.1</version>
 
-			<version>5.9.1</version>
+            <scope>test</scope>
 
-			<scope>test</scope>
+        </dependency>
 
-		</dependency>
+        <dependency>
 
-		<dependency>
+            <groupId>org.junit.jupiter</groupId>
 
-			<groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
 
-			<artifactId>junit-jupiter-params</artifactId>
+            <version>5.9.1</version>
 
-			<version>5.9.1</version>
+            <scope>test</scope>
 
-			<scope>test</scope>
+        </dependency>
 
-		</dependency>
+        <dependency>
 
-		<dependency>
+            <groupId>junit</groupId>
 
-			<groupId>junit</groupId>
+            <artifactId>junit</artifactId>
 
-			<artifactId>junit</artifactId>
+            <version>4.8.1</version>
 
-			<version>4.8.1</version>
+            <scope>test</scope>
 
-			<scope>test</scope>
+        </dependency>
 
-		</dependency>
+    </dependencies>
 
-	</dependencies>
+    <build>
 
-	<build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>3.0.1</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <gpgArguments>
+                        <arg>--batch</arg>
+                        <arg>--pinentry-mode</arg>
+                        <arg>loopback</arg>
+                        <arg>--default-key</arg>
+                        <arg>DD8173D7</arg>
+                    </gpgArguments>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.3.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.8.0</version>
+                <executions>
+                    <execution>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>javadoc</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.2.5</version>
+            </plugin>
 
-		<plugins>
-			   <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-gpg-plugin</artifactId>
-            <version>3.0.1</version>
-            <executions>
-                <execution>
-                    <id>sign-artifacts</id>
-                    <phase>verify</phase>
-                    <goals>
-                        <goal>sign</goal>
-                    </goals>
-                </execution>
-            </executions>
-             <configuration>
-                <gpgArguments>
-                    <arg>--batch</arg>
-                    <arg>--pinentry-mode</arg>
-                    <arg>loopback</arg>
-                    <arg>--default-key</arg>
-                    <arg>DD8173D7</arg> 
-                </gpgArguments>
-            </configuration>
-        </plugin>
-			 <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-source-plugin</artifactId>
-            <version>3.3.1</version>
-            <executions>
-                <execution>
-                    <id>attach-sources</id>
-                    <goals>
-                        <goal>jar</goal>
-                    </goals>
-                </execution>
-            </executions>
-        </plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.8.0</version>
-				<executions>
-					<execution>
-						<phase>deploy</phase>
-						<goals>
-							<goal>javadoc</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>attach-javadocs</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>3.2.5</version>
-			</plugin>
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>0.5.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <publishingServerId>central</publishingServerId>
+                    <autoPublish>true</autoPublish>
+                    <waitUntil>published</waitUntil>
+                </configuration>
+            </plugin>
+        </plugins>
 
-			<plugin>
-				<groupId>org.sonatype.central</groupId>
-				<artifactId>central-publishing-maven-plugin</artifactId>
-				<version>0.5.0</version>
-				<extensions>true</extensions>
-				<configuration>
-					<publishingServerId>central</publishingServerId>
-					<autoPublish>true</autoPublish>
-					<waitUntil>published</waitUntil>
-				</configuration>
-			</plugin>
-		</plugins>
+    </build>
 
-	</build>
+    <modules>
 
-	<modules>
+        <module>http</module>
+        <module>annotate</module>
+        <module>properties</module>
+        <module>test</module>
+        <module>databaseManager</module>
+        <module>vortex-maven-plugin</module>
+        <module>databaseMysql</module>
+        <module>Initializer</module>
 
-		<module>http</module>
-		<module>annotate</module>
-		<module>properties</module>
-		<module>test</module>
-		<module>databaseManager</module>
-		<module>vortex-maven-plugin</module>
-		<module>databaseMysql</module>
-		<module>Initializer</module>
-
-	</modules>
+    </modules>
 
 </project>
