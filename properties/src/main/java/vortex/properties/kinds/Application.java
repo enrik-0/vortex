@@ -3,19 +3,27 @@ package vortex.properties.kinds;
 import vortex.properties.filemanager.PropertyParser;
 import vortex.utils.StringUtils;
 
-public enum Application implements Family {
+/**
+ * Properties that involve all the application
+ */
+public
+enum Application implements Family{
 
+    /**
+     * if debug output is enabled
+     */
     DEBUG;
 
-  private Object value;
+    private Object value;
 
-    Application() {
-	value = PropertyParser.getInstance().get(StringUtils.proccessProperty(".", this.getClass(), this.name()));
+    Application(){
+        value = PropertyParser.getInstance().get(StringUtils.proccessProperty(".", this.getClass(), this.name()));
     }
 
     @Override
-    public Object value() {
-	return value;
+    public
+    Object value(){
+        return value;
     }
 
 }

@@ -1,6 +1,10 @@
 package vortex.properties.kinds;
 
-public interface Family {
+public
+interface Family{
 
-	Object value();
+    /**
+     * @return the value of the property
+     */
+    Object value();
 }
