@@ -3,7 +3,7 @@
 	xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>kik.framework.vortex</groupId>
+	<groupId>io.github.enrik-0</groupId>
 	<artifactId>databaseManager</artifactId>
 	<version>1.0.1</version>
 	<name>databaseManager</name>
@@ -85,8 +85,14 @@
 			<version>1.0.2</version>
 			<scope>test</scope>
 		</dependency>
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>RELEASE</version>
+            <scope>compile</scope>
+        </dependency>
 
-	</dependencies>
+    </dependencies>
 	<build>
 		<plugins>
 			<plugin>

@@ -19,40 +19,46 @@ import kik.framework.vortex.databasemanager.storage.DatabaseStorage;
 import kik.framework.vortex.databasemanager.storage.RecordInfo;
 import kik.framework.vortex.databasemanager.storage.Relation;
 
-public final class JPAUtils {
+public final
+class JPAUtils{
 
-    public static Map<String, Object> getValues(Object entity) throws IllegalAccessException {
+    /**
+     * @param entity object to get all the values
+     * @return {@link Map} with all the field of the given object
+     * @throws IllegalAccessException
+     */
+    public static
+    Map<String, Object> getValues(Object entity) throws IllegalAccessException{
         Map<String, Object> valuesMap = new HashMap<>();
         Collection<Field> fields = getAllFields(entity.getClass());
         DBTable table = DatabaseStorage.getInstance().getTable(entity.getClass());
 
-        for (Field field : fields) {
+        for(Field field : fields){
             field.setAccessible(true);
             String fieldName = getFieldName(field);
             valuesMap.put(fieldName, field.get(entity));
             field.setAccessible(false);
         }
 
-        List<String> tableNames = table.records().stream()
-                                          .map(RecordInfo::name)
-                                          .collect(Collectors.toList());
+        List<String> tableNames = table.records().stream().map(RecordInfo::name).collect(Collectors.toList());
 
-        for (String name : tableNames) {
-            if (!valuesMap.containsKey(name.toLowerCase())) {
+        for(String name : tableNames){
+            if(!valuesMap.containsKey(name.toLowerCase())){
                 Relation relation = table.getRelation(name);
-                if(relation != null && relation.type().equals(ManyToOne.class.getSimpleName()))
-                for(RecordInfo r : table.getAllRecords()) {
-                    if(r.name().equals(name)) {
-                	Map<String, Object> temp = null;
-                	Object value = valuesMap.get(r.fieldName());
-                	valuesMap.remove(r.fieldName());
-                	try {
-			    temp = DatabaseStorage.getInstance().getRepository(value.getClass()).generateId(value);
-			} catch (NoSuchFieldException | RepositoryNotExistsException e) {
-			    // TODO Auto-generated catch block
-			    e.printStackTrace();
-			}
-                	temp.forEach(valuesMap::put);
+                if(relation != null && relation.type().equals(ManyToOne.class.getSimpleName())){
+                    for(RecordInfo r : table.getAllRecords()){
+                        if(r.name().equals(name)){
+                            Map<String, Object> temp = null;
+                            Object value = valuesMap.get(r.fieldName());
+                            valuesMap.remove(r.fieldName());
+                            try{
+                                temp = DatabaseStorage.getInstance().getRepository(value.getClass()).generateId(value);
+                            }catch(NoSuchFieldException | RepositoryNotExistsException e){
+                                // TODO Auto-generated catch block
+                                e.printStackTrace();
+                            }
+                            temp.forEach(valuesMap::put);
+                        }
                     }
                 }
                 System.err.println();
@@ -62,22 +68,34 @@ public final class JPAUtils {
         return valuesMap;
     }
 
-    private static String getFieldName(Field field) {
-        for (Annotation annotation : field.getAnnotations()) {
-            if (annotation instanceof Column) {
-                return ((Column) annotation).name();
-            }
-        }
-        return field.getName().toLowerCase();
-    }
-
-    private static Collection<Field> getAllFields(Class<?> clazz) {
+    /**
+     * @param clazz
+     * @return {@link Collection<Field>} with all the fields including  the ones from inheritance
+     */
+    private static
+    Collection<Field> getAllFields(Class<?> clazz){
         Collection<Field> fields = new ArrayList<>();
-        while (clazz != null && clazz != Object.class) {
+        while(clazz != null && clazz != Object.class){
             Collections.addAll(fields, clazz.getDeclaredFields());
             clazz = clazz.getSuperclass();
         }
         return fields;
+    }
+
+    /**
+     * takes the field name from the {@link Column} or the field name
+     *
+     * @param field
+     * @return {@link Column#name()} if there no annotation uses {@link Field#name}
+     */
+    private static
+    String getFieldName(Field field){
+        for(Annotation annotation : field.getAnnotations()){
+            if(annotation instanceof Column){
+                return ((Column) annotation).name();
+            }
+        }
+        return field.getName().toLowerCase();
     }
 
 }

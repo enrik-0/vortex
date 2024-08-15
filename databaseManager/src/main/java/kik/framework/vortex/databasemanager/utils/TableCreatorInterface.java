@@ -6,8 +6,12 @@ import kik.framework.vortex.databasemanager.exception.DataTypeException;
 import kik.framework.vortex.databasemanager.exception.RelationTypeException;
 import kik.framework.vortex.databasemanager.storage.DBTable;
 
-public interface TableCreatorInterface {
+/**
+ * Contract of a table creator
+ */
+public
+interface TableCreatorInterface{
 
     DBTable createTable(Class<?> clazz) throws DataTypeException, SQLException, RelationTypeException;
-    
+
 }

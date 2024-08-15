@@ -199,7 +199,6 @@
 					<waitUntil>published</waitUntil>
 				</configuration>
 			</plugin>
-
 		</plugins>
 
 	</build>

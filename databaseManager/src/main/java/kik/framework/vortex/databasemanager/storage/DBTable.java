@@ -12,7 +12,9 @@ import kik.framework.vortex.databasemanager.Repository;
 
 public record DBTable(String name, Class<?> clazz, boolean created, Collection<RecordInfo> records,
 	Collection<Relation> relations) {
+
     public DBTable {
+
 	if (name == null || name.isEmpty()) {
 	    throw new IllegalArgumentException("The name cannot be null or empty");
 	}

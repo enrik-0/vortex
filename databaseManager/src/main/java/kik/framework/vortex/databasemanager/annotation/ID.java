@@ -8,6 +8,12 @@ import java.lang.annotation.Target;
 
 @Retention(RUNTIME)
 @Target(FIELD)
+/**
+ * Identifies a registry that must be in the <b> Primary key </b> of the table
+ * to modify for parameters of the registry use {@link Column}
+ * @see Nullable
+ * @see  Unique
+ */
 public @interface ID {
 
 }
